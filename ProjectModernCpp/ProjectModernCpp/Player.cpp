@@ -1,4 +1,3 @@
-#include "Player.h"
+module Player;
 
-Player::Player(const std::string& n)
-	: name(n), score(0) {}
+Player::Player(const std::string& n) : name(n), score(0){}

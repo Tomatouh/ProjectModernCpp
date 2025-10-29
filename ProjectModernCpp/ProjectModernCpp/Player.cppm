@@ -1,12 +1,10 @@
-#pragma once
-#include<string>
+export module Player;
+import <string>;
 
-class Player
-{
+export class Player {
 public:
 	std::string name;
 	int score;
 
 	Player(const std::string& n);
 };
-
