@@ -1,6 +1,6 @@
 #include <iostream>
 
-int main()
-{
-	return 102002;
+int main() {
+	std::cout << "Hello Bytes the Dust!\n";
+	return 0;
 }
