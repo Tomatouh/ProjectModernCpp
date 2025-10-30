@@ -19,3 +19,4 @@ uint8_t Money::getValue() const
 {
 	return value;
 }
+//test
