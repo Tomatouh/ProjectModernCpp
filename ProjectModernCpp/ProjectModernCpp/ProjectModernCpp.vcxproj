@@ -106,6 +106,7 @@
       <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,6 +132,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player.cppm" />
+    <ClCompile Include="BuildingResource.cpp" />
+    <ClCompile Include="card.cpp" />
+    <ClCompile Include="card.cppm" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Money.cpp" />
+    <ClCompile Include="Resource.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BuildingResource.h" />
+    <ClInclude Include="Money.h" />
+    <ClInclude Include="Resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
