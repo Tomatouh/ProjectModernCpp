@@ -38,5 +38,11 @@
     <ClInclude Include="BuildingResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="card.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

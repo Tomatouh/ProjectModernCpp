@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Money.h"
-int main()
-{
-	std::cout << "Hello world, from Alex's branch";
+
+int main() {
+	std::cout << "Hello Bytes the Dust!\n";
+	return 0;
 }
