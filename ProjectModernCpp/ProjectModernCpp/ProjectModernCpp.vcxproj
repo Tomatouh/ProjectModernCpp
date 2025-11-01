@@ -125,9 +125,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bank.cpp" />
+    <ClCompile Include="BuildingResource.cpp" />
     <ClCompile Include="card.cpp" />
     <ClCompile Include="card.cppm" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Money.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bank.h" />
+    <ClInclude Include="BuildingResource.h" />
+    <ClInclude Include="Money.h" />
+    <ClInclude Include="Resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
