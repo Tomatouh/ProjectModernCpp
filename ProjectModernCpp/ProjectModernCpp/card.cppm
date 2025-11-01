@@ -48,7 +48,7 @@ namespace SevenWonders {
 		std::vector<Effect> m_effects;
 		Cost m_cost;
 		std::string m_name;
-		//SevenWonders::Card* m_link;
+		
 };
 	
 }
