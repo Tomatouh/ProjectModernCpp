@@ -18,13 +18,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cppm">
+    <ClCompile Include="card.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Card.cppm">
+    <ClCompile Include="card.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
