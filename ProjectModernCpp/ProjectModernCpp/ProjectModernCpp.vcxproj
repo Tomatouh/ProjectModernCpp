@@ -131,6 +131,9 @@
     <ClCompile Include="card.cppm" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Money.cpp" />
+    <ClCompile Include="peon.cpp" />
+    <ClCompile Include="peon.cppm" />
+    <ClCompile Include="Resource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bank.h" />
