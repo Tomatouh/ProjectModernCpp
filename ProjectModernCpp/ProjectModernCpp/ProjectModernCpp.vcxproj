@@ -103,9 +103,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableModules>true</EnableModules>
       <BuildStlModules>true</BuildStlModules>
-      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,10 +125,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Card.cppm" />
+    <ClCompile Include="BuildingResource.cpp" />
+    <ClCompile Include="card.cpp" />
+    <ClCompile Include="card.cppm" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Player.cppm" />
+    <ClCompile Include="Money.cpp" />
+    <ClCompile Include="peon.cpp" />
+    <ClCompile Include="peon.cppm" />
+    <ClCompile Include="Resource.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BuildingResource.h" />
+    <ClInclude Include="Money.h" />
+    <ClInclude Include="Resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
