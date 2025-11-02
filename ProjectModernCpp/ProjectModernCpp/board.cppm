@@ -1,5 +1,10 @@
 export module board;
-export class peon{
-public: int peon;
-	  int getPeonPos() const;
-};
+import peon;
+#import "Money.h";
+export class board {
+private: 
+    int zone = 0;
+public: 
+    void checkZone();
+    int getZone() const { return zone;}
+}
