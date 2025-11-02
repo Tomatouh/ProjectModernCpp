@@ -1,13 +1,18 @@
 #include "BuildingResource.h"
-void BuildingResource::add1()
+void BuildingResource::add()
 {
-	value++;
+	m_value++;
 }
 uint8_t BuildingResource::getValue() const
 {
-	return value;
+	return m_value+m_temporaryValue;
 }
 ResourceType BuildingResource::getType() const
 {
-	return type;
+	return m_type;
+}
+BuildingResource::BuildingResource(const ResourceType& type) {
+	this->m_type = type;
+	this->m_value = 0;
+	this->m_temporaryValue = 0;
 }
