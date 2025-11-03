@@ -1,10 +1,17 @@
 export module board;
+
 import peon;
-#import "Money.h";
+#include "Money.h"
+
 export class board {
-private: 
+private:
     int zone = 0;
-public: 
-    void checkZone();
-    int getZone() const { return zone;}
-}
+	peon playerPeon;
+public:
+    explicit board(int initialZone) noexcept : zone(initialZone) {}
+
+    void checkZone() {}
+
+    int getZone() const noexcept { return zone; }
+    void setZone(int newZone) noexcept { zone = newZone; }
+};
