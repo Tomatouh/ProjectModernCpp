@@ -20,7 +20,7 @@ const std::string& Player::getName() const
 
 void Player::showCards() const
 {
-	std::cout << name << " detine urmatoarele carti:\n";
+	std::cout << name << " owns the following cards:\n";
 	for (const auto& card : ownedCards) {
 		//std::cout << " - " << card.name << " (+ " << card.points << " puncte)\n";
 	}
