@@ -6,7 +6,6 @@ import <unordered_set>;
 import <string_view>;
 #include "BuildingResource.h"
 
-namespace SevenWonders {
 	export class Card {
 	public:
 		enum class Effect {
@@ -51,4 +50,3 @@ namespace SevenWonders {
 		
 };
 	
-}

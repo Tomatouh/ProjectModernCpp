@@ -1,21 +1,19 @@
 export module peon;
-export class peon {
+
+export class peon final {
 private:
     int pos = 0;
 
+    void incrementPos() noexcept { ++pos; }
+    void decrementPos() noexcept { --pos; }
+
 public:
     peon() = default;
+    explicit peon(int initialPos) noexcept : pos(initialPos) {}
 
-    explicit peon(int initialPos) : pos(initialPos) {}
+    [[nodiscard]] int getPos() const noexcept { return pos; }
+    void setPos(int newPos) noexcept { pos = newPos; }
 
-    int getPos() const { return pos; }
-
-    void setPos(int newPos) { pos = newPos; }
-
-private: 
-    void incrementPos() { ++pos; }
-
-    void decrementPos() { --pos; }
-public: void move(int steps, bool player);
-      void checkZone();
+    void move(int steps, bool player) noexcept(false);
+    void checkZone() noexcept;
 };

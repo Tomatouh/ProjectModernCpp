@@ -1,6 +1,5 @@
 module card;
 
-namespace SevenWonders {
 	Card::Cost::Cost(const std::vector<ResourceType>& resources, std::uint16_t coins) : m_resources(resources), m_coins(coins)
 	{
 	}
@@ -41,4 +40,3 @@ namespace SevenWonders {
 		other.m_cost.getResources().clear();
 		return *this;
 	}
-}

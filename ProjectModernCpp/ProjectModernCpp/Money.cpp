@@ -28,14 +28,14 @@ bool Money::subtract(const uint8_t& value)
 	{
 		m_value = 0;
 		m_bank->add(m_value);
-		//return true;
+		return true;
 	}
 	else
 	{
 		m_value -= value;
 		m_bank->add(value);
-		//return true;
+		return true;
 	}
-	//return false;
+	return false;
 }
 Bank* Money::m_bank = new Bank();
