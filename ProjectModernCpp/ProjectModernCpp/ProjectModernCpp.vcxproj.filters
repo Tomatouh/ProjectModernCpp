@@ -18,10 +18,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="money.cpp">
+    <ClCompile Include="Money.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="buildingResource.cpp">
+    <ClCompile Include="BuildingResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Bank.cpp">
@@ -30,44 +30,38 @@
     <ClCompile Include="peon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="peon.cppm">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cppm">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="resource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Building.cppm">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Building.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="board.cppm">
+    <ClCompile Include="Resource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="board.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="buildingResource.cppm">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="board.cppm">
+      <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="resource.cppm">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="card.cppm">
+      <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="money.cppm">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="peon.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cppm">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="card.cppm">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Money.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClCompile Include="card.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
