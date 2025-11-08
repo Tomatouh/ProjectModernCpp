@@ -1,13 +1,13 @@
-#pragma once
-#include "Resource.h"
-enum class ResourceType {
+export module buildingResource;
+import resource;
+export enum class ResourceType {
 	WOOD,
 	STONE,
 	CLAY,
 	GLASS,
 	PAPYRUS
 };
-class BuildingResource:public Resource
+export class BuildingResource :public Resource
 {
 private:
 	uint8_t m_value;
@@ -19,4 +19,3 @@ public:
 	ResourceType getType() const;
 	BuildingResource(const ResourceType& resourceType);
 };
-

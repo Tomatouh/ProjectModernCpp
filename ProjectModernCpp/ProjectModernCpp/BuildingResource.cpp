@@ -1,4 +1,4 @@
-#include "BuildingResource.h"
+module buildingResource;
 void BuildingResource::add()
 {
 	m_value++;

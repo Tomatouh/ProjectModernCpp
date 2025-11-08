@@ -1,1 +1,1 @@
-#include "Resource.h"
+module resource;

@@ -130,22 +130,22 @@
     <ClCompile Include="board.cppm" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="Building.cppm" />
-    <ClCompile Include="BuildingResource.cpp" />
+    <ClCompile Include="buildingResource.cpp" />
+    <ClCompile Include="buildingResource.cppm" />
     <ClCompile Include="card.cpp" />
     <ClCompile Include="card.cppm" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Money.cpp" />
+    <ClCompile Include="money.cpp" />
+    <ClCompile Include="money.cppm" />
     <ClCompile Include="peon.cpp" />
     <ClCompile Include="peon.cppm" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player.cppm" />
-    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="resource.cpp" />
+    <ClCompile Include="resource.cppm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bank.h" />
-    <ClInclude Include="BuildingResource.h" />
-    <ClInclude Include="Money.h" />
-    <ClInclude Include="Resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
