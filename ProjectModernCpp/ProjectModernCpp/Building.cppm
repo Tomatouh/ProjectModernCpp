@@ -1,6 +1,8 @@
 export module Building;
+#include "BuildingResource.h"
 import card;
 import std;
+
 
 export class Building : Card {
 public:
@@ -29,9 +31,7 @@ public:
 	};
 	
 
-	Building(Age age, Color color, const std::uint8_t link, std::uint8_t wood, std::uint8_t clay, std::uint8_t stone,
-		std::uint8_t glass, std::uint8_t papyrus, std::uint8_t victoryPoints,
-		std::uint8_t shields, std::uint8_t coins, const std::optional<ScientificSymbol>& scientificSymbol);
+	Building(Age age, Color color, const std::vector<ResourceType>& resources, const std::optional<ScientificSymbol>& scientificSymbol);
 	Building(const Building& other);
 	Building(Building&& other) noexcept;
 	Building& operator=(const Building& other);
@@ -44,12 +44,7 @@ public:
 private:
 	Age m_age;
 	Color m_color;
-	std::uint8_t m_link;
-	std::uint8_t m_wood;
-	std::uint8_t m_clay;
-	std::uint8_t m_stone;
-	std::uint8_t m_glass;
-	std::uint8_t m_papyrus;
+	std::vector<ResourceType> m_resources;
 	std::optional<ScientificSymbol> m_scientificSymbol;
 
 };
