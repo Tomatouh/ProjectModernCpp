@@ -129,15 +129,18 @@
     <ClCompile Include="board.cpp" />
     <ClCompile Include="board.cppm" />
     <ClCompile Include="buildingResource.cpp" />
+    <ClCompile Include="buildingResource.cppm" />
     <ClCompile Include="card.cpp" />
     <ClCompile Include="card.cppm" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="money.cpp" />
+    <ClCompile Include="money.cppm" />
     <ClCompile Include="peon.cpp" />
     <ClCompile Include="peon.cppm" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player.cppm" />
     <ClCompile Include="resource.cpp" />
+    <ClCompile Include="resource.cppm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bank.h" />

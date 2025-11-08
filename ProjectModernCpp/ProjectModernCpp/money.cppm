@@ -1,13 +1,15 @@
 export module money;
-import resource;
-class Money : public Resource
+import <cstdint>;
+import <array>;
+export class Money
 {
 private:
-	uint8_t m_value;
+	std::array<uint8_t, 33> m_coins;
 public:
 	Money();
-	bool add(const uint8_t& value);
-	bool subtract(const uint8_t& value);
-	uint8_t getValue() const;
-
+	std::array<uint8_t, 33> getCoins();
+	void add1();
+	void add3();
+	void add6();
+	bool remove(uint8_t value);
 };

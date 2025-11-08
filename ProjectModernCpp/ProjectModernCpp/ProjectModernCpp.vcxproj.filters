@@ -51,6 +51,15 @@
     <ClCompile Include="Player.cppm">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="buildingResource.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="money.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resource.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">

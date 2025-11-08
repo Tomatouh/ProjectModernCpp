@@ -1,28 +1,75 @@
 module money;
 Money::Money()
 {
-	m_value = 7;
-}
-bool Money::add(const uint8_t& value)
-{
-		m_value += value;
-		return 0;
-}
-uint8_t Money::getValue() const
-{
-	return m_value;
-}
-bool Money::subtract(const uint8_t& value)
-{
-	if(value>m_value)
+	for (int i = 0; i < 33; i++)
 	{
-		m_value = 0;
-		return true;
+		if (i == 14 || i == 25)
+			m_coins[i] = 255;
+		else
+			m_coins[i] = 6;
 	}
-	else
+}
+std::array<uint8_t, 33> Money::getCoins()
+{
+	return m_coins;
+}
+void Money::add1()
+{
+	for(int i=0;i<14;i++)
+		if (m_coins[i] == 0)
+		{
+			m_coins[i] = 1;
+			return;
+		}
+}
+void Money::add3()
+{
+	for (int i = 15; i < 25; i++)
+		if (m_coins[i] == 0)
+		{
+			m_coins[i] = 3;
+			return;
+		}
+}
+void Money::add6()
+{
+	for (int i = 26; i < 34; i++)
+		if (m_coins[i] == 0)
+		{
+			m_coins[i] = 6;
+			return;
+		}
+}
+bool Money::remove(uint8_t value)
+{
+	int8_t iAux=32;
+	while (value && iAux>-1)
 	{
-		m_value -= value;
-		return true;
+		if (iAux > 25)
+		{
+			if (m_coins[iAux])
+			{
+				value = value - 6;
+				m_coins[iAux] = 0;
+			}
+		}
+		if (iAux < 25)
+		{
+			if (m_coins[iAux])
+			{
+				value = value - 3;
+				m_coins[iAux] = 0;
+			}
+		}
+		if (iAux < 14)
+		{
+			if (m_coins[iAux])
+			{
+				value = value - 1;
+				m_coins[iAux] = 0;
+			}
+		}
+		iAux--;
 	}
-	return false;
+	return !value;
 }

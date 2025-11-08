@@ -1,5 +1,5 @@
 export module resource;
-import <iostream>;
+import <cstdint>;
 export class Resource
 {
 public:
