@@ -9,18 +9,36 @@ import <string_view>;
 	export class Card {
 	public:
 		enum class Effect {
-			addRawMaterial,
-			addManufacturedGood,
-			addEveryRawMaterial,
-			addEveryManufacturedGood,
+			addResource,
+			addEveryResource,
 			addCoins,
 			addVictoryPoints,
 			addShields,
+			addScientificSymbol,
 			oneCoinClay,
 			oneCoinWood,
 			oneCoinStone,
 			oneCoinGlass,
-			oneCoinPapyrus
+			oneCoinPapyrus,
+			twoCoinsPerWonder,
+			threeCoinsPerGrey,
+			twoCoinsPerBrown,
+			oneCoinPerYellow,
+			oneCoinPerRed,
+			BuildersGuild,
+			TradersGuild,
+			MoneylendersGuild,
+			MagistratesGuild,
+			ScientistsGuild,
+			TacticiansGuild,
+			ShipownersGuild,
+			loseThreeCoins,
+			discardGrey,
+			drawThreeProgress,
+			produceResourcePerTurn,
+			playSecondTurn,
+			constructCard,
+			discardBrown,
 		};
 		class Cost {
 		private:
