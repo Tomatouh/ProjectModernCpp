@@ -1,4 +1,4 @@
-#include "Bank.h"
+import bank;
 Bank::Bank()
 {
 	m_value = 17;
