@@ -4,8 +4,7 @@ import <vector>;
 import <string>;
 import <unordered_set>;
 import <string_view>;
-#include "BuildingResource.h"
-
+import buildingResource;
 	export class Card {
 	public:
 		enum class Effect {

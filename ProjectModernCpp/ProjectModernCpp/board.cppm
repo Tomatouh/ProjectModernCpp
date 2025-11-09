@@ -1,8 +1,7 @@
 export module board;
 
 import peon;
-#include "Money.h"
-
+import money;
 export class board {
 private:
     int zone{0};
