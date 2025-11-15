@@ -1,5 +1,5 @@
 export module Building;
-#include "BuildingResource.h"
+import buildingResource;
 import card;
 import std;
 
