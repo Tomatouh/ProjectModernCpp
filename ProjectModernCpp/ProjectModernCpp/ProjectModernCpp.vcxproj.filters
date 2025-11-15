@@ -24,7 +24,7 @@
     <ClCompile Include="buildingResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bank.cpp">
+    <ClCompile Include="bank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="peon.cpp">

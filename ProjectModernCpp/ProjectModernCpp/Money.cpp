@@ -30,6 +30,7 @@ bool Money::pay(uint8_t value)
 		{
 			m_coins[2]--;
 			value -= 6;
+			Bank::theBank->pay6();
 		}
 		else
 		{
@@ -37,6 +38,7 @@ bool Money::pay(uint8_t value)
 			{
 				m_coins[1]--;
 				value -= 3;
+				Bank::theBank->pay3();
 			}
 			else
 			{
@@ -44,6 +46,7 @@ bool Money::pay(uint8_t value)
 				{
 					m_coins[0]--;
 					value -= 1;
+					Bank::theBank->pay1();
 				}
 				else
 				{

@@ -1,6 +1,7 @@
 export module money;
 import <cstdint>;
 import <unordered_map>;
+import bank;
 export class Money
 {
 private:
