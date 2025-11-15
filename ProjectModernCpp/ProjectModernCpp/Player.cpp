@@ -1,37 +1,106 @@
 module Player;
 import <iostream>;
 import card;
+import Building;
 
-Player::Player(std::string name) : name_(std::move(name)) {}
+Player::Player(std::string name)
+    : name_(std::move(name)),
+    coin1_count_(7),
+    coin3_count_(0),
+    coin6_count_(0),
+    total_coin_value_(7),
+    score_(0)
+{
+}
 
-const std::string& Player::name() const noexcept { return name_; }
-int Player::coins() const noexcept { return coins_; }
-void Player::addCoins(int n) noexcept { coins_ += n; }
+const std::string& Player::name() const noexcept {
+    return name_;
+}
+
+int Player::coins() const noexcept {
+    return total_coin_value_;
+}
+
+void Player::addCoins(int n) noexcept {
+    total_coin_value_ += n;
+}
+
 bool Player::spendCoins(int n) noexcept {
-    if (n > coins_) return false;
-    coins_ -= n;
+    if (n > total_coin_value_) {
+        return false;
+    }
+    total_coin_value_ -= n;
     return true;
 }
 
-void Player::addCard(const Card& c) {
-    ownedCards_.push_back(c);
-    // card internals (name, victory points, etc.) are private in `card` module;
-    // so we don't attempt to read them here. If you add accessors in `card`,
-    // you can update score_ here (e.g. score_ += c.victoryPoints()).
+int Player::coin1Count() const noexcept {
+    return coin1_count_;
 }
 
-const std::vector<Card>& Player::ownedCards() const noexcept {
-    return ownedCards_;
+int Player::coin3Count() const noexcept {
+    return coin3_count_;
 }
+
+int Player::coin6Count() const noexcept {
+    return coin6_count_;
+}
+
+int Player::totalCoinValue() const noexcept {
+    return total_coin_value_;
+}
+
+
+void Player::addBuilding(const Building& building) {
+    switch (building.getColor()) {
+    case Building::Color::BROWN:
+        brownBuildings_.push_back(building);
+        break;
+    case Building::Color::GREY:
+        greyBuildings_.push_back(building);
+        break;
+    case Building::Color::BLUE:
+        blueBuildings_.push_back(building);
+        break;
+    case Building::Color::GREEN:
+        greenBuildings_.push_back(building);
+        break;
+    case Building::Color::YELLOW:
+        yellowBuildings_.push_back(building);
+        break;
+    case Building::Color::RED:
+        redBuildings_.push_back(building);
+        break;
+    case Building::Color::PURPLE:
+        purpleBuildings_.push_back(building);
+        break;
+    }
+}
+
+const std::vector<Building>& Player::getBrownBuildings() const noexcept { return brownBuildings_; }
+const std::vector<Building>& Player::getGreyBuildings() const noexcept { return greyBuildings_; }
+const std::vector<Building>& Player::getBlueBuildings() const noexcept { return blueBuildings_; }
+const std::vector<Building>& Player::getGreenBuildings() const noexcept { return greenBuildings_; }
+const std::vector<Building>& Player::getYellowBuildings() const noexcept { return yellowBuildings_; }
+const std::vector<Building>& Player::getRedBuildings() const noexcept { return redBuildings_; }
+const std::vector<Building>& Player::getPurpleBuildings() const noexcept { return purpleBuildings_; }
 
 int Player::getScore() const noexcept {
     return score_;
 }
 
 void Player::showStatus(std::ostream& os) const {
-    os << "Player " << name_ << " | coins=" << coins_ << " | cards=" << ownedCards_.size() << "\n";
+    os << "Player " << name_ << " | coins=" << total_coin_value_
+        << " (1s=" << coin1_count_ << ", 3s=" << coin3_count_ << ", 6s=" << coin6_count_ << ")\n";
+    os << "Score: " << getScore() << "\n";
 }
 
 void Player::showCards(std::ostream& os) const {
-    os << name_ << " owns " << ownedCards_.size() << " cards\n";
+    os << name_ << " owns buildings:\n";
+    os << " - Brown: " << brownBuildings_.size() << "\n";
+    os << " - Grey: " << greyBuildings_.size() << "\n";
+    os << " - Blue: " << blueBuildings_.size() << "\n";
+    os << " - Green: " << greenBuildings_.size() << "\n";
+    os << " - Yellow: " << yellowBuildings_.size() << "\n";
+    os << " - Red: " << redBuildings_.size() << "\n";
+    os << " - Purple: " << purpleBuildings_.size() << "\n";
 }

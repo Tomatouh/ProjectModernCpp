@@ -1,75 +1,55 @@
-export module Player;
+﻿export module Player;
 import <string>;
 import <vector>;
 import <iostream>;
 import card;
+import Building; // Building trebuie importat pentru a fi folosit in Player
 
 export class Player {
 public:
-    explicit Player(std::string name)
-        : name_(std::move(name)),
-          coin1_count_(7),
-          coin3_count_(0),
-          coin6_count_(0),
-          total_coin_value_(7),
-          score_(0)
-    {}
+    explicit Player(std::string name);
 
-    const std::string& name() const noexcept { return name_; }
+    const std::string& name() const noexcept;
 
-    // legacy compatibility: total coin value (keeps existing `coins()` name)
-    int coins() const noexcept { return total_coin_value_; }
+    int coins() const noexcept;
+    void addCoins(int n) noexcept;
+    bool spendCoins(int n) noexcept;
 
-    // Add/spend operate on total value only (denomination counts are read-only here)
-    void addCoins(int n) noexcept { total_coin_value_ += n; }
-    bool spendCoins(int n) noexcept {
-        if (n > total_coin_value_) return false;
-        total_coin_value_ -= n;
-        return true;
-    }
+    int coin1Count() const noexcept;
+    int coin3Count() const noexcept;
+    int coin6Count() const noexcept;
+    int totalCoinValue() const noexcept;
 
-    // Denomination getters (read-only)
-    int coin1Count() const noexcept { return coin1_count_; }
-    int coin3Count() const noexcept { return coin3_count_; }
-    int coin6Count() const noexcept { return coin6_count_; }
-    int totalCoinValue() const noexcept { return total_coin_value_; }
+    void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
 
-    // Card management
-    void addCard(const Card& c) { ownedCards_.emplace_back(c); }
-    const std::vector<Card>& ownedCards() const noexcept { return ownedCards_; }
+    // Getters pentru cladiri, pe culori
+    const std::vector<Building>& getBrownBuildings() const noexcept;
+    const std::vector<Building>& getGreyBuildings() const noexcept;
+    const std::vector<Building>& getBlueBuildings() const noexcept;
+    const std::vector<Building>& getGreenBuildings() const noexcept;
+    const std::vector<Building>& getYellowBuildings() const noexcept;
+    const std::vector<Building>& getRedBuildings() const noexcept;
+    const std::vector<Building>& getPurpleBuildings() const noexcept;
 
-    int getScore() const noexcept {
-        // Assuming score is calculated based on the cards owned
-        int totalScore = 0;
-        for (const auto& card : ownedCards_) {
-            totalScore += card.value(); // Assuming Card has a value() method
-        }
-        return totalScore;
-    }
+    int getScore() const noexcept;
 
-    void showStatus(std::ostream& os = std::cout) const {
-        os << "Player " << name_ << " | coins=" << total_coin_value_
-           << " (1s=" << coin1_count_ << ", 3s=" << coin3_count_ << ", 6s=" << coin6_count_ << ")\n";
-        os << "Score: " << getScore() << "\n";
-    }
-
-    void showCards(std::ostream& os = std::cout) const {
-        os << "Cards owned by " << name_ << ":\n";
-        for (const auto& card : ownedCards_) {
-            os << " - " << card.name() << " (Value: " << card.value() << ")\n"; // Assumes Card exposes m_name() and value()
-        }
-    }
+    void showStatus(std::ostream& os = std::cout) const;
+    void showCards(std::ostream& os = std::cout) const;
 
 private:
     std::string name_;
+    int coin1_count_;
+    int coin3_count_;
+    int coin6_count_;
+    int total_coin_value_;
+    int score_;
 
-    // New coin state (counts by denomination)
-    int coin1_count_{ 7 };      // number of 1-value coins
-    int coin3_count_{ 0 };      // number of 3-value coins
-    int coin6_count_{ 0 };      // number of 6-value coins
-    int total_coin_value_{ 7 }; // total value of all coins
-
-    int score_{ 0 };
-    std::vector<Card> ownedCards_;
+    // Colectii de cladiri, separate pe culori
+    std::vector<Building> brownBuildings_;
+    std::vector<Building> greyBuildings_;
+    std::vector<Building> blueBuildings_;
+    std::vector<Building> greenBuildings_;
+    std::vector<Building> yellowBuildings_;
+    std::vector<Building> redBuildings_;
+    std::vector<Building> purpleBuildings_; 
 };
-
