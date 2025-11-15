@@ -1,15 +1,15 @@
 export module money;
 import <cstdint>;
-import <array>;
+import <unordered_map>;
 export class Money
 {
 private:
-	std::array<uint8_t, 33> m_coins;
+	std::unordered_map<uint8_t, uint8_t> m_coins;
 public:
 	Money();
-	std::array<uint8_t, 33> getCoins();
+	std::unordered_map<uint8_t, uint8_t> getCoins();
 	void add1();
 	void add3();
 	void add6();
-	bool remove(uint8_t value);
+	bool pay(uint8_t value);
 };
