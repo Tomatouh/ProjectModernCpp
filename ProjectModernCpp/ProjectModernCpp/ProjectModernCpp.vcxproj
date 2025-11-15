@@ -130,6 +130,8 @@
     <ClCompile Include="bank.cppm" />
     <ClCompile Include="board.cpp" />
     <ClCompile Include="board.cppm" />
+    <ClCompile Include="Building.cpp" />
+    <ClCompile Include="Building.cppm" />
     <ClCompile Include="buildingResource.cpp" />
     <ClCompile Include="buildingResource.cppm" />
     <ClCompile Include="card.cpp" />

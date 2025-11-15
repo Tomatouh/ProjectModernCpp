@@ -63,6 +63,12 @@
     <ClCompile Include="bank.cppm">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Building.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="card.cpp">
