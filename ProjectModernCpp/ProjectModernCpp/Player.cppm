@@ -1,13 +1,14 @@
 ﻿export module Player;
 import <string>;
 import <vector>;
+import <cstdint>;
 import <iostream>;
 import card;
 import Building; // Building trebuie importat pentru a fi folosit in Player
 
 export class Player {
 public:
-    explicit Player(std::string name, int coin1_count = 0, int coin3_count = 0, int coin6_count = 0);
+    explicit Player(std::string name);
 
     const std::string& name() const noexcept;
 
@@ -33,6 +34,23 @@ public:
 
     int getScore() const noexcept;
 
+    uint8_t getVictoryPoints() const noexcept;
+    void addVictoryPoints(uint8_t points) noexcept;
+
+    int getMilitaryPoints() const noexcept;
+    void addMilitaryPoints(int points) noexcept;
+
+    uint8_t getWood() const noexcept;
+    void addWood(uint8_t amount = 1) noexcept;
+    uint8_t getStone() const noexcept;
+    void addStone(uint8_t amount = 1) noexcept;
+    uint8_t getClay() const noexcept;
+    void addClay(uint8_t amount = 1) noexcept;
+    uint8_t getGlass() const noexcept;
+    void addGlass(uint8_t amount = 1) noexcept;
+    uint8_t getPapyrus() const noexcept;
+    void addPapyrus(uint8_t amount = 1) noexcept;
+
     void showStatus(std::ostream& os = std::cout) const;
     void showCards(std::ostream& os = std::cout) const;
 
@@ -43,6 +61,15 @@ private:
     int coin6_count_;
     int total_coin_value_;
     int score_;
+    uint8_t victory_points_;
+    int military_points_;
+
+    // Resources
+    uint8_t wood_;
+    uint8_t stone_;
+    uint8_t clay_;
+    uint8_t glass_;
+    uint8_t papyrus_;
 
     // Colectii de cladiri, separate pe culori
     std::vector<Building> brownBuildings_;
@@ -51,5 +78,5 @@ private:
     std::vector<Building> greenBuildings_;
     std::vector<Building> yellowBuildings_;
     std::vector<Building> redBuildings_;
-    std::vector<Building> purpleBuildings_; 
+    std::vector<Building> purpleBuildings_;
 };

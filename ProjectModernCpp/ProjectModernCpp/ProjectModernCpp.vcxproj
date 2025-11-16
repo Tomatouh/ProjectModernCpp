@@ -145,8 +145,6 @@
     <ClCompile Include="effects.cpp" />
     <ClCompile Include="effects.cppm" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="money.cpp" />
-    <ClCompile Include="money.cppm" />
     <ClCompile Include="peon.cpp" />
     <ClCompile Include="peon.cppm" />
     <ClCompile Include="Player.cpp" />

@@ -4,17 +4,14 @@ import <iostream>;
 import card;
 import Building;
 
-Player::Player(std::string name, int coin1_count, int coin3_count, int coin6_count)
+Player::Player(std::string name)
     : name_(std::move(name)),
-    coin1_count_(coin1_count),
-    coin3_count_(coin3_count),
-    coin6_count_(coin6_count),
+    coin1_count_(7),
+    coin3_count_(0),
+    coin6_count_(0),
+    total_coin_value_(7),
     score_(0)
 {
-    total_coin_value_ = coin1_count_ * 1 + coin3_count_ * 3 + coin6_count_ * 6;
-    if (total_coin_value_ != 7) {
-        throw std::invalid_argument("Initial coin value must be 7.");
-    }
 }
 
 const std::string& Player::name() const noexcept {
@@ -91,6 +88,23 @@ const std::vector<Building>& Player::getPurpleBuildings() const noexcept { retur
 int Player::getScore() const noexcept {
     return score_;
 }
+
+uint8_t Player::getVictoryPoints() const noexcept { return victory_points_; }
+void Player::addVictoryPoints(uint8_t points) noexcept { victory_points_ += points; }
+
+int Player::getMilitaryPoints() const noexcept { return military_points_; }
+void Player::addMilitaryPoints(int points) noexcept { military_points_ += points; }
+
+uint8_t Player::getWood() const noexcept { return wood_; }
+void Player::addWood(uint8_t amount) noexcept { wood_ += amount; }
+uint8_t Player::getStone() const noexcept { return stone_; }
+void Player::addStone(uint8_t amount) noexcept { stone_ += amount; }
+uint8_t Player::getClay() const noexcept { return clay_; }
+void Player::addClay(uint8_t amount) noexcept { clay_ += amount; }
+uint8_t Player::getGlass() const noexcept { return glass_; }
+void Player::addGlass(uint8_t amount) noexcept { glass_ += amount; }
+uint8_t Player::getPapyrus() const noexcept { return papyrus_; }
+void Player::addPapyrus(uint8_t amount) noexcept { papyrus_ += amount; }
 
 void Player::showStatus(std::ostream& os) const {
     os << "Player " << name_ << " | coins=" << total_coin_value_

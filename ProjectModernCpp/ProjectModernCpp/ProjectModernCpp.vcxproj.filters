@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="money.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="buildingResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,9 +49,6 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="buildingResource.cppm">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="money.cppm">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="resource.cppm">
