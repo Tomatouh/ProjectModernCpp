@@ -65,6 +65,14 @@ import buildingResource;
 
 		void swap(Card& other) noexcept;
 
+		std::vector<Effect> getEffects() const;
+		Cost getCost() const;
+		std::string getName() const;
+		std::uint8_t getId() const;
+		std::uint8_t getVictoryPoints() const;
+		std::uint8_t getShields() const;
+		std::uint8_t getCoins() const;
+
 
 	private:
 		std::vector<Effect> m_effects;

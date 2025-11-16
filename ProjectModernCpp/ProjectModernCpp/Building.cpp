@@ -35,3 +35,17 @@ void Building::swap(Building& other) noexcept
 	std::swap(m_resources, other.m_resources);
 	std::swap(m_scientificSymbol, other.m_scientificSymbol);
 }
+
+Building::Age Building::getAge() const
+{
+	return m_age;
+}
+
+Building::Color Building::getColor() const
+{
+	return m_color;
+}
+std::optional<Building::ScientificSymbol> Building::getScientificSymbol() const
+{
+	return m_scientificSymbol;
+}

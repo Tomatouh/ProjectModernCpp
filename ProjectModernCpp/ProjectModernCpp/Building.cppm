@@ -40,6 +40,11 @@ public:
 
 	void swap(Building& other) noexcept;
 
+	Age getAge() const;
+	Color getColor() const;
+	std::vector<ResourceType> getResources() const;
+	std::optional<ScientificSymbol> getScientificSymbol() const;
+
 
 private:
 	Age m_age;

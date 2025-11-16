@@ -13,6 +13,7 @@ module card;
 	{
 		return m_resources;
 	}
+	
 	std::uint8_t Card::Cost::getCoins() const
 	{
 		return m_coins;
@@ -52,4 +53,34 @@ module card;
 		std::swap(m_victoryPoints, other.m_victoryPoints);
 		std::swap(m_shields, other.m_shields);
 		std::swap(m_coins, other.m_coins);
+	}
+
+	std::vector<Card::Effect> Card::getEffects() const
+	{
+		return m_effects;
+	}
+
+	Card::Cost Card::getCost() const
+	{
+		return m_cost;
+	}
+
+	std::string Card::getName() const
+	{
+		return m_name;
+	}
+
+	std::uint8_t Card::getId() const
+	{
+		return m_id;
+	}
+
+	std::uint8_t Card::getVictoryPoints() const
+	{
+		return m_victoryPoints;
+	}
+
+	std::uint8_t Card::getShields() const
+	{
+		return m_shields;
 	}
