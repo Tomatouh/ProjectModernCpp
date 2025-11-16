@@ -2,7 +2,10 @@ export module peon;
 
 export class peon final {
 private:
-    int pos = 0;
+	int const static startPos = 0;
+	int const static winPosP2 = -9;
+	int const static winPosP1 = 9;
+    int pos = startPos;
 
     void incrementPos() noexcept { ++pos; }
     void decrementPos() noexcept { --pos; }

@@ -1,12 +1,28 @@
 import board;
 import peon;
 
-void board::checkZone()
+void board::checkZone(bool Player)
 {
 	int pos = playerPeon.getPos();
-	if ( pos == 0) return; 
-	if (pos <= 2 && pos >= 1) { zone = 1; }
-	else if (pos >= 3 && pos <= 5) { zone = 2; }
-	else if (pos >= 6 && pos <= 8) { zone = 3; }
-	else zone = -1;
+	if ( pos == board::k_zone_start) return; 
+	if (Player) {
+		if (pos < board::k_zone2_start && pos >= board::k_zone1_start) { zone = board::k_zone1; }
+		else if (pos >= board::k_zone2_start && pos < board::k_zone3_start) { zone = board::k_zone2; }
+		else if (pos >= board::k_zone3_start && pos < board::k_zone_win) { zone = board::k_zone3; }
+		else zone = board::militaryWinP2;
+		return;
+	}
+    if (pos > -board::k_zone2_start && pos <= -board::k_zone1_start) {
+        zone = -board::k_zone1;
+    }
+    else if (pos <= -board::k_zone2_start && pos > -board::k_zone3_start) {
+        zone = -board::k_zone2;
+    }
+    else if (pos <= -board::k_zone3_start && pos > -board::k_zone_win) {
+        zone =- board::k_zone3;
+    }
+    else {
+        zone = -board::militaryWinP2;
+    }
+	return;
 }

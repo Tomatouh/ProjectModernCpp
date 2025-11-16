@@ -1,9 +1,9 @@
 import peon;
 void peon::move(int steps, bool player) {
-	if(steps < 0) {
+	if(steps < peon::startPos) {
 		throw ("Steps cannot be negative");
 	}
-	else if(steps >9) {
+	else if(steps >peon::winPosP2) {
 		throw ("Steps cannot be greater than 9");
 	}
 	if (player=false) {

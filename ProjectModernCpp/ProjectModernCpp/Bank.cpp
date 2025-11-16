@@ -47,4 +47,3 @@ int Bank::take(uint8_t value)
 	}
 	return 0;
 }
-Bank* Bank::theBank=new Bank();
