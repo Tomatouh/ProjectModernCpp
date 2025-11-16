@@ -1,9 +1,9 @@
 import board;
-
+import peon;
 
 void board::checkZone()
 {
-	int pos = PlayerPeon.getPos();
+	int pos = playerPeon.getPos();
 	if ( pos == 0) return; 
 	if (pos <= 2 && pos >= 1) { zone = 1; }
 	else if (pos >= 3 && pos <= 5) { zone = 2; }

@@ -9,7 +9,7 @@ private:
 public:
     explicit board(int initialZone) noexcept : zone{initialZone} {}
 
-    void checkZone() noexcept {}
+    void checkZone() {}
 
     int getZone() const noexcept { return zone; }
     void setZone(int newZone) noexcept { zone = newZone; }

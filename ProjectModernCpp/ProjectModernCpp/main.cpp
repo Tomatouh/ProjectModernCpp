@@ -1,5 +1,4 @@
-module card;
-#include <iostream>
+import <iostream>;
 
 
 int main() {
