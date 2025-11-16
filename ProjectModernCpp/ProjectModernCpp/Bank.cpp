@@ -1,46 +1,40 @@
 module bank;
-Bank::Bank()
-{
-	m_coins[0] = 12;
-	m_coins[1] = 6;
-	m_coins[3] = 7;
-}
 void Bank::pay1()
 {
-	m_coins[0]++;
+	m_coins[Bank::k_coinsAmount1]++;
 }
 void Bank::pay3()
 {
-	m_coins[1]++;
+	m_coins[Bank::k_coinsAmount3]++;
 }
 void Bank::pay6()
 {
-	m_coins[2]++;
+	m_coins[Bank::k_coinsAmount6]++;
 }
 int Bank::take(uint8_t value)
 {
 	while (value)
 	{
-		if (m_coins[2])
+		if (m_coins[Bank::k_coinsAmount6])
 		{
-			m_coins[2]--;
-			value -= 6;
+			m_coins[Bank::k_coinsAmount6]--;
+			value -= Bank::k_coinsValue6;
 			//Player.add6();
 		}
 		else
 		{
-			if (m_coins[1])
+			if (m_coins[Bank::k_coinsAmount3])
 			{
-				m_coins[1]--;
-				value -= 3;
+				m_coins[Bank::k_coinsAmount3]--;
+				value -= Bank::k_coinsValue3;
 				//Player.add3();
 			}
 			else
 			{
-				if (m_coins[0])
+				if (m_coins[Bank::k_coinsAmount1])
 				{
-					m_coins[0]--;
-					value -= 1;
+					m_coins[Bank::k_coinsAmount1]--;
+					value -= Bank::k_coinsValue1;
 					//Player.add1();
 				}
 				else
