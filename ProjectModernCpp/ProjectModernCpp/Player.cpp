@@ -1,16 +1,20 @@
 module Player;
 import <iostream>;
+import <stdexcept>;
 import card;
 import Building;
 
-Player::Player(std::string name)
+Player::Player(std::string name, int coin1_count, int coin3_count, int coin6_count)
     : name_(std::move(name)),
-    coin1_count_(7),
-    coin3_count_(0),
-    coin6_count_(0),
-    total_coin_value_(7),
+    coin1_count_(coin1_count),
+    coin3_count_(coin3_count),
+    coin6_count_(coin6_count),
     score_(0)
 {
+    total_coin_value_ = coin1_count_ * 1 + coin3_count_ * 3 + coin6_count_ * 6;
+    if (total_coin_value_ != 7) {
+        throw std::invalid_argument("Initial coin value must be 7.");
+    }
 }
 
 const std::string& Player::name() const noexcept {

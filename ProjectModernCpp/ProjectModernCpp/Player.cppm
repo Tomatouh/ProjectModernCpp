@@ -7,7 +7,7 @@ import Building; // Building trebuie importat pentru a fi folosit in Player
 
 export class Player {
 public:
-    explicit Player(std::string name);
+    explicit Player(std::string name, int coin1_count = 0, int coin3_count = 0, int coin6_count = 0);
 
     const std::string& name() const noexcept;
 
