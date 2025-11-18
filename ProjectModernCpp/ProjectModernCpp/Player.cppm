@@ -11,7 +11,6 @@ public:
     explicit Player(std::string name);
 
     const std::string& name() const noexcept;
-
     int coins() const noexcept;
     void addCoins(int n) noexcept;
     bool spendCoins(int n) noexcept;
@@ -56,7 +55,7 @@ public:
 
 private:
     std::string name_;
-    int coin1_count_;
+    int coin1_count_; 
     int coin3_count_;
     int coin6_count_;
     int total_coin_value_;
