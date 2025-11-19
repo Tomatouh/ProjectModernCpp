@@ -4,8 +4,9 @@ import <iostream>;
 import card;
 import Building;
 
-Player::Player(std::string name)
+Player::Player(std::string name, bool isPlayer1)
     : name_(std::move(name)),
+    m_isPlayer1(isPlayer1),
     coin1_count_(7),
     coin3_count_(0),
     coin6_count_(0),
@@ -16,6 +17,14 @@ Player::Player(std::string name)
 
 const std::string& Player::name() const noexcept {
     return name_;
+}
+
+bool Player::isPlayer1() const noexcept {
+    return m_isPlayer1;
+}
+
+void Player::setIsPlayer1(bool isPlayer1) noexcept {
+    m_isPlayer1 = isPlayer1;
 }
 
 int Player::coins() const noexcept {

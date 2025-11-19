@@ -8,9 +8,13 @@ import Building; // Building trebuie importat pentru a fi folosit in Player
 
 export class Player {
 public:
-    explicit Player(std::string name);
+    explicit Player(std::string name, bool isPlayer1);
 
     const std::string& name() const noexcept;
+
+    bool isPlayer1() const noexcept;
+    void setIsPlayer1(bool isPlayer1) noexcept;
+
     int coins() const noexcept;
     void addCoins(int n) noexcept;
     bool spendCoins(int n) noexcept;
@@ -54,6 +58,7 @@ public:
     void showCards(std::ostream& os = std::cout) const;
 
 private:
+    bool m_isPlayer1;
     std::string name_;
     int coin1_count_; 
     int coin3_count_;
