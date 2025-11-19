@@ -1,6 +1,6 @@
 export module peon;
 
-export class peon final {
+export class Peon final {
 private:
 	int const static startPos = 0;
 	int const static winPosP2 = -9;
@@ -11,8 +11,8 @@ private:
     void decrementPos() noexcept { --pos; }
 
 public:
-    peon() = default;
-    explicit peon(int initialPos) noexcept : pos(initialPos) {}
+    Peon() = default;
+    explicit Peon(int initialPos) noexcept : pos(initialPos) {}
 
     [[nodiscard]] int getPos() const noexcept { return pos; }
     void setPos(int newPos) noexcept { pos = newPos; }

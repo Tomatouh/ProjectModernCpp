@@ -9,12 +9,21 @@ module card;
 	{
 		return m_link;
 	}
-	std::vector<ResourceType> Card::Cost::getResources() const
+	std::vector<ResourceType> Card::Cost::getCostResources() const
 	{
 		return m_resources;
 	}
+	/*std::vector<ResourceType> Card::Cost::getResources() const
+	{
+		return m_resources;
+	}*/
+
+	std::uint8_t Card::Cost::getCostCoins() const
+	{
+		return m_coins;
+	}
 	
-	std::uint8_t Card::Cost::getCoins() const
+	std::uint8_t Card::getCoins() const
 	{
 		return m_coins;
 	}

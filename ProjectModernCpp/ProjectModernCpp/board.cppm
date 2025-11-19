@@ -1,7 +1,7 @@
 export module board;
 
 import peon;
-export class board {
+export class Board {
 private:
 	int const static k_zone_start = 0;
 	int const static k_zone_win = 9;
@@ -14,9 +14,9 @@ private:
     int const static militaryWinP2 = 4;
 
     int zone{k_zone_start};
-    peon playerPeon;
+    Peon playerPeon;
 public:
-    explicit board(int initialZone) noexcept : zone{initialZone} {}
+    explicit Board(int initialZone) noexcept : zone{initialZone} {}
 
     void checkZone(bool Player) {}
 

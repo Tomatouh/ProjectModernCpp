@@ -49,8 +49,8 @@ import buildingResource;
 			Cost(std::uint8_t link, const std::vector<ResourceType>& resources, std::uint8_t coins);
 			~Cost() = default;
 			std::uint8_t getLink() const;
-			std::vector<ResourceType> getResources() const;
-			std::uint8_t getCoins() const;
+			std::vector<ResourceType> getCostResources() const;
+			std::uint8_t getCostCoins() const;
 
 		};
 		
