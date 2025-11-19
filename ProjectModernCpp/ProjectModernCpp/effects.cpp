@@ -1,7 +1,7 @@
 import effects;
 import card;
-import Building;
 import Player;
+import board;
 
 void addCoins(Player& player, const Card& card)
 {
@@ -37,3 +37,13 @@ void addResources(Player& player, const Building& building)
 		}
 	}
 }
+
+void addScientificSymbol(Player& player, const Building& card)
+{
+	player.addBuilding(card);
+}
+
+//void addShields(bool player, Board& board)
+//{
+//	
+//}

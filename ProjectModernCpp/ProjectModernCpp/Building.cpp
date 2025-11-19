@@ -45,6 +45,10 @@ Building::Color Building::getColor() const
 {
 	return m_color;
 }
+std::vector<ResourceType> Building::getResources() const
+{
+	return m_resources;
+}
 std::optional<Building::ScientificSymbol> Building::getScientificSymbol() const
 {
 	return m_scientificSymbol;

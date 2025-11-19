@@ -1,12 +1,12 @@
 import peon;
-void peon::move(int steps, bool player) {
-	if(steps < peon::startPos) {
+void Peon::move(int steps, bool player) {
+	if(steps < Peon::startPos) {
 		throw ("Steps cannot be negative");
 	}
-	else if(steps >peon::winPosP2) {
+	else if(steps >Peon::winPosP2) {
 		throw ("Steps cannot be greater than 9");
 	}
-	if (player=false) {
+	if (player==false) {
 		for (int i = 0; i < steps; ++i) {
 			incrementPos();
 		}

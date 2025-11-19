@@ -1,28 +1,28 @@
 import board;
 import peon;
 
-void board::checkZone(bool Player)
+void Board::checkZone(bool Player)
 {
 	int pos = playerPeon.getPos();
-	if ( pos == board::k_zone_start) return; 
+	if ( pos == Board::k_zone_start) return; 
 	if (Player) {
-		if (pos < board::k_zone2_start && pos >= board::k_zone1_start) { zone = board::k_zone1; }
-		else if (pos >= board::k_zone2_start && pos < board::k_zone3_start) { zone = board::k_zone2; }
-		else if (pos >= board::k_zone3_start && pos < board::k_zone_win) { zone = board::k_zone3; }
-		else zone = board::militaryWinP2;
+		if (pos < Board::k_zone2_start && pos >= Board::k_zone1_start) { zone = Board::k_zone1; }
+		else if (pos >= Board::k_zone2_start && pos < Board::k_zone3_start) { zone = Board::k_zone2; }
+		else if (pos >= Board::k_zone3_start && pos < Board::k_zone_win) { zone = Board::k_zone3; }
+		else zone = Board::militaryWinP2;
 		return;
 	}
-    if (pos > -board::k_zone2_start && pos <= -board::k_zone1_start) {
-        zone = -board::k_zone1;
+    if (pos > -Board::k_zone2_start && pos <= -Board::k_zone1_start) {
+        zone = -Board::k_zone1;
     }
-    else if (pos <= -board::k_zone2_start && pos > -board::k_zone3_start) {
-        zone = -board::k_zone2;
+    else if (pos <= -Board::k_zone2_start && pos > -Board::k_zone3_start) {
+        zone = -Board::k_zone2;
     }
-    else if (pos <= -board::k_zone3_start && pos > -board::k_zone_win) {
-        zone =- board::k_zone3;
+    else if (pos <= -Board::k_zone3_start && pos > -Board::k_zone_win) {
+        zone =- Board::k_zone3;
     }
     else {
-        zone = -board::militaryWinP2;
+        zone = -Board::militaryWinP2;
     }
 	return;
 }
