@@ -18,5 +18,4 @@ public:
     void setPos(int newPos) noexcept { pos = newPos; }
 
     void move(int steps, bool player) noexcept(false);
-    void checkZone() noexcept;
 };
