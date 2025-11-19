@@ -47,3 +47,7 @@ int Bank::take(uint8_t value)
 	}
 	return 0;
 }
+void Bank::trade(bool player, Player & p1, Player & p2)
+{
+
+}

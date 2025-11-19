@@ -1,9 +1,13 @@
 import <iostream>;
 
-/*#TODO damian : trading rules bank+
+/*#TODO damian : trading rules bank
+* 
 *		david: implement effects that directly manipulate the pleyer's resources
+* 
 * 	    alex: vector simboluri din player deoarece david ii e frica de vectori+inceput de progress tokens in card.cppm
+* 
 *		lalu: update code to modern standards, const static for k_ class bits, remove random underscores, use m_ for member variables
+*				add a bool in player for which player it is, 1 or 2;
 */
 int main() {
 	std::cout << "Hello Bytes the Dust!\n";

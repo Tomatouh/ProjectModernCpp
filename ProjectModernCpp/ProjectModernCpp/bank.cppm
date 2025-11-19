@@ -1,6 +1,7 @@
 export module bank;
 import <cstdint>;
 import <unordered_map>;
+import Player;
 export class Bank {
 private:
 	std::uint8_t const static k_coinsAmount1 = 14;
@@ -19,7 +20,7 @@ public:
 	void pay3();
 	void pay6();
 	int take(uint8_t value);
-	void trade();
+	void trade(bool player, Player & p1, Player & p2);
 
 
 };
