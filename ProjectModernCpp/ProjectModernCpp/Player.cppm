@@ -35,7 +35,6 @@ public:
     const std::vector<Building>& getRedBuildings() const noexcept;
     const std::vector<Building>& getPurpleBuildings() const noexcept;
 
-    int getScore() const noexcept;
 
     uint8_t getVictoryPoints() const noexcept;
     void addVictoryPoints(uint8_t points) noexcept;
@@ -59,28 +58,27 @@ public:
 
 private:
     bool m_isPlayer1;
-    std::string name_;
-    int coin1_count_; 
-    int coin3_count_;
-    int coin6_count_;
-    int total_coin_value_;
-    int score_;
-    uint8_t victory_points_;
-    int military_points_;
+    std::string m_name;
+    int m_coin1Count;
+    int m_coin3Count;
+    int m_coin6Count;
+    int m_totalCoinValue;
+    uint8_t m_victoryPoints;
+    int m_militaryPoints;
 
     // Resources
-    uint8_t wood_;
-    uint8_t stone_;
-    uint8_t clay_;
-    uint8_t glass_;
-    uint8_t papyrus_;
+    uint8_t m_wood;
+    uint8_t m_stone;
+    uint8_t m_clay;
+    uint8_t m_glass;
+    uint8_t m_papyrus;
 
     // Colectii de cladiri, separate pe culori
-    std::vector<Building> brownBuildings_;
-    std::vector<Building> greyBuildings_;
-    std::vector<Building> blueBuildings_;
-    std::vector<Building> greenBuildings_;
-    std::vector<Building> yellowBuildings_;
-    std::vector<Building> redBuildings_;
-    std::vector<Building> purpleBuildings_;
+    std::vector<Building> m_brownBuildings;
+    std::vector<Building> m_greyBuildings;
+    std::vector<Building> m_blueBuildings;
+    std::vector<Building> m_greenBuildings;
+    std::vector<Building> m_yellowBuildings;
+    std::vector<Building> m_redBuildings;
+    std::vector<Building> m_purpleBuildings;
 };
