@@ -6,7 +6,7 @@ import <iostream>;
 * 
 * 	    alex: vector simboluri din player deoarece david ii e frica de vectori+inceput de progress tokens in card.cppm
 * 
-*		lalu: update code to modern standards, const static for k_ class bits, remove random underscores, use m_ for member variables
+*	SOLVED	lalu: update code to modern standards, const static for k_ class bits, remove random underscores, use m_ for member variables
 *				add a bool in player for which player it is, 1 or 2;
 *			  remove stupid money methods addcoins spendcoins from player, bank handles that now; add methods in player for adding each type of coin to coin wallet
 * 
