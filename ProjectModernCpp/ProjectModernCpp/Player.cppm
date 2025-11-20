@@ -8,21 +8,23 @@ import Building; // Building trebuie importat pentru a fi folosit in Player
 
 export class Player {
 public:
-    explicit Player(std::string name, bool isPlayer1);
+    explicit Player(std::string name, bool isPlayer1, int startCoin1Amount, int startCoin3Amount, int startCoin6Amount);
 
     const std::string& name() const noexcept;
 
     bool isPlayer1() const noexcept;
     void setIsPlayer1(bool isPlayer1) noexcept;
 
-    int coins() const noexcept;
-    void addCoins(int n) noexcept;
-    bool spendCoins(int n) noexcept;
+    // Coin management methods
+    void addCoin1(int amount = 1) noexcept;
+    void addCoin3(int amount = 1) noexcept;
+    void addCoin6(int amount = 1) noexcept;
 
     int coin1Count() const noexcept;
     int coin3Count() const noexcept;
     int coin6Count() const noexcept;
     int totalCoinValue() const noexcept;
+    int coins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
 
@@ -62,7 +64,6 @@ private:
     int m_coin1Count;
     int m_coin3Count;
     int m_coin6Count;
-    int m_totalCoinValue;
     uint8_t m_victoryPoints;
     int m_militaryPoints;
 

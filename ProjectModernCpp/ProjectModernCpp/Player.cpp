@@ -4,13 +4,13 @@ import <iostream>;
 import card;
 import Building;
 
-Player::Player(std::string name, bool isPlayer1)
+Player::Player(std::string name, bool isPlayer1, int startCoin1Amount,
+    int startCoin3Amount, int startCoin6Amount)
     : m_name(std::move(name)),
     m_isPlayer1(isPlayer1),
-    m_coin1Count(7),
-    m_coin3Count(0),
-    m_coin6Count(0),
-    m_totalCoinValue(7),
+    m_coin1Count(startCoin1Amount),
+    m_coin3Count(startCoin3Amount),
+    m_coin6Count(startCoin6Amount),
     m_victoryPoints(0),
     m_militaryPoints(0),
     m_wood(0),
@@ -33,20 +33,16 @@ void Player::setIsPlayer1(bool isPlayer1) noexcept {
     m_isPlayer1 = isPlayer1;
 }
 
-int Player::coins() const noexcept {
-    return m_totalCoinValue;
+void Player::addCoin1(int amount) noexcept {
+    m_coin1Count += amount;
 }
 
-void Player::addCoins(int n) noexcept {
-    m_totalCoinValue += n;
+void Player::addCoin3(int amount) noexcept {
+    m_coin3Count += amount;
 }
 
-bool Player::spendCoins(int n) noexcept {
-    if (n > m_totalCoinValue) {
-        return false;
-    }
-    m_totalCoinValue -= n;
-    return true;
+void Player::addCoin6(int amount) noexcept {
+    m_coin6Count += amount;
 }
 
 int Player::coin1Count() const noexcept {
@@ -62,7 +58,11 @@ int Player::coin6Count() const noexcept {
 }
 
 int Player::totalCoinValue() const noexcept {
-    return m_totalCoinValue;
+    return (m_coin1Count * 1) + (m_coin3Count * 3) + (m_coin6Count * 6);
+}
+
+int Player::coins() const noexcept {
+    return totalCoinValue();
 }
 
 
@@ -119,7 +119,7 @@ uint8_t Player::getPapyrus() const noexcept { return m_papyrus; }
 void Player::addPapyrus(uint8_t amount) noexcept { m_papyrus += amount; }
 
 void Player::showStatus(std::ostream& os) const {
-    os << "Player " << m_name << " | coins=" << m_totalCoinValue
+    os << "Player " << m_name << " | coins=" << totalCoinValue()
         << " (1s=" << m_coin1Count << ", 3s=" << m_coin3Count << ", 6s=" << m_coin6Count << ")\n";
 }
 
