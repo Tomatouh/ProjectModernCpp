@@ -97,4 +97,5 @@ private:
 
     // Puncte stiintifice
     std::vector<uint8_t> m_scientificPoints;
+    uint8_t m_scientificPointTypeNumber = 0;
 };

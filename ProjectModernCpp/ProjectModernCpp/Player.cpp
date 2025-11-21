@@ -138,14 +138,20 @@ void Player::showCards(std::ostream& os) const {
 
 void Player::addScientificPoint(Player::scientificPointType point)
 {
-    switch (point)
+    uint8_t auxIndex = static_cast<uint8_t>(point);
+    m_scientificPoints[auxIndex]++;
+    if (m_scientificPoints[auxIndex] == 2)
     {
-        case Player::scientificPointType::Globe: { m_scientificPoints[0]; break; }
-        case Player::scientificPointType::Law: { m_scientificPoints[1]; break; }
-        case Player::scientificPointType::Time: { m_scientificPoints[2]; break; }
-        case Player::scientificPointType::Medicine: { m_scientificPoints[3]; break; }
-        case Player::scientificPointType::Architecture: { m_scientificPoints[4]; break; }
-        case Player::scientificPointType::Writing: { m_scientificPoints[5]; break; }
-        case Player::scientificPointType::Wheel: { m_scientificPoints[6]; break; }
+        //Add new progress token
+        std::cout << "Placeholder";
+    }
+    else
+    {
+        m_scientificPointTypeNumber++;
+    }
+    if (m_scientificPointTypeNumber == 6)
+    {
+        std::cout << "Scientific victory for player " << (m_isPlayer1 == 0) ? 1 : 2;
+        exit(0);
     }
 }
