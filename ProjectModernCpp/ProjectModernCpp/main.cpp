@@ -4,7 +4,7 @@ import <iostream>;
 * 
 *		david: implement effects that directly manipulate the pleyer's resources
 * 
-* 	    alex: (vector simboluri din player deoarece david ii e frica de vectori) SOLVED +inceput de progress tokens in card.cppm
+* 	    alex: (vector simboluri din player deoarece david ii e frica de vectori) SOLVED + inceput de progress tokens in card.cppm
 * 
 *	SOLVED	lalu: update code to modern standards, const static for k_ class bits, remove random underscores, use m_ for member variables
 *				add a bool in player for which player it is, 1 or 2;
