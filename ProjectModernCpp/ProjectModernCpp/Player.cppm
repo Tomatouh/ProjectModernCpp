@@ -82,4 +82,7 @@ private:
     std::vector<Building> m_yellowBuildings;
     std::vector<Building> m_redBuildings;
     std::vector<Building> m_purpleBuildings;
+
+    // Puncte stiintifice
+    std::vector<uint8_t> m_scientificPoints;
 };

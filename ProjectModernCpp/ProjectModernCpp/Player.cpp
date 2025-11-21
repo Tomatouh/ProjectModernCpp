@@ -19,6 +19,8 @@ Player::Player(std::string name, bool isPlayer1, int startCoin1Amount,
     m_glass(0),
     m_papyrus(0)
 {
+    for (int i = 0; i < 7; i++)
+        m_scientificPoints.push_back(0);
 }
 
 const std::string& Player::name() const noexcept {
