@@ -135,3 +135,17 @@ void Player::showCards(std::ostream& os) const {
     os << " - Red: " << m_redBuildings.size() << "\n";
     os << " - Purple: " << m_purpleBuildings.size() << "\n";
 }
+
+void Player::addScientificPoint(Player::scientificPointType point)
+{
+    switch (point)
+    {
+        case Player::scientificPointType::Globe: { m_scientificPoints[0]; break; }
+        case Player::scientificPointType::Law: { m_scientificPoints[1]; break; }
+        case Player::scientificPointType::Time: { m_scientificPoints[2]; break; }
+        case Player::scientificPointType::Medicine: { m_scientificPoints[3]; break; }
+        case Player::scientificPointType::Architecture: { m_scientificPoints[4]; break; }
+        case Player::scientificPointType::Writing: { m_scientificPoints[5]; break; }
+        case Player::scientificPointType::Wheel: { m_scientificPoints[6]; break; }
+    }
+}

@@ -58,6 +58,18 @@ public:
     void showStatus(std::ostream& os = std::cout) const;
     void showCards(std::ostream& os = std::cout) const;
 
+    //Functii pentru folosirea punctelor stiintifice
+    enum class scientificPointType:uint8_t
+    {
+        Globe,
+        Law,
+        Time,
+        Medicine,
+        Architecture,
+        Writing,
+        Wheel
+    };
+    void addScientificPoint(scientificPointType point) noexcept;
 private:
     bool m_isPlayer1;
     std::string m_name;
