@@ -38,6 +38,14 @@ import buildingResource;
 			playSecondTurn,
 			constructCard,
 			discardBrown,
+			arhitecture,
+			economy,
+			law,
+			masonry,
+			mathematics,
+			strategy,
+			theology,
+			urbanism
 		};
 		class Cost {
 		private:

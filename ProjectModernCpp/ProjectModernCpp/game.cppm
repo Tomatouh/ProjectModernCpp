@@ -14,6 +14,8 @@ private:
 	std::vector<Card*> ageIDeck;
 	std::vector<Card*> ageIIDeck;
 	std::vector<Card*> ageIIIDeck;
+	std::vector<Card*> discardedCards;
+	std::array<std::pair<std::uint8_t, bool>, 20> cardDisplay;
 	bool endGame;
 
 public:
