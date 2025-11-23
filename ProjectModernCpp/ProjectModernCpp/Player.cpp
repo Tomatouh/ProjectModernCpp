@@ -155,3 +155,43 @@ void Player::addScientificPoint(Player::scientificPointType point)
         exit(0);
     }
 }
+std::vector<uint8_t> Player::getScientificPoints()
+{
+    return m_scientificPoints;
+}
+std::vector<Player::ProgressToken> Player::getProgressTokens()
+{
+    return m_progressTokens;
+}
+void Player::applyEffects()
+{
+    for (auto progresToken : m_progressTokens)
+        progresToken.applyEffect(this);
+}
+void Player::ProgressToken::applyEffect(Player* p)
+{
+    m_effect(p);
+}
+
+Player::ProgressToken Player::ProgressToken::agricultureToken([](Player* p) {
+    p->addCoin6();
+    p->addVictoryPoints(4);
+    }, true);
+
+Player::ProgressToken Player::ProgressToken::lawToken([](Player* p) {
+    std::vector<uint8_t> vect = p->getScientificPoints();
+    for(int i=0;i<vect.size();i++)
+        if (vect[i] != 2)
+        {
+            p->addScientificPoint((Player::scientificPointType)i);
+            break;
+        }
+    }, true);
+
+Player::ProgressToken Player::ProgressToken::philosphyToken([](Player* p) {
+    p->addVictoryPoints(6);
+    }, true);
+
+Player::ProgressToken Player::ProgressToken::mathematicsToken([](Player* p) {
+    p->addVictoryPoints(p->getProgressTokens().size()*3);
+    }, true);

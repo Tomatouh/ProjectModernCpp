@@ -70,6 +70,28 @@ public:
         Wheel
     };
     void addScientificPoint(scientificPointType point) noexcept;
+    std::vector<uint8_t> getScientificPoints() noexcept;
+    //Aplicare efecte
+    class ProgressToken {
+    public:
+        static ProgressToken agricultureToken;
+        static ProgressToken architectureToken;
+        static ProgressToken EconomyToken;
+        static ProgressToken lawToken;
+        static ProgressToken masonryToken;
+        static ProgressToken mathematicsToken;
+        static ProgressToken philosphyToken;
+        static ProgressToken strategyToken;
+        static ProgressToken theologyToken;
+        static ProgressToken urbanismToken;
+        void applyEffect(Player*p);
+        ProgressToken(void (*effect)(Player* p), bool isOneTime);
+    private:
+        void (*m_effect)(Player* p);
+        bool m_isOneTime;
+    };
+    void applyEffects();
+    std::vector<ProgressToken> getProgressTokens();
 private:
     bool m_isPlayer1;
     std::string m_name;
@@ -98,4 +120,8 @@ private:
     // Puncte stiintifice
     std::vector<uint8_t> m_scientificPoints;
     uint8_t m_scientificPointTypeNumber = 0;
+
+    // Progress token
+    std::vector<ProgressToken> m_progressTokens;
+
 };
