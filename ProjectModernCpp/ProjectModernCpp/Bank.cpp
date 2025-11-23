@@ -49,5 +49,5 @@ int Bank::take(uint8_t value)
 }
 void Bank::trade(bool player, Player & p1, Player & p2)
 {
-
+	switch ()
 }

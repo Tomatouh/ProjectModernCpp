@@ -8,17 +8,23 @@ import Building; // Building trebuie importat pentru a fi folosit in Player
 
 export class Player {
 public:
-    explicit Player(std::string name);
+    explicit Player(std::string name, bool isPlayer1, int startCoin1Amount, int startCoin3Amount, int startCoin6Amount);
 
     const std::string& name() const noexcept;
-    int coins() const noexcept;
-    void addCoins(int n) noexcept;
-    bool spendCoins(int n) noexcept;
+
+    bool isPlayer1() const noexcept;
+    void setIsPlayer1(bool isPlayer1) noexcept;
+
+    // Coin management methods
+    void addCoin1(int amount = 1) noexcept;
+    void addCoin3(int amount = 1) noexcept;
+    void addCoin6(int amount = 1) noexcept;
 
     int coin1Count() const noexcept;
     int coin3Count() const noexcept;
     int coin6Count() const noexcept;
     int totalCoinValue() const noexcept;
+    int coins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
 
@@ -31,7 +37,6 @@ public:
     const std::vector<Building>& getRedBuildings() const noexcept;
     const std::vector<Building>& getPurpleBuildings() const noexcept;
 
-    int getScore() const noexcept;
 
     uint8_t getVictoryPoints() const noexcept;
     void addVictoryPoints(uint8_t points) noexcept;
@@ -53,29 +58,44 @@ public:
     void showStatus(std::ostream& os = std::cout) const;
     void showCards(std::ostream& os = std::cout) const;
 
+    //Functii pentru folosirea punctelor stiintifice
+    enum class scientificPointType:uint8_t
+    {
+        Globe,
+        Law,
+        Time,
+        Medicine,
+        Architecture,
+        Writing,
+        Wheel
+    };
+    void addScientificPoint(scientificPointType point) noexcept;
 private:
-    std::string name_;
-    int coin1_count_; 
-    int coin3_count_;
-    int coin6_count_;
-    int total_coin_value_;
-    int score_;
-    uint8_t victory_points_;
-    int military_points_;
+    bool m_isPlayer1;
+    std::string m_name;
+    int m_coin1Count;
+    int m_coin3Count;
+    int m_coin6Count;
+    uint8_t m_victoryPoints;
+    int m_militaryPoints;
 
     // Resources
-    uint8_t wood_;
-    uint8_t stone_;
-    uint8_t clay_;
-    uint8_t glass_;
-    uint8_t papyrus_;
+    uint8_t m_wood;
+    uint8_t m_stone;
+    uint8_t m_clay;
+    uint8_t m_glass;
+    uint8_t m_papyrus;
 
     // Colectii de cladiri, separate pe culori
-    std::vector<Building> brownBuildings_;
-    std::vector<Building> greyBuildings_;
-    std::vector<Building> blueBuildings_;
-    std::vector<Building> greenBuildings_;
-    std::vector<Building> yellowBuildings_;
-    std::vector<Building> redBuildings_;
-    std::vector<Building> purpleBuildings_;
+    std::vector<Building> m_brownBuildings;
+    std::vector<Building> m_greyBuildings;
+    std::vector<Building> m_blueBuildings;
+    std::vector<Building> m_greenBuildings;
+    std::vector<Building> m_yellowBuildings;
+    std::vector<Building> m_redBuildings;
+    std::vector<Building> m_purpleBuildings;
+
+    // Puncte stiintifice
+    std::vector<uint8_t> m_scientificPoints;
+    uint8_t m_scientificPointTypeNumber = 0;
 };

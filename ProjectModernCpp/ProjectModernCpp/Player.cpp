@@ -4,121 +4,154 @@ import <iostream>;
 import card;
 import Building;
 
-Player::Player(std::string name)
-    : name_(std::move(name)),
-    coin1_count_(7),
-    coin3_count_(0),
-    coin6_count_(0),
-    total_coin_value_(7),
-    score_(0)
+Player::Player(std::string name, bool isPlayer1, int startCoin1Amount,
+    int startCoin3Amount, int startCoin6Amount)
+    : m_name(std::move(name)),
+    m_isPlayer1(isPlayer1),
+    m_coin1Count(startCoin1Amount),
+    m_coin3Count(startCoin3Amount),
+    m_coin6Count(startCoin6Amount),
+    m_victoryPoints(0),
+    m_militaryPoints(0),
+    m_wood(0),
+    m_stone(0),
+    m_clay(0),
+    m_glass(0),
+    m_papyrus(0)
 {
+    for (int i = 0; i < 7; i++)
+        m_scientificPoints.push_back(0);
 }
 
 const std::string& Player::name() const noexcept {
-    return name_;
+    return m_name;
 }
 
-int Player::coins() const noexcept {
-    return total_coin_value_;
+bool Player::isPlayer1() const noexcept {
+    return m_isPlayer1;
 }
 
-void Player::addCoins(int n) noexcept {
-    total_coin_value_ += n;
+void Player::setIsPlayer1(bool isPlayer1) noexcept {
+    m_isPlayer1 = isPlayer1;
 }
 
-bool Player::spendCoins(int n) noexcept {
-    if (n > total_coin_value_) {
-        return false;
-    }
-    total_coin_value_ -= n;
-    return true;
+void Player::addCoin1(int amount) noexcept {
+    m_coin1Count += amount;
+}
+
+void Player::addCoin3(int amount) noexcept {
+    m_coin3Count += amount;
+}
+
+void Player::addCoin6(int amount) noexcept {
+    m_coin6Count += amount;
 }
 
 int Player::coin1Count() const noexcept {
-    return coin1_count_;
+    return m_coin1Count;
 }
 
 int Player::coin3Count() const noexcept {
-    return coin3_count_;
+    return m_coin3Count;
 }
 
 int Player::coin6Count() const noexcept {
-    return coin6_count_;
+    return m_coin6Count;
 }
 
 int Player::totalCoinValue() const noexcept {
-    return total_coin_value_;
+    return (m_coin1Count * 1) + (m_coin3Count * 3) + (m_coin6Count * 6);
+}
+
+int Player::coins() const noexcept {
+    return totalCoinValue();
 }
 
 
 void Player::addBuilding(const Building& building) {
     switch (building.getColor()) {
     case Building::Color::BROWN:
-        brownBuildings_.push_back(building);
+        m_brownBuildings.push_back(building);
         break;
     case Building::Color::GREY:
-        greyBuildings_.push_back(building);
+        m_greyBuildings.push_back(building);
         break;
     case Building::Color::BLUE:
-        blueBuildings_.push_back(building);
+        m_blueBuildings.push_back(building);
         break;
     case Building::Color::GREEN:
-        greenBuildings_.push_back(building);
+        m_greenBuildings.push_back(building);
         break;
     case Building::Color::YELLOW:
-        yellowBuildings_.push_back(building);
+        m_yellowBuildings.push_back(building);
         break;
     case Building::Color::RED:
-        redBuildings_.push_back(building);
+        m_redBuildings.push_back(building);
         break;
     case Building::Color::PURPLE:
-        purpleBuildings_.push_back(building);
+        m_purpleBuildings.push_back(building);
         break;
     }
 }
 
-const std::vector<Building>& Player::getBrownBuildings() const noexcept { return brownBuildings_; }
-const std::vector<Building>& Player::getGreyBuildings() const noexcept { return greyBuildings_; }
-const std::vector<Building>& Player::getBlueBuildings() const noexcept { return blueBuildings_; }
-const std::vector<Building>& Player::getGreenBuildings() const noexcept { return greenBuildings_; }
-const std::vector<Building>& Player::getYellowBuildings() const noexcept { return yellowBuildings_; }
-const std::vector<Building>& Player::getRedBuildings() const noexcept { return redBuildings_; }
-const std::vector<Building>& Player::getPurpleBuildings() const noexcept { return purpleBuildings_; }
+const std::vector<Building>& Player::getBrownBuildings() const noexcept { return m_brownBuildings; }
+const std::vector<Building>& Player::getGreyBuildings() const noexcept { return m_greyBuildings; }
+const std::vector<Building>& Player::getBlueBuildings() const noexcept { return m_blueBuildings; }
+const std::vector<Building>& Player::getGreenBuildings() const noexcept { return m_greenBuildings; }
+const std::vector<Building>& Player::getYellowBuildings() const noexcept { return m_yellowBuildings; }
+const std::vector<Building>& Player::getRedBuildings() const noexcept { return m_redBuildings; }
+const std::vector<Building>& Player::getPurpleBuildings() const noexcept { return m_purpleBuildings; }
 
-int Player::getScore() const noexcept {
-    return score_;
-}
 
-uint8_t Player::getVictoryPoints() const noexcept { return victory_points_; }
-void Player::addVictoryPoints(uint8_t points) noexcept { victory_points_ += points; }
+uint8_t Player::getVictoryPoints() const noexcept { return m_victoryPoints; }
+void Player::addVictoryPoints(uint8_t points) noexcept { m_victoryPoints += points; }
 
-int Player::getMilitaryPoints() const noexcept { return military_points_; }
-void Player::addMilitaryPoints(int points) noexcept { military_points_ += points; }
+int Player::getMilitaryPoints() const noexcept { return m_militaryPoints; }
+void Player::addMilitaryPoints(int points) noexcept { m_militaryPoints += points; }
 
-uint8_t Player::getWood() const noexcept { return wood_; }
-void Player::addWood(uint8_t amount) noexcept { wood_ += amount; }
-uint8_t Player::getStone() const noexcept { return stone_; }
-void Player::addStone(uint8_t amount) noexcept { stone_ += amount; }
-uint8_t Player::getClay() const noexcept { return clay_; }
-void Player::addClay(uint8_t amount) noexcept { clay_ += amount; }
-uint8_t Player::getGlass() const noexcept { return glass_; }
-void Player::addGlass(uint8_t amount) noexcept { glass_ += amount; }
-uint8_t Player::getPapyrus() const noexcept { return papyrus_; }
-void Player::addPapyrus(uint8_t amount) noexcept { papyrus_ += amount; }
+uint8_t Player::getWood() const noexcept { return m_wood; }
+void Player::addWood(uint8_t amount) noexcept { m_wood += amount; }
+uint8_t Player::getStone() const noexcept { return m_stone; }
+void Player::addStone(uint8_t amount) noexcept { m_stone += amount; }
+uint8_t Player::getClay() const noexcept { return m_clay; }
+void Player::addClay(uint8_t amount) noexcept { m_clay += amount; }
+uint8_t Player::getGlass() const noexcept { return m_glass; }
+void Player::addGlass(uint8_t amount) noexcept { m_glass += amount; }
+uint8_t Player::getPapyrus() const noexcept { return m_papyrus; }
+void Player::addPapyrus(uint8_t amount) noexcept { m_papyrus += amount; }
 
 void Player::showStatus(std::ostream& os) const {
-    os << "Player " << name_ << " | coins=" << total_coin_value_
-        << " (1s=" << coin1_count_ << ", 3s=" << coin3_count_ << ", 6s=" << coin6_count_ << ")\n";
-    os << "Score: " << getScore() << "\n";
+    os << "Player " << m_name << " | coins=" << totalCoinValue()
+        << " (1s=" << m_coin1Count << ", 3s=" << m_coin3Count << ", 6s=" << m_coin6Count << ")\n";
 }
 
 void Player::showCards(std::ostream& os) const {
-    os << name_ << " owns buildings:\n";
-    os << " - Brown: " << brownBuildings_.size() << "\n";
-    os << " - Grey: " << greyBuildings_.size() << "\n";
-    os << " - Blue: " << blueBuildings_.size() << "\n";
-    os << " - Green: " << greenBuildings_.size() << "\n";
-    os << " - Yellow: " << yellowBuildings_.size() << "\n";
-    os << " - Red: " << redBuildings_.size() << "\n";
-    os << " - Purple: " << purpleBuildings_.size() << "\n";
+    os << m_name << " owns buildings:\n";
+    os << " - Brown: " << m_brownBuildings.size() << "\n";
+    os << " - Grey: " << m_greyBuildings.size() << "\n";
+    os << " - Blue: " << m_blueBuildings.size() << "\n";
+    os << " - Green: " << m_greenBuildings.size() << "\n";
+    os << " - Yellow: " << m_yellowBuildings.size() << "\n";
+    os << " - Red: " << m_redBuildings.size() << "\n";
+    os << " - Purple: " << m_purpleBuildings.size() << "\n";
+}
+
+void Player::addScientificPoint(Player::scientificPointType point)
+{
+    uint8_t auxIndex = static_cast<uint8_t>(point);
+    m_scientificPoints[auxIndex]++;
+    if (m_scientificPoints[auxIndex] == 2)
+    {
+        //Add new progress token
+        std::cout << "Placeholder";
+    }
+    else
+    {
+        m_scientificPointTypeNumber++;
+    }
+    if (m_scientificPointTypeNumber == 6)
+    {
+        std::cout << "Scientific victory for player " << (m_isPlayer1 == 0) ? 1 : 2;
+        exit(0);
+    }
 }
