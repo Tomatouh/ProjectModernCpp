@@ -144,6 +144,8 @@
     <ClCompile Include="card.cppm" />
     <ClCompile Include="effects.cpp" />
     <ClCompile Include="effects.cppm" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="game.cppm" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="peon.cpp" />
     <ClCompile Include="peon.cppm" />
