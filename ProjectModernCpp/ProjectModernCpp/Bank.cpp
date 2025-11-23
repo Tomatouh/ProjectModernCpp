@@ -1,4 +1,5 @@
 module bank;
+import Player;
 void Bank::pay1()
 {
 	m_coins[Bank::k_coinsAmount1]++;
@@ -19,7 +20,7 @@ int Bank::take(uint8_t value)
 		{
 			m_coins[Bank::k_coinsAmount6]--;
 			value -= Bank::k_coinsValue6;
-			//Player.add6();
+			Player::addCoin6();
 		}
 		else
 		{
@@ -27,7 +28,7 @@ int Bank::take(uint8_t value)
 			{
 				m_coins[Bank::k_coinsAmount3]--;
 				value -= Bank::k_coinsValue3;
-				//Player.add3();
+				Player::addCoin3();
 			}
 			else
 			{
@@ -35,7 +36,7 @@ int Bank::take(uint8_t value)
 				{
 					m_coins[Bank::k_coinsAmount1]--;
 					value -= Bank::k_coinsValue1;
-					//Player.add1();
+					Player::addCoin1();
 				}
 				else
 				{
@@ -49,5 +50,7 @@ int Bank::take(uint8_t value)
 }
 void Bank::trade(bool player, Player & p1, Player & p2)
 {
-	switch ()
+	//if(player==false)
+	//	if(p1.getYellowBuildings()))
+
 }
