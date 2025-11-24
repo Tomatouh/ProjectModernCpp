@@ -1,16 +1,6 @@
 import <iostream>;
 
-/*#TODO damian : trading rules bank
-* 
-*		david: implement effects that directly manipulate the pleyer's resources
-* 
-* 	    alex: vector simboluri din player deoarece david ii e frica de vectori+inceput de progress tokens in card.cppm
-* 
-*		lalu: update code to modern standards!!!!!!!!!!!!!!, const static for k_ class bits, remove random underscores, use m_ for member variables
-*				add a bool in player for which player it is, 1 or 2;
-*			  remove stupid money methods addcoins spendcoins from player, bank handles that now; add methods in player for adding each type of coin to coin wallet
-*
-* 
+/*
 * ID's : brown cards 1-9(1-3 wood, 4-6 clay, 7-9 stone)
 *		 gray cards 10-13(10-11 glass, 12-13 papyrus)
 *        red cards 14-27(14-19 1 shield, additionally grouped by linking, 20-25 2 shields, additionally grouped by linking, 26-27 3 shields)
