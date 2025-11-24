@@ -19,7 +19,7 @@ public:
 	void pay1();
 	void pay3();
 	void pay6();
-	int take(uint8_t value);
+	int take(uint8_t value, Player & player);
 	void trade(bool player, Player & p1, Player & p2);
 
 

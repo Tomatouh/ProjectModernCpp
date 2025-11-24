@@ -1,5 +1,6 @@
 module bank;
 import Player;
+import game;
 void Bank::pay1()
 {
 	m_coins[Bank::k_coinsAmount1]++;
@@ -12,7 +13,7 @@ void Bank::pay6()
 {
 	m_coins[Bank::k_coinsAmount6]++;
 }
-int Bank::take(uint8_t value)
+int Bank::take(uint8_t value, Player &player)
 {
 	while (value)
 	{
@@ -20,7 +21,7 @@ int Bank::take(uint8_t value)
 		{
 			m_coins[Bank::k_coinsAmount6]--;
 			value -= Bank::k_coinsValue6;
-			Player::addCoin6();
+			player.addCoin6();
 		}
 		else
 		{
@@ -28,7 +29,7 @@ int Bank::take(uint8_t value)
 			{
 				m_coins[Bank::k_coinsAmount3]--;
 				value -= Bank::k_coinsValue3;
-				Player::addCoin3();
+				player.addCoin3();
 			}
 			else
 			{
@@ -36,7 +37,7 @@ int Bank::take(uint8_t value)
 				{
 					m_coins[Bank::k_coinsAmount1]--;
 					value -= Bank::k_coinsValue1;
-					Player::addCoin1();
+					player.addCoin1();
 				}
 				else
 				{

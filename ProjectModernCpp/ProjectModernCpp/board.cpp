@@ -1,4 +1,4 @@
-import board;
+module board;
 import peon;
 
 void Board::checkZone(bool Player)
