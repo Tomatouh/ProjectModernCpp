@@ -25,4 +25,25 @@ void Board::checkZone(bool Player)
         zone = -Board::militaryWinP2;
     }
 	return;
+
+}
+
+void Board::move(uint8_t steps, bool player) noexcept(false)
+{
+	if (steps < playerPeon.getPos()) {
+		throw ("Steps cannot be negative");
+	}
+	else if (steps > winPosP2) {
+		throw ("Steps cannot be greater than 9");
+	}
+	if (player == false) {
+		for (int i = 0; i < steps; ++i) {
+			playerPeon.incrementPos();
+		}
+	}
+	else {
+		for (int i = 0; i < steps; ++i) {
+			playerPeon.decrementPos();
+		}
+	}
 }

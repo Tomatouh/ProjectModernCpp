@@ -20,6 +20,10 @@ public:
     void addCoin3(int amount = 1) noexcept;
     void addCoin6(int amount = 1) noexcept;
 
+    void payCoin1(int amount = 1) noexcept;
+    void payCoin3(int amount = 1) noexcept;
+    void payCoin6(int amount = 1) noexcept;
+
     int coin1Count() const noexcept;
     int coin3Count() const noexcept;
     int coin6Count() const noexcept;

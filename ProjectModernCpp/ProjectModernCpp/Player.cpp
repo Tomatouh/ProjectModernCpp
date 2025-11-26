@@ -46,6 +46,15 @@ void Player::addCoin3(int amount) noexcept {
 void Player::addCoin6(int amount) noexcept {
     m_coin6Count += amount;
 }
+void Player::payCoin1(int amount) noexcept {
+    m_coin1Count -= amount;
+}
+void Player::payCoin3(int amount) noexcept {
+    m_coin3Count -= amount;
+}
+void Player::payCoin6(int amount) noexcept {
+    m_coin6Count -= amount;
+}
 
 int Player::coin1Count() const noexcept {
     return m_coin1Count;

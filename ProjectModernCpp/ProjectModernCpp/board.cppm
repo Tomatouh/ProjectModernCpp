@@ -1,5 +1,5 @@
 export module board;
-
+import <cstdint>;
 import peon;
 export class Board {
 private:
@@ -21,27 +21,7 @@ public:
 
     void checkZone(bool Player) {}
 
-    void move(int steps, bool player) noexcept(false);
+    void move(uint8_t steps, bool player) noexcept(false);
     int getZone() const noexcept { return zone; }
     void setZone(int newZone) noexcept { zone = newZone; }
 };
-
-void Board::move(int steps, bool player) noexcept(false)
-{
-		if (steps < playerPeon.getPos()) {
-			throw ("Steps cannot be negative");
-		}
-		else if (steps > winPosP2) {
-			throw ("Steps cannot be greater than 9");
-		}
-		if (player == false) {
-			for (int i = 0; i < steps; ++i) {
-				playerPeon.incrementPos();
-			}
-		}
-		else {
-			for (int i = 0; i < steps; ++i) {
-				playerPeon.decrementPos();
-			}
-		}
-}
