@@ -1,5 +1,6 @@
 module Player;
 import <iostream>;
+import <memory>;
 //import <stdexcept>;
 import card;
 import Building;
