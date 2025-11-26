@@ -3,6 +3,7 @@ import <string>;
 import <vector>;
 import <cstdint>;
 import <iostream>;
+import <memory>;
 import card;
 import Building; // Building trebuie importat pentru a fi folosit in Player
 
@@ -88,10 +89,10 @@ public:
         static ProgressToken strategyToken;
         static ProgressToken theologyToken;
         static ProgressToken urbanismToken;
-        void applyEffect(Player*p);
-        ProgressToken(void (*effect)(Player* p), bool isOneTime);
+        void applyEffect(std::unique_ptr<Player> player);
+        ProgressToken(void (*effect)(std::unique_ptr<Player> player), bool isOneTime);
     private:
-        void (*m_effect)(Player* p);
+        void (*m_effect)(std::unique_ptr<Player> player);
         bool m_isOneTime;
     };
     void applyEffects();
