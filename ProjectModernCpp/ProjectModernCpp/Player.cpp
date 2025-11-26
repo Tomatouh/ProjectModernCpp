@@ -204,3 +204,9 @@ Player::ProgressToken Player::ProgressToken::philosphyToken([](Player* p) {
 Player::ProgressToken Player::ProgressToken::mathematicsToken([](Player* p) {
     p->addVictoryPoints(p->getProgressTokens().size()*3);
     }, true);
+
+Player::ProgressToken::ProgressToken(void (*effect)(Player* p), bool isOneTime)
+{
+    this->m_effect = effect;
+    this->m_isOneTime = isOneTime;
+}
