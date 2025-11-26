@@ -146,7 +146,7 @@ void Player::showCards(std::ostream& os) const {
     os << " - Purple: " << m_purpleBuildings.size() << "\n";
 }
 
-void Player::addScientificPoint(Player::scientificPointType point) noexcept
+void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
 {
     uint8_t auxIndex = static_cast<uint8_t>(point);
     m_scientificPoints[auxIndex]++;
@@ -194,7 +194,7 @@ Player::ProgressToken Player::ProgressToken::lawToken([](std::unique_ptr<Player>
     for(int i=0;i<vect.size();i++)
         if (vect[i] != 2)
         {
-            player->addScientificPoint((Player::scientificPointType)i);
+            player->addScientificPoint((Building::ScientificSymbol)i);
             break;
         }
     }, true);
