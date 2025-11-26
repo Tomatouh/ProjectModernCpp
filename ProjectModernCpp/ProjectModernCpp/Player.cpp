@@ -146,7 +146,7 @@ void Player::showCards(std::ostream& os) const {
     os << " - Purple: " << m_purpleBuildings.size() << "\n";
 }
 
-void Player::addScientificPoint(Player::scientificPointType point) noexcept
+void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
 {
     uint8_t auxIndex = static_cast<uint8_t>(point);
     m_scientificPoints[auxIndex]++;
