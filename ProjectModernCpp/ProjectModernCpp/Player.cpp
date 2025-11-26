@@ -136,7 +136,7 @@ void Player::showCards(std::ostream& os) const {
     os << " - Purple: " << m_purpleBuildings.size() << "\n";
 }
 
-void Player::addScientificPoint(Player::scientificPointType point)
+void Player::addScientificPoint(Player::scientificPointType point) noexcept
 {
     uint8_t auxIndex = static_cast<uint8_t>(point);
     m_scientificPoints[auxIndex]++;
@@ -155,7 +155,7 @@ void Player::addScientificPoint(Player::scientificPointType point)
         exit(0);
     }
 }
-std::vector<uint8_t> Player::getScientificPoints()
+std::vector<uint8_t> Player::getScientificPoints() noexcept
 {
     return m_scientificPoints;
 }
