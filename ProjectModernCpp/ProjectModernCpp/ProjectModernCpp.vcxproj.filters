@@ -75,6 +75,12 @@
     <ClCompile Include="game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cardsLoader.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cardsLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="card.cpp">

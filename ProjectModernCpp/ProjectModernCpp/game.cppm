@@ -11,13 +11,18 @@ private:
 	Player player1, player2;
 	Board board;
 	Bank bank;
-	std::vector<Card*> ageIDeck;
-	std::vector<Card*> ageIIDeck;
-	std::vector<Card*> ageIIIDeck;
-	std::vector<Card*> discardedCards;
-	std::array<std::pair<std::uint8_t, bool>, 20> cardDisplay;
+	std::vector<std::shared_ptr<Card>> wondersDeck;
+	std::vector<std::shared_ptr<Card>> ageIDeck;
+	std::vector<std::shared_ptr<Card>> ageIIDeck;
+	std::vector<std::shared_ptr<Card>> ageIIIDeck;
+	std::vector<std::shared_ptr<Card>> discardedCards;
+	//std::array<std::pair<std::uint8_t, bool>, 20> cardDisplay;
 	bool endGame;
 
 public:
+
+	Game() = default;
+	
+	void setAgeIDeck(const std::vector<std::shared_ptr<Card>>& deck) { ageIDeck = deck; }
 
 };

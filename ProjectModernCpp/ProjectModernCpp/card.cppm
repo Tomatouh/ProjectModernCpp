@@ -69,7 +69,7 @@ import buildingResource;
 		Card(Card&& other) noexcept;
 		Card& operator=(const Card& other);
 		Card& operator=(Card&& other) noexcept;
-		~Card() = default;
+		virtual ~Card() = default;
 
 		void swap(Card& other) noexcept;
 

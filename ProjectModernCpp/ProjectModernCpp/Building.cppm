@@ -4,7 +4,7 @@ import card;
 import std;
 
 
-export class Building : Card {
+export class Building : public Card {
 public:
 	enum class Age {
 		AGEI,
