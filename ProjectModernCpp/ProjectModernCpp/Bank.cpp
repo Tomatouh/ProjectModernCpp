@@ -1,21 +1,19 @@
 module bank;
 import Player;
 import game;
-void Bank::pay1()
+void Bank::deposit1()
 {
 	m_coins[Bank::k_coinsAmount1]++;
 }
-void Bank::pay3()
+void Bank::deposit3()
 {
 	m_coins[Bank::k_coinsAmount3]++;
 }
-void Bank::pay6()
+void Bank::deposit6()
 {
 	m_coins[Bank::k_coinsAmount6]++;
 }
-void Player::payCoin1(int amount) noexcept {
-    m_coin1Count -= amount;
-}
+
 void Bank::bankTotal()
 {
     this->k_total = this->m_coins[Bank::k_coinsAmount1] * Bank::k_coinsValue1 +
@@ -28,7 +26,7 @@ void Bank::give(uint8_t value, Player& player)
 	{
 		if (player.coin6Count())
 		{
-			pay6();
+			deposit6();
 			bankTotal();
 			value -= Bank::k_coinsValue6;
 			player.payCoin6();
@@ -37,7 +35,7 @@ void Bank::give(uint8_t value, Player& player)
 		{
 			if (player.coin3Count())
 			{
-				pay3();
+				deposit3();
 				bankTotal();
 				value -= Bank::k_coinsValue3;
 				player.addCoin3();
@@ -46,7 +44,7 @@ void Bank::give(uint8_t value, Player& player)
 			{
 				if (m_coins[Bank::k_coinsAmount1])
 				{
-					pay1();
+					deposit1();
 					bankTotal();
 					value -= Bank::k_coinsValue1;
 					player.addCoin1();

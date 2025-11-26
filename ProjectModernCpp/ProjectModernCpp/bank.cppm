@@ -18,9 +18,9 @@ public:
 	std::uint8_t k_total = m_coins[k_coinsValue1] + m_coins[k_coinsValue3] * k_coinsValue3 + m_coins[k_coinsValue6] * k_coinsValue6;
 	static Bank* theBank;
 	void bankTotal();
-	void pay1();
-	void pay3();
-	void pay6();
+	void deposit1();
+	void deposit3();
+	void deposit6();
 	void take(uint8_t value, Player & player);
 	void give(uint8_t value, Player & player);
 	void trade(bool player, Player & p1, Player & p2);

@@ -19,7 +19,7 @@ private:
 public:
     explicit Board(int initialZone) noexcept : zone{initialZone} {}
 
-    void checkZone(bool Player) {}
+    void checkZone(bool Player);
 
     void move(uint8_t steps, bool player) noexcept(false);
     int getZone() const noexcept { return zone; }
