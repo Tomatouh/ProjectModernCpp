@@ -96,3 +96,15 @@ void Bank::trade(bool player, Player & p1, Player & p2)
 	//	if(p1.getYellowBuildings()))
 
 }
+Bank::Bank(const Bank& other)
+    : m_coins(other.m_coins), k_total(other.k_total) {}
+
+Bank& Bank::operator=(const Bank& other) {
+    if (this != &other) {
+        m_coins = other.m_coins;
+        k_total = other.k_total;
+    }
+    return *this;
+}
+
+Bank::~Bank() = default;
