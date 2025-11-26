@@ -16,9 +16,11 @@ void Bank::pay6()
 void Player::payCoin1(int amount) noexcept {
     m_coin1Count -= amount;
 }
-void bankTotal();
+void Bank::bankTotal()
 {
-	k_total = m_coins[k_coinsValue1] + m_coins[k_coinsValue3] * k_coinsValue3 + m_coins[k_coinsValue6] * k_coinsValue6;
+    this->k_total = this->m_coins[Bank::k_coinsAmount1] * Bank::k_coinsValue1 +
+                    this->m_coins[Bank::k_coinsAmount3] * Bank::k_coinsValue3 +
+                    this->m_coins[Bank::k_coinsAmount6] * Bank::k_coinsValue6;
 }
 void Bank::give(uint8_t value, Player& player)
 {
