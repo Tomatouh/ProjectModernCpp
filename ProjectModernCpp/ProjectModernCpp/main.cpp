@@ -1,4 +1,9 @@
+import game;
+import cardsLoader;
+import card;
 import <iostream>;
+import <vector>;
+//import <memory>;
 
 /*
 * ID's : brown cards 1-9(1-3 wood, 4-6 clay, 7-9 stone)
@@ -10,6 +15,8 @@ import <iostream>;
 *		 guild cards 67-73;
 */
 int main() {
+	std::vector<std::shared_ptr<Card>> deck = loadAgeIDeck();
+	
 	std::cout << "Hello Bytes the Dust!\n";
 	return 0;
 }

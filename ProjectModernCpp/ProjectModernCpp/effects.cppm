@@ -10,7 +10,7 @@ export void addCoins(Player& player, const Card& card, Bank& bank);
 export void addVictorypoints(Player& player, const Card& card);
 export void addResources(Player& player, const Building& card);
 //export void addEveryResource(Player& player, const Building& card);
-export void addShields(bool player, Board& board, const Card& card);
+//export void addShields(bool player, Board& board, const Card& card);
 export void addScientificSymbol(Player& player, const Building& card);
 export void threeCoinsPerGray(Player& player, Bank& bank);
 export void twoCoinsPerBrown(Player& player, Bank& bank);

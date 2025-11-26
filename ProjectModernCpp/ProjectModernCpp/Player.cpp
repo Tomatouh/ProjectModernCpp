@@ -1,6 +1,5 @@
 module Player;
 import <iostream>;
-import <memory>;
 //import <stdexcept>;
 import card;
 import Building;
@@ -146,7 +145,7 @@ void Player::showCards(std::ostream& os) const {
     os << " - Purple: " << m_purpleBuildings.size() << "\n";
 }
 
-void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
+void Player::addScientificPoint(Player::scientificPointType point) noexcept
 {
     uint8_t auxIndex = static_cast<uint8_t>(point);
     m_scientificPoints[auxIndex]++;
@@ -175,39 +174,39 @@ std::vector<Player::ProgressToken> Player::getProgressTokens()
 }
 void Player::applyEffects()
 {
-    std::unique_ptr<Player> aux(this);
     for (auto progresToken : m_progressTokens)
-        progresToken.applyEffect(std::move(aux));
+        progresToken.applyEffect(this);
 }
-void Player::ProgressToken::applyEffect(std::unique_ptr<Player> player)
+void Player::ProgressToken::applyEffect(Player* p)
 {
-    m_effect(std::move(player));
+    m_effect(p);
 }
 
-Player::ProgressToken Player::ProgressToken::agricultureToken([](std::unique_ptr<Player> player) {
-    player->addCoin6();
-    player->addVictoryPoints(4);
+
+Player::ProgressToken Player::ProgressToken::agricultureToken([](Player* p) {
+    p->addCoin6();
+    p->addVictoryPoints(4);
     }, true);
 
-Player::ProgressToken Player::ProgressToken::lawToken([](std::unique_ptr<Player> player) {
-    std::vector<uint8_t> vect = player->getScientificPoints();
+Player::ProgressToken Player::ProgressToken::lawToken([](Player* p) {
+    std::vector<uint8_t> vect = p->getScientificPoints();
     for(int i=0;i<vect.size();i++)
         if (vect[i] != 2)
         {
-            player->addScientificPoint((Building::ScientificSymbol)i);
+            p->addScientificPoint((Player::scientificPointType)i);
             break;
         }
     }, true);
 
-Player::ProgressToken Player::ProgressToken::philosphyToken([](std::unique_ptr<Player> player) {
-    player->addVictoryPoints(6);
+Player::ProgressToken Player::ProgressToken::philosphyToken([](Player* p) {
+    p->addVictoryPoints(6);
     }, true);
 
-Player::ProgressToken Player::ProgressToken::mathematicsToken([](std::unique_ptr<Player> player) {
-    player->addVictoryPoints(player->getProgressTokens().size()*3);
+Player::ProgressToken Player::ProgressToken::mathematicsToken([](Player* p) {
+    p->addVictoryPoints(p->getProgressTokens().size()*3);
     }, true);
 
-Player::ProgressToken::ProgressToken(void (*effect)(std::unique_ptr<Player> player), bool isOneTime)
+Player::ProgressToken::ProgressToken(void (*effect)(Player* p), bool isOneTime)
 {
     this->m_effect = effect;
     this->m_isOneTime = isOneTime;

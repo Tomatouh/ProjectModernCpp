@@ -9,7 +9,7 @@ import buildingResource;
 	public:
 		enum class Effect {
 			addResource,
-			addEveryResource,
+			ChooseResource,
 			addCoins,
 			addVictoryPoints,
 			addShields,
