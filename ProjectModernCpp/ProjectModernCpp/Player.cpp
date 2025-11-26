@@ -174,6 +174,7 @@ std::vector<Player::ProgressToken> Player::getProgressTokens()
 }
 void Player::applyEffects()
 {
+    std::unique_ptr<Player> aux(this);
     for (auto progresToken : m_progressTokens)
         progresToken.applyEffect(this);
 }
