@@ -623,7 +623,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIDeck() {
     // YELLOW CARDS
 
     {
-        std::vector<Card::Effect> effects = { Card::Effect::ChooseResource };
+        std::vector<Card::Effect> effects = { Card::Effect::chooseManufacturedGood };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY }, 3 };
         std::string name = "Forum";
         uint8_t id = 44;
@@ -638,7 +638,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIDeck() {
         out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
     }
     {
-        std::vector<Card::Effect> effects = { Card::Effect::ChooseResource };
+        std::vector<Card::Effect> effects = { Card::Effect::chooseRawResource };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::GLASS, ResourceType::PAPYRUS }, 2 };
         std::string name = "Caravansery";
         uint8_t id = 45;
@@ -785,7 +785,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 0;
         uint8_t shields = 2;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -799,7 +799,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
     uint8_t vp = 0;
     uint8_t shields = 2;
     uint8_t coins = 0;
-    auto age = Building::Age::AGEII;
+    auto age = Building::Age::AGEIII;
     auto color = Building::Color::RED;
     std::vector<ResourceType> resources = {};
     std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -813,7 +813,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 0;
         uint8_t shields = 2;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -827,7 +827,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 0;
         uint8_t shields = 3;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -841,7 +841,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 0;
         uint8_t shields = 3;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -858,7 +858,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 3;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::GREEN;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::SUNDIAL;
@@ -873,7 +873,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 3;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::GREEN;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::SUNDIAL;
@@ -888,7 +888,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 2;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::GREEN;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::GLOBE;
@@ -903,7 +903,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 2;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::GREEN;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::GLOBE;
@@ -920,7 +920,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 3;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::YELLOW;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -935,7 +935,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 3;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::YELLOW;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -950,7 +950,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 3;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::YELLOW;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -965,7 +965,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 3;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::YELLOW;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -980,7 +980,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 3;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::YELLOW;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -998,7 +998,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 7;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::BLUE;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -1013,7 +1013,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 7;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::BLUE;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -1028,7 +1028,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 5;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::BLUE;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -1043,7 +1043,37 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         uint8_t vp = 6;
         uint8_t shields = 0;
         uint8_t coins = 0;
-        auto age = Building::Age::AGEII;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::BLUE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 58, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::WOOD, ResourceType::PAPYRUS, ResourceType::PAPYRUS }, 0 };
+        std::string name = "Pantheon";
+        uint8_t id = 65;
+        uint8_t vp = 6;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::BLUE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 60, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::CLAY, ResourceType::STONE, ResourceType::PAPYRUS }, 0 };
+        std::string name = "Senate";
+        uint8_t id = 66;
+        uint8_t vp = 5;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
         auto color = Building::Color::BLUE;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
@@ -1051,5 +1081,249 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
         out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
     }
 
+    // PURPLE CARDS
+
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::tradersGuild };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::WOOD, ResourceType::GLASS, ResourceType::PAPYRUS }, 0 };
+        std::string name = "Traders Guild";
+        uint8_t id = 67;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::PURPLE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::shipownersGuild };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::STONE, ResourceType::GLASS, ResourceType::PAPYRUS }, 0 };
+        std::string name = "Shipowners Guild";
+        uint8_t id = 68;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::PURPLE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::buildersGuild };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::STONE, ResourceType::STONE, ResourceType::CLAY, ResourceType::WOOD, ResourceType::GLASS }, 0 };
+        std::string name = "Builders Guild";
+        uint8_t id = 69;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::PURPLE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::magistratesGuild };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::WOOD, ResourceType::WOOD, ResourceType::CLAY, ResourceType::PAPYRUS }, 0 };
+        std::string name = "Magistrates Guild";
+        uint8_t id = 70;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::PURPLE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::scientistsGuild };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::CLAY, ResourceType::WOOD, ResourceType::WOOD }, 0 };
+        std::string name = "Scientists Guild";
+        uint8_t id = 71;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::PURPLE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::moneylendersGuild };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::STONE, ResourceType::STONE, ResourceType::WOOD, ResourceType::WOOD }, 0 };
+        std::string name = "Moneylenders Guild";
+        uint8_t id = 72;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::PURPLE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::tacticiansGuild };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::STONE, ResourceType::STONE, ResourceType::CLAY, ResourceType::PAPYRUS }, 0 };
+        std::string name = "Tacticians Guild";
+        uint8_t id = 73;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+        auto age = Building::Age::AGEIII;
+        auto color = Building::Color::PURPLE;
+        std::vector<ResourceType> resources = {};
+        std::optional<Building::ScientificSymbol> sym = std::nullopt;
+
+        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    }
+    return out;
+}
+export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
+    std::vector<std::shared_ptr<Card>> out;
+
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::addCoins, Card::Effect::loseThreeCoins, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Appian Way";
+        uint8_t id = 74;
+        uint8_t vp = 3;
+        uint8_t shields = 0;
+        uint8_t coins = 3;
+  
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::discardGrey, Card::Effect::addShields, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "Circus Maximus";
+        uint8_t id = 75;
+        uint8_t vp = 3;
+        uint8_t shields = 1;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::addShields, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Colossus";
+        uint8_t id = 76;
+        uint8_t vp = 3;
+        uint8_t shields = 2;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::drawProgress, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Great Library";
+        uint8_t id = 77;
+        uint8_t vp = 4;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::chooseRawResource, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Great Lighthouse";
+        uint8_t id = 78;
+        uint8_t vp = 4;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::addCoins, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Hanging Gardens";
+        uint8_t id = 79;
+        uint8_t vp = 3;
+        uint8_t shields = 0;
+        uint8_t coins = 6;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::constructCard, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Mausoleum";
+        uint8_t id = 80;
+        uint8_t vp = 2;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::chooseManufacturedGood, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "Piraeus";
+        uint8_t id = 81;
+        uint8_t vp = 2;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Pyramids";
+        uint8_t id = 82;
+        uint8_t vp = 9;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Sphinx";
+        uint8_t id = 83;
+        uint8_t vp = 6;
+        uint8_t shields = 0;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::discardBrown, Card::Effect::addShields, Card::Effect::addVictoryPoints };
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Statue of Zeus";
+        uint8_t id = 84;
+        uint8_t vp = 3;
+        uint8_t shields = 1;
+        uint8_t coins = 0;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
+    {
+        std::vector<Card::Effect> effects = { Card::Effect::addCoins, Card::Effect::playSecondTurn};
+        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        std::string name = "The Temple of Artemis";
+        uint8_t id = 84;
+        uint8_t vp = 0;
+        uint8_t shields = 0;
+        uint8_t coins = 12;
+
+        out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
+    }
     return out;
 }

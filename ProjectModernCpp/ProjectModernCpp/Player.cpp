@@ -24,6 +24,30 @@ Player::Player(std::string name, bool isPlayer1, int startCoin1Amount,
         m_scientificPoints.push_back(0);
 }
 
+Player::Player(const Player& other) : m_name(other.m_name),
+m_isPlayer1(other.m_isPlayer1),
+m_coin1Count(other.m_coin1Count),
+m_coin3Count(other.m_coin3Count),
+m_coin6Count(other.m_coin6Count),
+m_victoryPoints(other.m_victoryPoints),
+m_militaryPoints(other.m_militaryPoints),
+m_wood(other.m_wood),
+m_stone(other.m_stone),
+m_clay(other.m_clay),
+m_glass(other.m_glass),
+m_papyrus(other.m_papyrus),
+m_brownBuildings(other.m_brownBuildings),
+m_greyBuildings(other.m_greyBuildings),
+m_blueBuildings(other.m_blueBuildings),
+m_greenBuildings(other.m_greenBuildings),
+m_redBuildings(other.m_redBuildings),
+m_purpleBuildings(other.m_purpleBuildings),
+m_scientificPoints(other.m_scientificPoints),
+m_scientificPointTypeNumber(other.m_scientificPointTypeNumber),
+m_progressTokens(other.m_progressTokens)
+{
+}
+
 const std::string& Player::name() const noexcept {
     return m_name;
 }

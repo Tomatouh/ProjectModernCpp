@@ -1,8 +1,12 @@
 import game;
+import Player;
 import cardsLoader;
 import card;
+import board;
+import std;
 import <iostream>;
 import <vector>;
+
 //import <memory>;
 
 /*
@@ -15,8 +19,14 @@ import <vector>;
 *		 guild cards 67-73;
 */
 int main() {
-	std::vector<std::shared_ptr<Card>> deck = loadAgeIDeck();
+	//srand(time(0));
+
+	Player player1("Player1", true, Player::k_startCoin1Amount, Player::k_startCoin3Amount, Player::k_startCoin6amount);
+	Player player2("Player2", false, Player::k_startCoin1Amount, Player::k_startCoin3Amount, Player::k_startCoin6amount);
+	Board board(0);
+	Game game(player1, player2, board, loadWondersDeck(), loadAgeIDeck(), loadAgeIIDeck(), loadAgeIIIDeck(), {});
+	game.initAgeIBoard();
+	game.displayAgeIBoard();
 	
-	std::cout << "Hello Bytes the Dust!\n";
 	return 0;
 }

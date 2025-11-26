@@ -9,7 +9,11 @@ import Building; // Building trebuie importat pentru a fi folosit in Player
 
 export class Player {
 public:
+
+    const static std::uint8_t k_startCoin1Amount = 7, k_startCoin3Amount = 0, k_startCoin6amount = 0;
+
     explicit Player(std::string name, bool isPlayer1, int startCoin1Amount, int startCoin3Amount, int startCoin6Amount);
+    Player(const Player& other);
 
     const std::string& name() const noexcept;
 
