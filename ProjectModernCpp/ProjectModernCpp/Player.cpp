@@ -4,7 +4,7 @@ import <memory>;
 //import <stdexcept>;
 import card;
 import Building;
-
+import <functional>;
 Player::Player(std::string name, bool isPlayer1, int startCoin1Amount,
     int startCoin3Amount, int startCoin6Amount)
     : m_name(std::move(name)),
@@ -231,7 +231,7 @@ Player::ProgressToken Player::ProgressToken::mathematicsToken([](std::unique_ptr
     player->addVictoryPoints(player->getProgressTokens().size()*3);
     }, true);
 
-Player::ProgressToken::ProgressToken(void (*effect)(std::unique_ptr<Player> player), bool isOneTime)
+Player::ProgressToken::ProgressToken(std::function<void(std::unique_ptr<Player> player)> effect, bool isOneTime)
 {
     this->m_effect = effect;
     this->m_isOneTime = isOneTime;
