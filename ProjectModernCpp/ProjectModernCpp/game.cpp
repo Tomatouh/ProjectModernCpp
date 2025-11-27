@@ -15,38 +15,100 @@ Game::Game(const Player& player1, const Player& player2,
 
 void Game::initAgeIBoard()
 {
+	
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist1(0, k_boardSize - 1);
 	std::vector<std::shared_ptr<Card>> copyDeck = m_ageIDeck;
-	for (int i = 0; i < k_boardSize; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
-		std::uniform_int_distribution<> dist2(0, copyDeck.size() - 1);
-		std::pair<std::uint16_t, bool> card;
-		std::uint16_t index1 = dist2(gen);
-		card.first = copyDeck[index1].get()->getId();
-		copyDeck.erase(copyDeck.begin() + index1);
-		while (true) {
-			std::uint16_t index2 = dist1(gen);
+		std::vector<std::pair<std::uint16_t, bool>> row;
+		for (int j = 0; j < i + 2; ++j)
+		{
+			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
+			std::pair<std::uint16_t, bool> card;
+			std::uint16_t index1 = dist(gen);
+			card.first = copyDeck[index1].get()->getId();
+			copyDeck.erase(copyDeck.begin() + index1);
+			if (!(i % 2)) card.second = true;
+			row.push_back(card);
+			
+		}
+		m_cardDisplay.push_back(row);
+		row.clear();
+	}
+}
 
-			if ((index2 >= 2 && index2 <= 4) || (index2 >= 9 && index2 <= 13)) card.second = false;
-			else card.second = true;
-			if (cardDisplay[index2].first == 0)
-			{
-				cardDisplay[index2] = card;
-				break;
-			}
+void Game::initAgeIIBoard()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::vector<std::shared_ptr<Card>> copyDeck = m_ageIIDeck;
+	for (int i = 5; i > 0; --i)
+	{
+		std::vector<std::pair<std::uint16_t, bool>> row;
+		for (int j = 0; j < i + 1; ++j)
+		{
+			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
+			std::pair<std::uint16_t, bool> card;
+			std::uint16_t index1 = dist(gen);
+			card.first = copyDeck[index1].get()->getId();
+			copyDeck.erase(copyDeck.begin() + index1);
+			if (!(i % 2)) card.second = true;
+			row.push_back(card);
+
+		}
+		m_cardDisplay.push_back(row);
+		row.clear();
+	}
+
+}
+
+void Game::initAgeIIIBoard()
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::vector<std::shared_ptr<Card>> copyDeck = m_ageIIIDeck;
+	m_cardDisplay.resize(7);
+	for (int i = 0; i <= 3; ++i)
+	{
+		if (i == 3) m_cardDisplay[i].resize(2);
+		else m_cardDisplay[i].resize(i + 2);
+	}
+
+	for (int i = 4; i < 7; ++i)
+	{
+		m_cardDisplay[i].resize(8 - i);
+	}
+	for (int i = 0; i < m_cardDisplay.size(); ++i)
+	{
+		for (int j = 0; j < m_cardDisplay[i].size(); ++j)
+		{
+			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
+			std::pair<std::uint16_t, bool> card;
+			std::uint16_t index1 = dist(gen);
+			card.first = copyDeck[index1].get()->getId();
+			copyDeck.erase(copyDeck.begin() + index1);
+			if (!(i % 2)) card.second = true;
+			m_cardDisplay[i][j] = card;
 		}
 	}
 }
 
-void Game::displayAgeIBoard()
+void Game::displayBoard()
 {
-	for (int i = 0; i < cardDisplay.size(); ++i)
+	for (int i = 0; i < m_cardDisplay.size(); ++i)
 	{
-		if (cardDisplay[i].second) std::cout << "[" << cardDisplay[i].first << "] ";
-		else std::cout << "[hidden]";
-		if (i == 1 || i == 4 || i == 8 || i == 13) std::cout << "\n";
+		for (int j = 0; j < m_cardDisplay[i].size(); ++j)
+		{
+			if (m_cardDisplay[i][j].second) std::cout << "[" << m_cardDisplay[i][j].first << "] ";
+			else std::cout << "[hidden]";
+		}
+		std::cout << "\n";
 	}
+}
+
+void Game::clearBoard()
+{
+	m_cardDisplay.clear();
 }
 	

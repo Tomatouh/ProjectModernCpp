@@ -16,7 +16,7 @@ private:
 	std::vector<std::shared_ptr<Card>> m_ageIIDeck;
 	std::vector<std::shared_ptr<Card>> m_ageIIIDeck;
 	std::vector<std::shared_ptr<Card>> m_discardedCards;
-	std::array<std::pair<std::uint16_t, bool>, k_boardSize> cardDisplay;
+	std::vector<std::vector<std::pair<std::uint16_t, bool>>> m_cardDisplay;
 	bool endGame;
 
 public:
@@ -31,12 +31,11 @@ public:
 		const std::vector<std::shared_ptr<Card>>& m_discardedCards);
 
 	void initAgeIBoard();
-	/*void initAgeIIBoard();
-	void initAgeIIIBoard();*/
+	void initAgeIIBoard();
+	void initAgeIIIBoard();
 
-	void displayAgeIBoard();
-	/*void displayAgeIIBoard();
-	void displayAgeIIIBoard();*/
+	void displayBoard();
+	void clearBoard();
 
 };
 

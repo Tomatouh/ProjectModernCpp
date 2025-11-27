@@ -26,7 +26,14 @@ int main() {
 	Board board(0);
 	Game game(player1, player2, board, loadWondersDeck(), loadAgeIDeck(), loadAgeIIDeck(), loadAgeIIIDeck(), {});
 	game.initAgeIBoard();
-	game.displayAgeIBoard();
-	
+	game.displayBoard();
+	game.clearBoard();
+	game.initAgeIIBoard();
+	std::cout << "\n";
+	game.displayBoard();
+	game.clearBoard();
+	game.initAgeIIIBoard();
+	std::cout << "\n";
+	game.displayBoard();
 	return 0;
 }
