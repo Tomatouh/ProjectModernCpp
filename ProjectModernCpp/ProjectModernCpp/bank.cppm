@@ -2,6 +2,7 @@ export module bank;
 import <cstdint>;
 import <unordered_map>;
 import Player;
+import buildingResource;
 
 export class Bank {
 private:
@@ -14,7 +15,6 @@ private:
     std::unordered_map<uint8_t, uint8_t> m_coins = { {k_coinsValue1,k_coinsAmount1},{k_coinsValue3,k_coinsAmount3},{k_coinsValue6,k_coinsAmount6} };
 public:
     Bank();
-    // Rule of Three
     Bank(const Bank& other);
     Bank& operator=(const Bank& other);
     ~Bank();
@@ -27,5 +27,5 @@ public:
     void deposit6();
     void take(uint8_t value, Player & player);
     void give(uint8_t value, Player & player);
-    void trade(bool player, Player & p1, Player & p2);
+    void trade(bool player, Player & p1, Player & p2, ResourceType type);
 };

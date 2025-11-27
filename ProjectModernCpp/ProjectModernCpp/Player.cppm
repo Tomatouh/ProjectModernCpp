@@ -11,9 +11,9 @@ import Building; // Building trebuie importat pentru a fi folosit in Player
 export class Player {
 public:
 
-    const static std::uint8_t k_startCoin1Amount = 7, k_startCoin3Amount = 0, k_startCoin6amount = 0;
+    const static std::uint16_t k_startCoin1Amount = 7, k_startCoin3Amount = 0, k_startCoin6amount = 0;
 
-    explicit Player(std::string name, bool isPlayer1, int startCoin1Amount, int startCoin3Amount, int startCoin6Amount);
+    explicit Player(std::string name, bool isPlayer1, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
     Player(const Player& other);
 
     const std::string& name() const noexcept;
@@ -22,19 +22,19 @@ public:
     void setIsPlayer1(bool isPlayer1) noexcept;
 
     // Coin management methods
-    void addCoin1(int amount = 1) noexcept;
-    void addCoin3(int amount = 1) noexcept;
-    void addCoin6(int amount = 1) noexcept;
+    void addCoin1(std::uint16_t amount = 1) noexcept;
+    void addCoin3(std::uint16_t amount = 1) noexcept;
+    void addCoin6(std::uint16_t amount = 1) noexcept;
 
-    void payCoin1(int amount = 1) noexcept;
-    void payCoin3(int amount = 1) noexcept;
-    void payCoin6(int amount = 1) noexcept;
-
-    int coin1Count() const noexcept;
-    int coin3Count() const noexcept;
-    int coin6Count() const noexcept;
-    int totalCoinValue() const noexcept;
-    int coins() const noexcept;
+    bool payCoin1(std::uint16_t amount = 1) noexcept;
+    bool payCoin3(std::uint16_t amount = 1) noexcept;
+    bool payCoin6(std::uint16_t amount = 1) noexcept;
+	bool payCoins(std::uint16_t amount) noexcept;
+    std::uint16_t coin1Count() const noexcept;
+    std::uint16_t coin3Count() const noexcept;
+    std::uint16_t coin6Count() const noexcept;
+    std::uint16_t totalCoinValue() const noexcept;
+    std::uint16_t coins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
 
@@ -48,29 +48,27 @@ public:
     const std::vector<Building>& getPurpleBuildings() const noexcept;
 
 
-    uint8_t getVictoryPoints() const noexcept;
-    void addVictoryPoints(uint8_t points) noexcept;
+    uint16_t getVictoryPoints() const noexcept;
+    void addVictoryPoints(uint16_t points) noexcept;
 
-    int getMilitaryPoints() const noexcept;
-    void addMilitaryPoints(int points) noexcept;
 
-    uint8_t getWood() const noexcept;
-    void addWood(uint8_t amount = 1) noexcept;
-    uint8_t getStone() const noexcept;
-    void addStone(uint8_t amount = 1) noexcept;
-    uint8_t getClay() const noexcept;
-    void addClay(uint8_t amount = 1) noexcept;
-    uint8_t getGlass() const noexcept;
-    void addGlass(uint8_t amount = 1) noexcept;
-    uint8_t getPapyrus() const noexcept;
-    void addPapyrus(uint8_t amount = 1) noexcept;
+    uint16_t getWood() const noexcept;
+    void addWood(uint16_t amount = 1) noexcept;
+    uint16_t getStone() const noexcept;
+    void addStone(uint16_t amount = 1) noexcept;
+    uint16_t getClay() const noexcept;
+    void addClay(uint16_t amount = 1) noexcept;
+    uint16_t getGlass() const noexcept;
+    void addGlass(uint16_t amount = 1) noexcept;
+    uint16_t getPapyrus() const noexcept;
+    void addPapyrus(uint16_t amount = 1) noexcept;
 
     void showStatus(std::ostream& os = std::cout) const;
     void showCards(std::ostream& os = std::cout) const;
 
     //Functii pentru folosirea punctelor stiintifice
     void addScientificPoint(Building::ScientificSymbol point) noexcept;
-    std::vector<uint8_t> getScientificPoints() noexcept;
+    std::vector<uint16_t> getScientificPoints() noexcept;
     //Aplicare efecte
     class ProgressToken {
     public:
@@ -95,18 +93,17 @@ public:
 private:
     bool m_isPlayer1;
     std::string m_name;
-    int m_coin1Count;
-    int m_coin3Count;
-    int m_coin6Count;
-    uint8_t m_victoryPoints;
-    int m_militaryPoints;
+    uint16_t m_coin1Count;
+    uint16_t m_coin3Count;
+    uint16_t m_coin6Count;
+    uint16_t m_victoryPoints;
 
     // Resources
-    uint8_t m_wood;
-    uint8_t m_stone;
-    uint8_t m_clay;
-    uint8_t m_glass;
-    uint8_t m_papyrus;
+    uint16_t m_wood;
+    uint16_t m_stone;
+    uint16_t m_clay;
+    uint16_t m_glass;
+    uint16_t m_papyrus;
 
     // Colectii de cladiri, separate pe culori
     std::vector<Building> m_brownBuildings;
@@ -118,8 +115,8 @@ private:
     std::vector<Building> m_purpleBuildings;
 
     // Puncte stiintifice
-    std::vector<uint8_t> m_scientificPoints;
-    uint8_t m_scientificPointTypeNumber = 0;
+    std::vector<uint16_t> m_scientificPoints;
+    uint16_t m_scientificPointTypeNumber = 0;
 
     // Progress token
     std::vector<ProgressToken> m_progressTokens;
