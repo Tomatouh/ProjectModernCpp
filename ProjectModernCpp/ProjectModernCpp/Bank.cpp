@@ -27,7 +27,7 @@ void Bank::bankTotal()
                     this->m_coins[Bank::k_coinsValue6] * Bank::k_coinsValue6;
 }
 
-void Bank::give(uint8_t value, Player& player)
+void Bank::give(uint16_t value, Player& player)
 {
     if (player.coins() == 0)
         return;
@@ -60,12 +60,12 @@ void Bank::give(uint8_t value, Player& player)
     }
 
     if (paid > needed) {
-        uint8_t change = static_cast<uint8_t>(paid - needed);
+        uint16_t change = static_cast<uint16_t>(paid - needed);
         take(change, player);
     }
 }
 
-void Bank::take(uint8_t value, Player &player)
+void Bank::take(uint16_t value, Player &player)
 {
     int remaining = static_cast<int>(value);
 
@@ -150,7 +150,7 @@ void Bank::trade(bool player, Player& p1, Player& p2, ResourceType type)
 
     bool buyerHasDiscount = false;
     for (const auto& y : buyer->getYellowBuildings()) {
-        uint8_t id = y.getId();
+        uint16_t id = y.getId();
         if (id < 40 || id > 43) continue;
 
         if (id == 40 && type == ResourceType::STONE) { buyerHasDiscount = true; break; }
@@ -164,13 +164,13 @@ void Bank::trade(bool player, Player& p1, Player& p2, ResourceType type)
         if (buyerHasDiscount) break;
     }
 
-    std::uint8_t cost = 0;
+    std::uint16_t cost = 0;
     if (buyerHasDiscount) {
         cost = 1;
     } else {
         std::size_t enemyCount = countBuildingsProducing(*enemy, type);
         std::size_t total = 2 + enemyCount;
-        cost = static_cast<std::uint8_t>((total > 255) ? 255 : total);
+        cost = static_cast<std::uint16_t>((total > 255) ? 255 : total);
     }
 
     if (cost > 0) {

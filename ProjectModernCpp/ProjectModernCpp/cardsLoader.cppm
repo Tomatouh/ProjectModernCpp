@@ -320,7 +320,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIDeck() {
         std::vector<Card::Effect> effects = { Card::Effect::addCoins };
         Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
         std::string name = "Tavern";
-        uint8_t id = 43;
+        uint8_t id = 46;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 4;
@@ -656,7 +656,7 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIDeck() {
         std::vector<Card::Effect> effects = { Card::Effect::oneCoinPapyrus, Card::Effect::oneCoinGlass };
         Card::Cost cost{ 0, std::vector<ResourceType>{}, 4 };
         std::string name = "Customs House";
-        uint8_t id = 46;
+        uint8_t id = 43;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;
