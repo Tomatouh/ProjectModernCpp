@@ -2,15 +2,29 @@ module game;
 
 
 
-Game::Game(const Player& player1, const Player& player2,
-	const Board& board,
-	const std::vector<std::shared_ptr<Card>>& wondersCard,
-	const std::vector<std::shared_ptr<Card>>& ageIDeck,
-	const std::vector<std::shared_ptr<Card>>& ageIIDeck,
-	const std::vector<std::shared_ptr<Card>>& ageIIIDeck,
-	const std::vector<std::shared_ptr<Card>>& discardedCards) : m_player1(player1), m_player2(player2), m_board(board), m_wondersDeck(wondersCard),
-	m_ageIDeck(ageIDeck), m_ageIIDeck(ageIIDeck), m_ageIIIDeck(ageIIIDeck), m_discardedCards(discardedCards)
+//Game::Game(const Player& player1, const Player& player2,
+//	const Board& board,
+//	const std::vector<std::shared_ptr<Card>>& wondersCard,
+//	const std::vector<std::shared_ptr<Card>>& ageIDeck,
+//	const std::vector<std::shared_ptr<Card>>& ageIIDeck,
+//	const std::vector<std::shared_ptr<Card>>& ageIIIDeck,
+//	const std::vector<std::shared_ptr<Card>>& discardedCards) : m_player1(player1), m_player2(player2), m_board(board), m_wondersDeck(wondersCard),
+//	m_ageIDeck(ageIDeck), m_ageIIDeck(ageIIDeck), m_ageIIIDeck(ageIIIDeck), m_discardedCards(discardedCards)
+//{
+//}
+
+Game::Game() : m_player1(), m_player2(), m_board(0), 
+m_wondersDeck(loadWondersDeck()), 
+m_ageIDeck(loadAgeIDeck()), 
+m_ageIIDeck(loadAgeIIDeck()), 
+m_ageIIIDeck(loadAgeIIIDeck()),
+m_discardedCards(),
+m_cardDisplay(),
+endGame(false),
+m_currentAge(Building::Age::AGEI)
 {
+	
+	
 }
 
 void Game::initAgeIBoard()

@@ -5,6 +5,23 @@ import <memory>;
 import card;
 import Building;
 import <functional>;
+
+Player::Player() : m_name("player"),
+m_isPlayer1(true),
+m_coin1Count(k_startCoin1Amount),
+m_coin3Count(k_startCoin3Amount),
+m_coin6Count(k_startCoin6Amount),
+m_victoryPoints(0),
+m_wood(0),
+m_stone(0),
+m_clay(0),
+m_glass(0),
+m_papyrus(0)
+{
+    for (uint16_t i = 0; i < 7; i++)
+        m_scientificPoints.push_back(0);
+}
+
 Player::Player(std::string name, bool isPlayer1, uint16_t startCoin1Amount,
     uint16_t startCoin3Amount, uint16_t startCoin6Amount)
     : m_name(std::move(name)),
@@ -56,6 +73,11 @@ bool Player::isPlayer1() const noexcept {
 
 void Player::setIsPlayer1(bool isPlayer1) noexcept {
     m_isPlayer1 = isPlayer1;
+}
+
+void Player::setPlayerName(const std::string_view name)
+{
+    m_name = name;
 }
 
 void Player::addCoin1(uint16_t amount) noexcept {

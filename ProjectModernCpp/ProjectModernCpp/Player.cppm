@@ -11,8 +11,8 @@ import Building; // Building trebuie importat pentru a fi folosit in Player
 export class Player {
 public:
 
-    const static std::uint16_t k_startCoin1Amount = 7, k_startCoin3Amount = 0, k_startCoin6amount = 0;
-
+    const static std::uint16_t k_startCoin1Amount = 7, k_startCoin3Amount = 0, k_startCoin6Amount = 0;
+    Player();
     explicit Player(std::string name, bool isPlayer1, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
     Player(const Player& other);
 
@@ -20,6 +20,7 @@ public:
 
     bool isPlayer1() const noexcept;
     void setIsPlayer1(bool isPlayer1) noexcept;
+    void setPlayerName(const std::string_view name);
 
     // Coin management methods
     void addCoin1(std::uint16_t amount = 1) noexcept;

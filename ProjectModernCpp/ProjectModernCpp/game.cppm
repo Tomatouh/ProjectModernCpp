@@ -5,6 +5,8 @@ import bank;
 import card;
 import Building;
 import std;
+import cardsLoader;
+
 
 export class Game {
 private:
@@ -18,17 +20,19 @@ private:
 	std::vector<std::shared_ptr<Card>> m_discardedCards;
 	std::vector<std::vector<std::pair<std::uint16_t, bool>>> m_cardDisplay;
 	bool endGame;
+	Building::Age m_currentAge;
 
 public:
 
+	Game();
 
-	Game(const Player& player1, const Player& player2,
+	/*Game(const Player& player1, const Player& player2,
 		const Board& board,
 		const std::vector<std::shared_ptr<Card>>& wondersCard,
 		const std::vector<std::shared_ptr<Card>>& ageIDeck,
 		const std::vector<std::shared_ptr<Card>>& ageIIDeck,
 		const std::vector<std::shared_ptr<Card>>& m_ageIIIDeck,
-		const std::vector<std::shared_ptr<Card>>& m_discardedCards);
+		const std::vector<std::shared_ptr<Card>>& m_discardedCards);*/
 
 	void initAgeIBoard();
 	void initAgeIIBoard();

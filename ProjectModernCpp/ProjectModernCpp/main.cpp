@@ -1,6 +1,6 @@
 import game;
 import Player;
-import cardsLoader;
+//import cardsLoader;
 import card;
 import board;
 import std;
@@ -19,21 +19,10 @@ import <vector>;
 *		 guild cards 67-73;
 */
 int main() {
-	//srand(time(0));
 
-	Player player1("Player1", true, Player::k_startCoin1Amount, Player::k_startCoin3Amount, Player::k_startCoin6amount);
-	Player player2("Player2", false, Player::k_startCoin1Amount, Player::k_startCoin3Amount, Player::k_startCoin6amount);
-	Board board(0);
-	Game game(player1, player2, board, loadWondersDeck(), loadAgeIDeck(), loadAgeIIDeck(), loadAgeIIIDeck(), {});
+	Game game;
 	game.initAgeIBoard();
 	game.displayBoard();
-	game.clearBoard();
-	game.initAgeIIBoard();
-	std::cout << "\n";
-	game.displayBoard();
-	game.clearBoard();
-	game.initAgeIIIBoard();
-	std::cout << "\n";
-	game.displayBoard();
+	
 	return 0;
 }
