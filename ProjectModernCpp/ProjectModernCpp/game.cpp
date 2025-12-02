@@ -23,7 +23,8 @@ m_cardDisplay(),
 endGame(false),
 m_currentAge(Building::Age::AGEI)
 {
-	
+	m_player2.setIsPlayer1(false);
+	m_player2.setPlayerName("player2");
 	
 }
 
