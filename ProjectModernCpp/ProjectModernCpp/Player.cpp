@@ -177,6 +177,34 @@ void Player::addBuilding(const Building& building) {
     }
 }
 
+Building Player::discardBuilding(Building::Color color, std::uint8_t id)
+{
+    Building found;
+    std::vector<Building>::iterator it;
+    switch(color)
+    {
+    case Building::Color::GREY:
+        it = std::find_if(m_greyBuildings.begin(), m_greyBuildings.end(), [id](const Building& b) { return b.getId() == id; });
+        if ( it == m_greyBuildings.end()) {
+            std::cout << "building not found\n";
+            return Building();
+        }
+        found = std::move(*it);
+        m_greyBuildings.erase(it);
+        return found;
+    case Building::Color::BROWN:
+        it = std::find_if(m_brownBuildings.begin(), m_brownBuildings.end(), [id](const Building& b) { return b.getId() == id; });
+        if ( it == m_brownBuildings.end()) {
+            std::cout << "building not found\n";
+            return Building();
+        }
+        found = std::move(*it);
+        m_brownBuildings.erase(it);
+        return found;
+    }
+    
+}
+
 const std::vector<Building>& Player::getBrownBuildings() const noexcept { return m_brownBuildings; }
 const std::vector<Building>& Player::getGreyBuildings() const noexcept { return m_greyBuildings; }
 const std::vector<Building>& Player::getBlueBuildings() const noexcept { return m_blueBuildings; }
@@ -184,6 +212,8 @@ const std::vector<Building>& Player::getGreenBuildings() const noexcept { return
 const std::vector<Building>& Player::getYellowBuildings() const noexcept { return m_yellowBuildings; }
 const std::vector<Building>& Player::getRedBuildings() const noexcept { return m_redBuildings; }
 const std::vector<Building>& Player::getPurpleBuildings() const noexcept { return m_purpleBuildings; }
+
+const std::array<std::shared_ptr<Card>, Player::k_numberOfWonders> Player::getWonders() const noexcept { return m_wonders; }
 
 
 uint16_t Player::getVictoryPoints() const noexcept { return m_victoryPoints; }

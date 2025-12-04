@@ -12,6 +12,8 @@ export class Player {
 public:
 
     const static std::uint16_t k_startCoin1Amount = 7, k_startCoin3Amount = 0, k_startCoin6Amount = 0;
+    const static std::uint16_t k_numberOfWonders = 4;
+
     Player();
     explicit Player(std::string name, bool isPlayer1, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
     Player(const Player& other);
@@ -38,6 +40,8 @@ public:
     std::uint16_t coins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
+    Building discardBuilding(Building::Color color, std::uint8_t id);
+
 
     // Getters pentru cladiri, pe culori
     const std::vector<Building>& getBrownBuildings() const noexcept;
@@ -47,6 +51,7 @@ public:
     const std::vector<Building>& getYellowBuildings() const noexcept;
     const std::vector<Building>& getRedBuildings() const noexcept;
     const std::vector<Building>& getPurpleBuildings() const noexcept;
+    const std::array<std::shared_ptr<Card>, k_numberOfWonders> getWonders() const noexcept;
 
 
     uint16_t getVictoryPoints() const noexcept;
@@ -92,6 +97,7 @@ public:
     void applyEffects();
     std::vector<ProgressToken> getProgressTokens();
 private:
+
     bool m_isPlayer1;
     std::string m_name;
     uint16_t m_coin1Count;
@@ -121,5 +127,8 @@ private:
 
     // Progress token
     std::vector<ProgressToken> m_progressTokens;
+
+    // Wonders
+    std::array<std::shared_ptr<Card>, k_numberOfWonders> m_wonders;
 
 };

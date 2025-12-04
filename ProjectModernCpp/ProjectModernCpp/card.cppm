@@ -35,18 +35,9 @@ import buildingResource;
 			loseThreeCoins,
 			discardGrey,
 			drawProgress,
-			produceResourcePerTurn,
 			playSecondTurn,
 			constructCard,
 			discardBrown,
-			arhitecture,
-			economy,
-			law,
-			masonry,
-			mathematics,
-			strategy,
-			theology,
-			urbanism
 		};
 		class Cost {
 		private:

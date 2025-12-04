@@ -40,16 +40,54 @@ void addResources(Player& player, const Building& building)
 	}
 }
 
-//void addEveryResource(Player& player, const Building& card)
-//{
-//	for (auto& res : card.getResources())
-//	{
-//		switch (res)
-//		{
-//			case ResourceType::WOOD
-//		}
-//	}
-//}
+void chooseRawResource(Player& player)
+{
+	std::cout << "Choose between WOOD, CLAY or STONE (type the initial lowercase letter of the desired resource): ";
+	char chosenRes;
+	while (true)
+	{
+		std::cin >> chosenRes;
+
+		switch (chosenRes)
+		{
+		case 'w':
+			player.addWood();
+			break;
+		case 'c':
+			player.addClay();
+			break;
+		case 's':
+			player.addStone();
+			break;
+		default:
+			std::cout << "Invalid input. Try again.";
+		}
+	}
+}
+
+void chooseManufacturedGood(Player& player)
+{
+	std::cout << "Choose between GLASS or PAPYRUS (type the initial lowercase letter of the desired resource): ";
+	char chosenRes;
+	while (true)
+	{
+		std::cin >> chosenRes;
+
+		switch (chosenRes)
+		{
+		case 'g':
+			player.addGlass();
+			break;
+		case 'p':
+			player.addPapyrus();
+			break;
+		default:
+			std::cout << "Invalid input. Try again.";
+		}
+	}
+}
+
+
 
 void addScientificSymbol(Player& player, const Building& card)
 {
@@ -77,10 +115,10 @@ void oneCoinPerRed(Player& player, Bank& bank)
 	bank.take(player.getRedBuildings().size(), player);
 }
 
-//void buildersGuild(Player& player1, const Player& player2, bool endGame)
-//{
-//	if (endGame) player.addVictoryPoints(2 * std::max(player1.getWonders().size(), player2.getWonders().size()));
-//}
+void buildersGuild(Player& player1, const Player& player2, bool endGame)
+{
+	if (endGame) player1.addVictoryPoints(2 * std::max(player1.getWonders().size(), player2.getWonders().size()));
+}
 
 void tradersGuild(Player& player1, const Player& player2, bool endGame, Bank& bank)
 {
@@ -140,22 +178,29 @@ void shipownersGuild(Player& player1, const Player& player2, bool endGame, Bank&
 	}
 }
 
-//void loseThreeCoins(Player& player, Bank& bank)
-//{
-//	player.spendCoins(3);
-//}
-//
-//void discardGrey(Player& player, std::uint8_t idCard, std::vector<Card> discardedCards)
-//{
-//	discardedCards.push_back(player.discard(player.getGreyBuildings(), idCard));
-//}
-//
-//void discardBrown(Player& player, std::uint8_t idCard, std::vector<Card> discardedCards)
-//{
-//	discardedCards.push_back(player.discard(player.getGreyBuildings(), idCard));
-//}
+void loseThreeCoins(Player& player, Bank& bank)
+{
+	bank.take(3, player);
+}
 
-//void addShields(bool player, Board& board, const Card& card)
-//{
-//	board.move(card.getShields(), player);
-//}
+void discardGrey(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards)
+{	
+	std::shared_ptr<Card> discarded = std::make_shared<Card>(player.discardBuilding(Building::Color::GREY, idCard));
+	discardedCards.push_back(discarded);
+}
+
+void discardBrown(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards)
+{
+	std::shared_ptr<Card> discarded = std::make_shared<Card>(player.discardBuilding(Building::Color::BROWN, idCard));
+	discardedCards.push_back(discarded);
+}
+
+void twoCoinsPerWonder(Player& player, Bank& bank)
+{
+	bank.take(player.getWonders().size() * 2, player);
+}
+
+void addShields(bool player, Board& board, const Card& card)
+{
+	board.move(card.getShields(), player);
+}
