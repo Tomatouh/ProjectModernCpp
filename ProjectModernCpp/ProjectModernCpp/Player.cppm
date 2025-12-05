@@ -75,12 +75,12 @@ public:
     //Functii pentru folosirea punctelor stiintifice
     void addScientificPoint(Building::ScientificSymbol point) noexcept;
     std::vector<uint16_t> getScientificPoints() noexcept;
-    //Aplicare efecte
+    //Aplicare efecte speciale ProgressToken
     class ProgressToken {
     public:
         static ProgressToken agricultureToken;
         static ProgressToken architectureToken;
-        static ProgressToken EconomyToken;
+        static ProgressToken economyToken;
         static ProgressToken lawToken;
         static ProgressToken masonryToken;
         static ProgressToken mathematicsToken;
@@ -125,9 +125,15 @@ private:
     std::vector<uint16_t> m_scientificPoints;
     uint16_t m_scientificPointTypeNumber = 0;
 
-    // Progress token
+    // Progress token, might delete
     std::vector<ProgressToken> m_progressTokens;
-
+    //Memorarea efectelor speciale pe care le poate avea un jucator (ProgressToken)
+    bool m_hasEconomyProgressToken=0;
+    bool m_hasMasonryProgressToken = 0;
+    bool m_hasStrategyProgressToken = 0;
+    bool m_hasTheologyProgressToken = 0;
+    bool m_hasUrbanismProgressToken = 0;
+    bool m_hasArchitectureProgressToken = 0;
     // Wonders
     std::array<std::shared_ptr<Card>, k_numberOfWonders> m_wonders;
 

@@ -307,6 +307,30 @@ Player::ProgressToken Player::ProgressToken::mathematicsToken([](std::unique_ptr
     player->addVictoryPoints(player->getProgressTokens().size()*3);
     }, true);
 
+Player::ProgressToken Player::ProgressToken::economyToken([](std::unique_ptr<Player> player) {
+    player->m_hasEconomyProgressToken = 1;
+    }, false);
+
+Player::ProgressToken Player::ProgressToken::masonryToken([](std::unique_ptr<Player> player) {
+    player->m_hasMasonryProgressToken = 1;
+    }, false);
+
+Player::ProgressToken Player::ProgressToken::strategyToken([](std::unique_ptr<Player> player) {
+    player->m_hasStrategyProgressToken = 1;
+    }, false);
+
+Player::ProgressToken Player::ProgressToken::theologyToken([](std::unique_ptr<Player> player) {
+    player->m_hasTheologyProgressToken = 1;
+    }, false);
+
+Player::ProgressToken Player::ProgressToken::urbanismToken([](std::unique_ptr<Player> player) {
+    player->m_hasUrbanismProgressToken = 1;
+    }, false);
+
+Player::ProgressToken Player::ProgressToken::architectureToken([](std::unique_ptr<Player> player) {
+    player->m_hasArchitectureProgressToken = 1;
+    }, false);
+
 Player::ProgressToken::ProgressToken(std::function<void(std::unique_ptr<Player> player)> effect, bool isOneTime)
 {
     this->m_effect = effect;
