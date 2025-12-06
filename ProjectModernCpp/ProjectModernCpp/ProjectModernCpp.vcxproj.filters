@@ -24,9 +24,6 @@
     <ClCompile Include="bank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="peon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,9 +37,6 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="card.cppm">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="peon.cppm">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="Player.cppm">

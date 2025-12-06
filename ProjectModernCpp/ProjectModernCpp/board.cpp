@@ -1,9 +1,8 @@
 module board;
-import peon;
 
 void Board::checkZone(bool Player)
 {
-	int pos = playerPeon.getPos();
+	int pos =this->getPos();
 	if ( pos == Board::k_zone_start) return; 
 	if (Player) {
 		if (pos < Board::k_zone2_start && pos >= Board::k_zone1_start) { zone = Board::k_zone1; }
@@ -30,7 +29,7 @@ void Board::checkZone(bool Player)
 
 void Board::move(uint8_t steps, bool player) noexcept(false)
 {
-	if (steps < playerPeon.getPos()) {
+	if (steps < this->getPos()) {
 		throw ("Steps cannot be negative");
 	}
 	else if (steps > winPosP2) {
@@ -38,12 +37,12 @@ void Board::move(uint8_t steps, bool player) noexcept(false)
 	}
 	if (player == false) {
 		for (int i = 0; i < steps; ++i) {
-			playerPeon.incrementPos();
+			this->incrementPos();
 		}
 	}
 	else {
 		for (int i = 0; i < steps; ++i) {
-			playerPeon.decrementPos();
+			this->decrementPos();
 		}
 	}
 }

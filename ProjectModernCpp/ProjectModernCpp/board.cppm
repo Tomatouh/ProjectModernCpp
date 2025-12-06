@@ -1,8 +1,11 @@
 export module board;
 import <cstdint>;
-import peon;
 export class Board {
 private:
+private:
+    int const static startPos = 0;
+
+    int pos = startPos;
 	int const static k_zone_start = 0;
 	int const static k_zone_win = 9;
     int const static k_zone1_start = 1;
@@ -15,8 +18,11 @@ private:
 	int const static winPosP2 = -9;
 	int const static winPosP1 = 9;
     int zone{k_zone_start};
-    Peon playerPeon;
 public:
+    void incrementPos() noexcept { ++pos; }
+    void decrementPos() noexcept { --pos; }
+    [[nodiscard]] int getPos() const noexcept { return pos; }
+    void setPos(int newPos) noexcept { pos = newPos; }
     explicit Board(int initialZone) noexcept : zone{initialZone} {}
 
     void checkZone(bool Player);

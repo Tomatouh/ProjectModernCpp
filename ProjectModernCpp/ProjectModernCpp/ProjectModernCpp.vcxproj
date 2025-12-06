@@ -152,8 +152,6 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game.cppm" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="peon.cpp" />
-    <ClCompile Include="peon.cppm" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player.cppm" />
     <ClCompile Include="resource.cpp" />
