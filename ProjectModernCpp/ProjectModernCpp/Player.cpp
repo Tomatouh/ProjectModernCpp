@@ -7,10 +7,7 @@ import Building;
 import <functional>;
 
 Player::Player() : m_name("player"),
-m_isPlayer1(true),
-m_coin1Count(k_startCoin1Amount),
-m_coin3Count(k_startCoin3Amount),
-m_coin6Count(k_startCoin6Amount),
+m_coins(7),
 m_victoryPoints(0),
 m_wood(0),
 m_stone(0),
@@ -22,13 +19,9 @@ m_papyrus(0)
         m_scientificPoints.push_back(0);
 }
 
-Player::Player(std::string name, bool isPlayer1, uint16_t startCoin1Amount,
-    uint16_t startCoin3Amount, uint16_t startCoin6Amount)
-    : m_name(std::move(name)),
-    m_isPlayer1(isPlayer1),
-    m_coin1Count(startCoin1Amount),
-    m_coin3Count(startCoin3Amount),
-    m_coin6Count(startCoin6Amount),
+Player::Player(std::string name,  uint16_t startCoin1Amount,
+    uint16_t startCoin3Amount, uint16_t startCoin6Amount): m_name(std::move(name)),
+    m_coins(7),
     m_victoryPoints(0),
     m_wood(0),
     m_stone(0),
@@ -41,10 +34,7 @@ Player::Player(std::string name, bool isPlayer1, uint16_t startCoin1Amount,
 }
 
 Player::Player(const Player& other) : m_name(other.m_name),
-m_isPlayer1(other.m_isPlayer1),
-m_coin1Count(other.m_coin1Count),
-m_coin3Count(other.m_coin3Count),
-m_coin6Count(other.m_coin6Count),
+m_coins(other.m_coins),
 m_victoryPoints(other.m_victoryPoints),
 m_wood(other.m_wood),
 m_stone(other.m_stone),
@@ -67,87 +57,21 @@ const std::string& Player::name() const noexcept {
     return m_name;
 }
 
-bool Player::isPlayer1() const noexcept {
-    return m_isPlayer1;
-}
-
-void Player::setIsPlayer1(bool isPlayer1) noexcept {
-    m_isPlayer1 = isPlayer1;
-}
-
 void Player::setPlayerName(const std::string_view name)
 {
     m_name = name;
 }
 
-void Player::addCoin1(uint16_t amount) noexcept {
-    m_coin1Count += amount;
+void Player::addCoin(std::uint16_t amount) noexcept
+{
+	m_coins = amount;
 }
 
-void Player::addCoin3(uint16_t amount) noexcept {
-    m_coin3Count += amount;
+bool Player::payCoin(uint16_t amount) noexcept {
+	m_coins -= amount;
 }
-
-void Player::addCoin6(uint16_t amount) noexcept {
-    m_coin6Count += amount;
-}
-bool Player::payCoin1(uint16_t amount) noexcept {
-    if (m_coin1Count == 0)
-        return false;
-        m_coin1Count -= amount;
-		totalCoinValue();
-    return true;
-}
-bool Player::payCoin3(uint16_t amount) noexcept {
-    if (m_coin3Count == 0)
-        return false;
-    m_coin3Count -= amount;
-    totalCoinValue();
-    return true;
-}
-bool Player::payCoin6(uint16_t amount) noexcept {
-    if (m_coin6Count == 0)
-        return false;
-    m_coin6Count -= amount;
-    totalCoinValue();
-    return true;
-}
-bool Player::payCoins(uint16_t amount) noexcept {
-    while (amount > 0) {
-        if (m_coin6Count > 0 && amount >= 6) {
-            m_coin6Count--;
-            amount -= 6;
-        } else if (m_coin3Count > 0 && amount >= 3) {
-            m_coin3Count--;
-            amount -= 3;
-        } else if (m_coin1Count > 0 && amount >= 1) {
-            m_coin1Count--;
-            amount -= 1;
-        } else {
-            // Not enough coins to pay the amount
-            return false;
-        }
-    }
-    totalCoinValue();
-}
-uint16_t Player::coin1Count() const noexcept {
-    return m_coin1Count;
-}
-
-uint16_t Player::coin3Count() const noexcept {
-    return m_coin3Count;
-}
-
-uint16_t Player::coin6Count() const noexcept {
-    return m_coin6Count;
-}
-
-uint16_t Player::totalCoinValue() const noexcept {
-    return (m_coin1Count * 1) + (m_coin3Count * 3) + (m_coin6Count * 6);
-}
-
 uint16_t Player::coins() const noexcept {
-    return totalCoinValue();
+    return m_coins;
 }
 
 
@@ -231,8 +155,7 @@ uint16_t Player::getPapyrus() const noexcept { return m_papyrus; }
 void Player::addPapyrus(uint16_t amount) noexcept { m_papyrus += amount; }
 
 void Player::showStatus(std::ostream& os) const {
-    os << "Player " << m_name << " | coins=" << totalCoinValue()
-        << " (1s=" << m_coin1Count << ", 3s=" << m_coin3Count << ", 6s=" << m_coin6Count << ")\n";
+    os << "Player " << m_name << " | coins=" << coins() <<"\n";
 }
 
 void Player::showCards(std::ostream& os) const {
@@ -261,7 +184,7 @@ void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
     }
     if (m_scientificPointTypeNumber == 6)
     {
-        std::cout << "Scientific victory for player " << (m_isPlayer1 == 0) ? 1 : 2;
+        std::cout << "Scientific victory for player " << this->name();
         exit(0);
     }
 }
@@ -285,7 +208,7 @@ void Player::ProgressToken::applyEffect(std::unique_ptr<Player> player)
 }
 
 Player::ProgressToken Player::ProgressToken::agricultureToken([](std::unique_ptr<Player> player) {
-    player->addCoin6();
+    player->addCoin(6);
     player->addVictoryPoints(4);
     }, true);
 

@@ -15,35 +15,24 @@ public:
     const static std::uint16_t k_numberOfWonders = 4;
 
     Player();
-    explicit Player(std::string name, bool isPlayer1, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
+    explicit Player(std::string name, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
     Player(const Player& other);
 
     const std::string& name() const noexcept;
 
-    bool isPlayer1() const noexcept;
-    void setIsPlayer1(bool isPlayer1) noexcept;
     void setPlayerName(const std::string_view name);
 
     // Coin management methods
-    void addCoin1(std::uint16_t amount = 1) noexcept;
-    void addCoin3(std::uint16_t amount = 1) noexcept;
-    void addCoin6(std::uint16_t amount = 1) noexcept;
+	void addCoin(std::uint16_t amount) noexcept;
 
-    bool payCoin1(std::uint16_t amount = 1) noexcept;
-    bool payCoin3(std::uint16_t amount = 1) noexcept;
-    bool payCoin6(std::uint16_t amount = 1) noexcept;
-	bool payCoins(std::uint16_t amount) noexcept;
-    std::uint16_t coin1Count() const noexcept;
-    std::uint16_t coin3Count() const noexcept;
-    std::uint16_t coin6Count() const noexcept;
-    std::uint16_t totalCoinValue() const noexcept;
+    bool payCoin(std::uint16_t amount) noexcept;
     std::uint16_t coins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
     Building discardBuilding(Building::Color color, std::uint8_t id);
 
 
-    // Getters pentru cladiri, pe culori
+    // Getters for Buildings, by colour
     const std::vector<Building>& getBrownBuildings() const noexcept;
     const std::vector<Building>& getGreyBuildings() const noexcept;
     const std::vector<Building>& getBlueBuildings() const noexcept;
@@ -98,11 +87,8 @@ public:
     std::vector<ProgressToken> getProgressTokens();
 private:
 
-    bool m_isPlayer1;
     std::string m_name;
-    uint16_t m_coin1Count;
-    uint16_t m_coin3Count;
-    uint16_t m_coin6Count;
+    uint16_t m_coins;
     uint16_t m_victoryPoints;
 
     // Resources
