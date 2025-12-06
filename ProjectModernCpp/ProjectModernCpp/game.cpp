@@ -181,10 +181,70 @@ std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 	}
 }
 
+bool CheckPlayerResources(const std::unique_ptr<Player> player, const std::shared_ptr<Building>& building)
+{
+	uint16_t auxWood = 0;
+	uint16_t auxStone = 0;
+	uint16_t auxClay = 0;
+	uint16_t auxGlass = 0;
+	uint16_t auxPapyrus = 0;
+	std::vector<ResourceType> cardResourceCost = building->getCost().getCostResources();
+	for (auto resource : cardResourceCost)
+	{
+		switch (resource)
+		{
+		case ResourceType::WOOD:
+		{
+			auxWood++;
+			break;
+		}
+		case ResourceType::STONE:
+		{
+			auxStone++;
+			break;
+		}
+		case ResourceType::CLAY:
+		{
+			auxClay++;
+			break;
+		}
+		case ResourceType::GLASS:
+		{
+			auxGlass++;
+			break;
+		}
+		case ResourceType::PAPYRUS:
+		{
+			auxPapyrus++;
+			break;
+		}
+		}
+	}
+	if (player->getWood() < auxWood)
+		return false;
+	if (player->getStone() < auxStone)
+		return false;
+	if (player->getClay() < auxClay)
+		return false;
+	if (player->getGlass() < auxGlass)
+		return false;
+	if (player->getPapyrus() < auxPapyrus)
+		return false;
+	return true;
+}
+
+bool CheckPlayerCoins(const std::unique_ptr<Player> player, const std::shared_ptr<Building>& building)
+{
+	if (player->getCoins() < building->getCost().getCostCoins())
+		return false;
+	return true;
+}
+
 void Game::run()
 {
 	std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
 	std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_player2);
+	bool player1Turn= true;
 	initAgeIBoard();
 	m_currentAge = Building::Age::AGEI;
 	std::uint8_t move;
@@ -200,7 +260,7 @@ void Game::run()
 			bool acceptableCard;
 			do
 			{
-				std::cout << "card id:";
+				std::cout << "\ncard id:";
 				std::cin >> id;
 				acceptableCard = 0;
 				for (auto lastRowCard:m_cardDisplay[m_cardDisplay.size()-1])
@@ -215,7 +275,19 @@ void Game::run()
 					std::cout << "Bad Card. Choose again\n";
 			} while (!acceptableCard);
 
-			currentPlayer->addBuilding(Building());
+			std::shared_ptr <Building> building = getBuildingById(id);
+
+			if(CheckPlayerResources(std::move(currentPlayer),building) || CheckPlayerCoins(std::move(currentPlayer), building))
+				currentPlayer->addBuilding(*building);
+
+			if (player1Turn)
+			{
+				m_board.setPos(m_board.getPos() + building->getShields());
+			}
+			else
+			{
+				m_board.setPos(m_board.getPos() - building->getShields());
+			}
 		}
 		if (move == '2')
 		{
@@ -225,7 +297,10 @@ void Game::run()
 		{
 
 		}
-		//system("cls");
+
+		std::swap(currentPlayer, otherPlayer);
+		player1Turn = !player1Turn;
+		system("cls");
 	}
 }
 	

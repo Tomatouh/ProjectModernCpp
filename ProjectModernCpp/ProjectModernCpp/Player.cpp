@@ -101,6 +101,42 @@ void Player::addBuilding(const Building& building) {
         m_purpleBuildings.push_back(building);
         break;
     }
+
+	//Add appropriate resources
+    m_coins = m_coins - building.getCoins();
+	std::vector<ResourceType> buildingResource = building.getResources();
+    for (auto resource : buildingResource)
+    {
+        switch (resource)
+        {
+        case ResourceType::WOOD:
+        {
+            m_wood++;
+            break;
+        }
+        case ResourceType::STONE:
+        {
+            m_stone++;
+            break;
+        }
+        case ResourceType::CLAY:
+        {
+            m_clay++;
+            break;
+        }
+        case ResourceType::GLASS:
+        {
+            m_glass++;
+            break;
+        }
+        case ResourceType::PAPYRUS:
+        {
+            m_papyrus++;
+            break;
+        }
+        }
+	}
+	m_victoryPoints = m_victoryPoints + building.getVictoryPoints();
 }
 
 Building Player::discardBuilding(Building::Color color, std::uint8_t id)

@@ -115,8 +115,6 @@ private:
     std::vector<uint16_t> m_scientificPoints;
     uint16_t m_scientificPointTypeNumber = 0;
 
-    // Progress token, might delete
-    std::vector<ProgressToken> m_progressTokens;
     //Memorarea efectelor speciale pe care le poate avea un jucator (ProgressToken)
     bool m_hasEconomyProgressToken = 0;
     bool m_hasMasonryProgressToken = 0;
