@@ -213,7 +213,7 @@ const std::vector<Building>& Player::getYellowBuildings() const noexcept { retur
 const std::vector<Building>& Player::getRedBuildings() const noexcept { return m_redBuildings; }
 const std::vector<Building>& Player::getPurpleBuildings() const noexcept { return m_purpleBuildings; }
 
-const std::array<std::shared_ptr<Card>, Player::k_numberOfWonders> Player::getWonders() const noexcept { return m_wonders; }
+const std::array<std::pair<std::shared_ptr<Card>, std::shared_ptr<Building>>, Player::k_numberOfWonders> Player::getWonders() const noexcept { return m_wonders; }
 
 
 uint16_t Player::getVictoryPoints() const noexcept { return m_victoryPoints; }
