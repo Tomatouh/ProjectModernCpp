@@ -67,10 +67,11 @@ void Player::addCoin(std::uint16_t amount) noexcept
 	m_coins = amount;
 }
 
-bool Player::payCoin(uint16_t amount) noexcept {
+void Player::payCoin(uint16_t amount) noexcept {
 	m_coins -= amount;
+    
 }
-uint16_t Player::coins() const noexcept {
+uint16_t Player::getCoins() const noexcept {
     return m_coins;
 }
 
@@ -155,7 +156,7 @@ uint16_t Player::getPapyrus() const noexcept { return m_papyrus; }
 void Player::addPapyrus(uint16_t amount) noexcept { m_papyrus += amount; }
 
 void Player::showStatus(std::ostream& os) const {
-    os << "Player " << m_name << " | coins=" << coins() <<"\n";
+    os << "Player " << m_name << " | coins=" << getCoins() <<"\n";
 }
 
 void Player::showCards(std::ostream& os) const {

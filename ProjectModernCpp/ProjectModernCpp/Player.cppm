@@ -25,8 +25,8 @@ public:
     // Coin management methods
 	void addCoin(std::uint16_t amount) noexcept;
 
-    bool payCoin(std::uint16_t amount) noexcept;
-    std::uint16_t coins() const noexcept;
+    void payCoin(std::uint16_t amount) noexcept;
+    std::uint16_t getCoins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
     Building discardBuilding(Building::Color color, std::uint8_t id);
@@ -40,7 +40,7 @@ public:
     const std::vector<Building>& getYellowBuildings() const noexcept;
     const std::vector<Building>& getRedBuildings() const noexcept;
     const std::vector<Building>& getPurpleBuildings() const noexcept;
-    const std::array<std::shared_ptr<Card>, k_numberOfWonders> getWonders() const noexcept;
+    const std::array<std::pair<std::shared_ptr<Card>, std::shared_ptr<Building>>, Player::k_numberOfWonders> getWonders() const noexcept;
 
 
     uint16_t getVictoryPoints() const noexcept;
