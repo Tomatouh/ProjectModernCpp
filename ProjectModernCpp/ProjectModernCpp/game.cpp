@@ -156,4 +156,50 @@ void Game::initProgressTokens()
 	}
 	
 }
+
+void Game::run()
+{
+	std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
+	std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_player2);
+	initAgeIBoard();
+	std::uint8_t move;
+	while (!endGame)
+	{
+		displayBoard();
+		std::cout << "1.build\n2.discard\n3.wonder\nmove:";
+		std::cin >> move;
+		if (move == '1')
+		{
+			int id;
+			bool acceptableCard;
+			do
+			{
+				std::cout << "card id:";
+				std::cin >> id;
+				acceptableCard = 0;
+				for (auto lastRowCard:m_cardDisplay[m_cardDisplay.size()-1])
+				{
+					if (id == lastRowCard.first)
+					{
+						acceptableCard = 1;
+						break;
+					}
+				}
+				if (!acceptableCard)
+					std::cout << "Bad Card. Choose again\n";
+			} while (!acceptableCard);
+
+			currentPlayer->addBuilding(Building());
+		}
+		if (move == '2')
+		{
+
+		}
+		if (move == '3')
+		{
+
+		}
+		//system("cls");
+	}
+}
 	

@@ -21,8 +21,6 @@ import <vector>;
 int main() {
 
 	Game game;
-	game.initAgeIBoard();
-	game.displayBoard();
-	
+	game.run();
 	return 0;
 }

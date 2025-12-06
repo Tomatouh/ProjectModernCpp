@@ -1,8 +1,20 @@
 module Building;
 
-Building::Building(const std::vector<Effect>& effects, const Cost& cost, std::string_view name, std::uint8_t id,
-	std::uint8_t victoryPoints, std::uint8_t shields, std::uint8_t coins, Age age, Color color, const std::vector<ResourceType>& resources, const std::optional<ScientificSymbol>& scientificSymbol) :
-	Card(effects, cost, name, id, victoryPoints, shields, coins), m_age(age), m_color(color), m_resources(resources), m_scientificSymbol(scientificSymbol)
+Building::Building(const std::vector<Effect>& effects,
+	const Cost& cost, std::string_view name, std::uint8_t id,
+	std::uint8_t victoryPoints,
+	std::uint8_t shields,
+	std::uint8_t coins,
+	Age age,
+	Color color,
+	const std::vector<ResourceType>& resources,
+	const std::optional<ScientificSymbol>& scientificSymbol):
+
+	Card(effects, cost, name, id, victoryPoints, shields, coins),
+	m_age(age),
+	m_color(color),
+	m_resources(resources),
+	m_scientificSymbol(scientificSymbol)
 {
 }
 
@@ -15,7 +27,18 @@ Building::Building(Building&& other) noexcept
 {
 	this->swap(other);
 }
+Building::Building(const Age& age,
+	const Color& color,
+	const std::vector<ResourceType>& resources,
+	const std::optional<ScientificSymbol>& scientificSymbol,
+	const Card& card):
 
+	Card(card.getEffects(), card.getCost(), card.getName(), card.getId(), card.getVictoryPoints(), card.getShields(), card.getCoins()),
+	m_age(age),
+	m_color(color),
+	m_resources(resources),
+	m_scientificSymbol(scientificSymbol)
+{}
 Building& Building::operator=(const Building& other)
 {
 	Building tempBuilding{ other };

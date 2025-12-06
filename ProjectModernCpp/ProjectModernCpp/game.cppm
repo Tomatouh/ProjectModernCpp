@@ -47,6 +47,7 @@ public:
 	void loadProgressTokens();
 	void initProgressTokens();
 
+	void run();
 };
 
 

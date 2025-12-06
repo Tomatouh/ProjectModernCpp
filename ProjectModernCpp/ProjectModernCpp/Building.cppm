@@ -34,6 +34,7 @@ public:
 	Building(const std::vector<Effect>& effects, const Cost& cost, std::string_view name, std::uint8_t id,
 		std::uint8_t victoryPoints, std::uint8_t shields, std::uint8_t coins, Age age, Color color, const std::vector<ResourceType>& resources, const std::optional<ScientificSymbol>& scientificSymbol);
 	Building(const Building& other);
+	Building(const Age& m_age, const Color& m_color, const std::vector<ResourceType>& m_resources, const std::optional<ScientificSymbol>& m_scientificSymbol,const Card& card);
 	Building(Building&& other) noexcept;
 	Building& operator=(const Building& other);
 	Building& operator=(Building&& other) noexcept;
