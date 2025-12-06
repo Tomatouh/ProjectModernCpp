@@ -33,7 +33,7 @@ void Game::initAgeIBoard()
 	
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::vector<std::shared_ptr<Card>> copyDeck = m_ageIDeck;
+	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIDeck;
 	for (int i = 0; i < 5; ++i)
 	{
 		std::vector<std::pair<std::uint16_t, bool>> row;
@@ -57,7 +57,7 @@ void Game::initAgeIIBoard()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::vector<std::shared_ptr<Card>> copyDeck = m_ageIIDeck;
+	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIIDeck;
 	for (int i = 5; i > 0; --i)
 	{
 		std::vector<std::pair<std::uint16_t, bool>> row;
@@ -82,7 +82,7 @@ void Game::initAgeIIIBoard()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::vector<std::shared_ptr<Card>> copyDeck = m_ageIIIDeck;
+	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIIIDeck;
 	m_cardDisplay.resize(7);
 	for (int i = 0; i <= 3; ++i)
 	{
@@ -157,17 +157,43 @@ void Game::initProgressTokens()
 	
 }
 
+std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
+{
+	if (m_currentAge == Building::Age::AGEI)
+	{
+		for(int i=0;i<m_ageIDeck.size();i++)
+			if (m_ageIDeck[i]->getId() == searchId)
+				return m_ageIDeck[i];
+	}
+
+	if (m_currentAge == Building::Age::AGEII)
+	{
+		for (int i = 0; i < m_ageIIDeck.size(); i++)
+			if (m_ageIIDeck[i]->getId() == searchId)
+				return m_ageIIDeck[i];
+	}
+
+	if (m_currentAge == Building::Age::AGEIII)
+	{
+		for (int i = 0; i < m_ageIIIDeck.size(); i++)
+			if (m_ageIIIDeck[i]->getId() == searchId)
+				return m_ageIIIDeck[i];
+	}
+}
+
 void Game::run()
 {
 	std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
 	std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_player2);
 	initAgeIBoard();
+	m_currentAge = Building::Age::AGEI;
 	std::uint8_t move;
 	while (!endGame)
 	{
 		displayBoard();
 		std::cout << "1.build\n2.discard\n3.wonder\nmove:";
 		std::cin >> move;
+		std::cout << move;
 		if (move == '1')
 		{
 			int id;

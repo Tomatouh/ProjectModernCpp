@@ -4,11 +4,11 @@ import Building;
 import buildingResource;
 import std;
 
-export std::vector<std::shared_ptr<Card>> loadAgeIDeck() {
+export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
     /*using std::make_unique;
     using std::vector;
     using std::string;*/
-    std::vector<std::shared_ptr<Card>> out;
+    std::vector<std::shared_ptr<Building>> out;
 
     // BROWN CARDS
     {
@@ -388,8 +388,8 @@ export std::vector<std::shared_ptr<Card>> loadAgeIDeck() {
     // Add more cards/buildings here...
     return out;
 }
-export std::vector<std::shared_ptr<Card>> loadAgeIIDeck() {
-    std::vector<std::shared_ptr<Card>> out;
+export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
+    std::vector<std::shared_ptr<Building>> out;
 
     // BROWN CARDS
     {
@@ -772,8 +772,8 @@ export std::vector<std::shared_ptr<Card>> loadAgeIIDeck() {
 
     return out;
 }
-export std::vector<std::shared_ptr<Card>> loadAgeIIIDeck() {
-    std::vector<std::shared_ptr<Card>> out;
+export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
+    std::vector<std::shared_ptr<Building>> out;
 
     // RED CARDS
 

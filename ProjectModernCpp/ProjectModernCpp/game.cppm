@@ -14,9 +14,9 @@ private:
 	Player m_player1, m_player2;
 	Board m_board;
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
-	std::vector<std::shared_ptr<Card>> m_ageIDeck;
-	std::vector<std::shared_ptr<Card>> m_ageIIDeck;
-	std::vector<std::shared_ptr<Card>> m_ageIIIDeck;
+	std::vector<std::shared_ptr<Building>> m_ageIDeck;
+	std::vector<std::shared_ptr<Building>> m_ageIIDeck;
+	std::vector<std::shared_ptr<Building>> m_ageIIIDeck;
 	std::vector<std::shared_ptr<Card>> m_discardedCards;
 	std::vector<std::vector<std::pair<std::uint16_t, bool>>> m_cardDisplay;
 	bool endGame;
@@ -24,7 +24,7 @@ private:
 	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
 	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
 
-
+	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
 public:
 
 	Game();
