@@ -75,6 +75,7 @@ import buildingResource;
 
 
 	private:
+
 		std::vector<Effect> m_effects;
 		Cost m_cost;
 		std::string m_name;

@@ -115,6 +115,7 @@ void Game::displayBoard()
 	{
 		for (int j = 0; j < m_cardDisplay[i].size(); ++j)
 		{
+
 			if (m_cardDisplay[i][j].second) std::cout << "[" << m_cardDisplay[i][j].first << "] ";
 			else std::cout << "[hidden]";
 		}
@@ -125,5 +126,34 @@ void Game::displayBoard()
 void Game::clearBoard()
 {
 	m_cardDisplay.clear();
+}
+
+void Game::loadProgressTokens()
+{
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::agricultureToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::architectureToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::economyToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::lawToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::masonryToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::mathematicsToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::philosphyToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::strategyToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::theologyToken));
+	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::urbanismToken));
+}
+
+void Game::initProgressTokens()
+{
+	
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	for (int i = 0; i < m_progressTokens.size(); ++i)
+	{
+		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
+		std::uint16_t index = dist(gen);
+		m_progressTokens[i] = m_progressTokensDeck[index];
+		m_progressTokensDeck.erase(m_progressTokensDeck.begin() + index);
+	}
+	
 }
 	

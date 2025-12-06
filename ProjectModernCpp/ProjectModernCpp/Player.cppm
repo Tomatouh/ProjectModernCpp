@@ -128,13 +128,13 @@ private:
     // Progress token, might delete
     std::vector<ProgressToken> m_progressTokens;
     //Memorarea efectelor speciale pe care le poate avea un jucator (ProgressToken)
-    bool m_hasEconomyProgressToken=0;
+    bool m_hasEconomyProgressToken = 0;
     bool m_hasMasonryProgressToken = 0;
     bool m_hasStrategyProgressToken = 0;
     bool m_hasTheologyProgressToken = 0;
     bool m_hasUrbanismProgressToken = 0;
     bool m_hasArchitectureProgressToken = 0;
     // Wonders
-    std::array<std::shared_ptr<Card>, k_numberOfWonders> m_wonders;
+    std::array<std::pair<std::shared_ptr<Card>, std::shared_ptr<Building>>, k_numberOfWonders> m_wonders;
 
 };

@@ -10,7 +10,8 @@ import cardsLoader;
 
 export class Game {
 private:
-	const static std::uint8_t k_boardSize = 20;
+	const static std::uint16_t k_boardSize = 20;
+	const static std::uint16_t k_tokensNumber = 5;
 	Player m_player1, m_player2;
 	Board m_board;
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
@@ -21,6 +22,9 @@ private:
 	std::vector<std::vector<std::pair<std::uint16_t, bool>>> m_cardDisplay;
 	bool endGame;
 	Building::Age m_currentAge;
+	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
+	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
+
 
 public:
 
@@ -40,6 +44,9 @@ public:
 
 	void displayBoard();
 	void clearBoard();
+
+	void loadProgressTokens();
+	void initProgressTokens();
 
 };
 
