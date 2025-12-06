@@ -136,8 +136,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bank.cpp" />
-    <ClCompile Include="bank.cppm" />
     <ClCompile Include="board.cpp" />
     <ClCompile Include="board.cppm" />
     <ClCompile Include="Building.cpp" />

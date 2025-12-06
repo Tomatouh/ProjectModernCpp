@@ -2,11 +2,10 @@ import effects;
 import card;
 import Player;
 import board;
-import bank;
 
-void addCoins(Player& player, const Card& card, Bank& bank)
+void addCoins(Player& player, const Card& card)
 {
-	bank.take(card.getCoins(), player);
+	player.addCoin(card.getCoins());
 
 }
 void addVictorypoints(Player& player, const Card& card) {
@@ -94,25 +93,25 @@ void addScientificSymbol(Player& player, const Building& card)
 	player.addBuilding(card);
 }
 
-void threeCoinsPerGray(Player& player, Bank& bank)
+void threeCoinsPerGray(Player& player)
 {
-	bank.take(player.getGreyBuildings().size() * 3, player);
+	player.addCoin(player.getGreyBuildings().size() * 3);
 
 }
 
-void twoCoinsPerBrown(Player& player, Bank& bank)
+void twoCoinsPerBrown(Player& player)
 {
-	bank.take(player.getBrownBuildings().size() * 2, player);
+	player.addCoin(player.getBrownBuildings().size() * 2);
 }
 
-void oneCoinPerYellow(Player& player, Bank& bank)
+void oneCoinPerYellow(Player& player)
 {
-	bank.take(player.getYellowBuildings().size(), player);
+	player.addCoin(player.getYellowBuildings().size());
 }
 
-void oneCoinPerRed(Player& player, Bank& bank)
+void oneCoinPerRed(Player& player)
 {
-	bank.take(player.getRedBuildings().size(), player);
+	player.addCoin(player.getRedBuildings().size());
 }
 
 void buildersGuild(Player& player1, const Player& player2, bool endGame)
@@ -120,10 +119,10 @@ void buildersGuild(Player& player1, const Player& player2, bool endGame)
 	if (endGame) player1.addVictoryPoints(2 * std::max(player1.getWonders().size(), player2.getWonders().size()));
 }
 
-void tradersGuild(Player& player1, const Player& player2, bool endGame, Bank& bank)
+void tradersGuild(Player& player1, const Player& player2, bool endGame)
 {
 	if (!endGame) {
-		bank.take(std::max(player1.getYellowBuildings().size(), player2.getYellowBuildings().size()), player1);
+		player1.addCoin(std::max(player1.getYellowBuildings().size(), player2.getYellowBuildings().size()));
 	}
 	else {
 		player1.addVictoryPoints(std::max(player1.getYellowBuildings().size(), player2.getYellowBuildings().size()));
@@ -131,46 +130,46 @@ void tradersGuild(Player& player1, const Player& player2, bool endGame, Bank& ba
 
 }
 
-void moneylendersGuild(Player& player1, const Player& player2, bool endGame, Bank& bank)
+void moneylendersGuild(Player& player1, const Player& player2, bool endGame)
 {
 	if (endGame) player1.addVictoryPoints(std::max(player1.getVictoryPoints(), player2.getVictoryPoints()));
 }
 
-void magistratesGuild(Player& player1, const Player& player2, bool endGame, Bank& bank)
+void magistratesGuild(Player& player1, const Player& player2, bool endGame)
 {
 	if (!endGame) {
-		bank.take(std::max(player1.getBlueBuildings().size(), player2.getBlueBuildings().size()), player1);
+		player1.addCoin(std::max(player1.getBlueBuildings().size(), player2.getBlueBuildings().size()));
 	}
 	else {
 		player1.addVictoryPoints(std::max(player1.getBlueBuildings().size(), player2.getBlueBuildings().size()));
 	}
 }
 
-void scientistsGuild(Player& player1, const Player& player2, bool endGame, Bank& bank)
+void scientistsGuild(Player& player1, const Player& player2, bool endGame)
 {
 	if (!endGame) {
-		bank.take(std::max(player1.getGreenBuildings().size(), player2.getGreenBuildings().size()), player1);
+		player1.addCoin(std::max(player1.getGreenBuildings().size(), player2.getGreenBuildings().size()));
 	}
 	else {
 		player1.addVictoryPoints(std::max(player1.getGreenBuildings().size(), player2.getGreenBuildings().size()));
 	}
 }
 
-void tacticiansGuild(Player& player1, const Player& player2, bool endGame, Bank& bank)
+void tacticiansGuild(Player& player1, const Player& player2, bool endGame)
 {
 	if (!endGame) {
-		bank.take(std::max(player1.getRedBuildings().size(), player2.getRedBuildings().size()), player1);
+		player1.addCoin(std::max(player1.getRedBuildings().size(), player2.getRedBuildings().size()));
 	}
 	else {
 		player1.addVictoryPoints(std::max(player1.getRedBuildings().size(), player2.getRedBuildings().size()));
 	}
 }
 
-void shipownersGuild(Player& player1, const Player& player2, bool endGame, Bank& bank)
+void shipownersGuild(Player& player1, const Player& player2, bool endGame)
 {
 	if (!endGame) {
-		bank.take(std::max(player1.getBrownBuildings().size() + player1.getGreyBuildings().size(),
-			player2.getBrownBuildings().size() + player2.getGreyBuildings().size()), player1);
+		player1.addCoin(std::max(player1.getBrownBuildings().size() + player1.getGreyBuildings().size(),
+			player2.getBrownBuildings().size() + player2.getGreyBuildings().size()));
 	}
 	else {
 		player1.addVictoryPoints(std::max(player1.getBrownBuildings().size() + player1.getGreyBuildings().size(),
@@ -178,9 +177,9 @@ void shipownersGuild(Player& player1, const Player& player2, bool endGame, Bank&
 	}
 }
 
-void loseThreeCoins(Player& player, Bank& bank)
+void loseThreeCoins(Player& player)
 {
-	bank.take(3, player);
+	player.addCoin(3);
 }
 
 void discardGrey(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards)
@@ -195,9 +194,9 @@ void discardBrown(Player& player, std::uint8_t idCard, std::vector<std::shared_p
 	discardedCards.push_back(discarded);
 }
 
-void twoCoinsPerWonder(Player& player, Bank& bank)
+void twoCoinsPerWonder(Player& player)
 {
-	bank.take(player.getWonders().size() * 2, player);
+	player.addCoin(player.getWonders().size() * 2);
 }
 
 void addShields(bool player, Board& board, const Card& card)

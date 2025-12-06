@@ -21,9 +21,6 @@
     <ClCompile Include="buildingResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bank.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,9 +43,6 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="resource.cppm">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bank.cppm">
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="Building.cppm">
