@@ -7,6 +7,7 @@ import <memory>;
 import <functional>;
 import card;
 import Building; // Building trebuie importat pentru a fi folosit in Player
+import buildingResource;
 
 export class Player {
 public:
@@ -85,6 +86,9 @@ public:
     };
     void applyEffects();
     std::vector<ProgressToken> getProgressTokens();
+
+    std::uint16_t getTradeCost(ResourceType type, const Player& opponent) const;
+
 private:
 
     std::string m_name;
@@ -122,5 +126,9 @@ private:
     bool m_hasArchitectureProgressToken = 0;
     // Wonders
     std::array<std::pair<std::shared_ptr<Card>, std::shared_ptr<Building>>, k_numberOfWonders> m_wonders;
+
+    bool hasDiscountFor(ResourceType type) const;
+
+    std::uint16_t countOpponentProduction(ResourceType type) const;
 
 };

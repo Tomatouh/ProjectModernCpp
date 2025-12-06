@@ -5,6 +5,7 @@ import <memory>;
 import card;
 import Building;
 import <functional>;
+import buildingResource;
 
 Player::Player() : m_name("player"),
 m_coins(7),
@@ -259,4 +260,58 @@ Player::ProgressToken::ProgressToken(std::function<void(std::unique_ptr<Player> 
 {
     this->m_effect = effect;
     this->m_isOneTime = isOneTime;
+}
+
+bool Player::hasDiscountFor(ResourceType type) const
+{
+    std::uint8_t requiredId = 0;
+
+    switch (type)
+    {
+    case ResourceType::WOOD: requiredId = 42; break;
+    case ResourceType::CLAY: requiredId = 41; break;
+    case ResourceType::STONE: requiredId = 40; break;
+    case ResourceType::GLASS: requiredId = 43; break;
+    case ResourceType::PAPYRUS: requiredId = 43; break;
+    }
+
+    for (const auto& building : m_yellowBuildings)
+    {
+        if (building.getId() == requiredId)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::uint16_t Player::countOpponentProduction(ResourceType type) const {
+    std::uint16_t count = 0;
+
+    auto countInList = [&](const std::vector<Building>& buildings) {
+        for (const auto& b : buildings) {
+            for (const auto& r : b.getResources()) {
+                if (r == type) {
+                    count++;
+                }
+            }
+        }
+        };
+
+    countInList(m_brownBuildings);
+    countInList(m_greyBuildings);
+
+    return count;
+}
+
+std::uint16_t Player::getTradeCost(ResourceType type, const Player& opponent) const {
+    if (this->hasDiscountFor(type)) {
+        return 1;
+    }
+
+
+    std::uint16_t baseCost = 2;
+    std::uint16_t opponentTax = opponent.countOpponentProduction(type);
+
+    return baseCost + opponentTax;
 }
