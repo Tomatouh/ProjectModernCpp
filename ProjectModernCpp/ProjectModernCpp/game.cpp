@@ -132,7 +132,7 @@ void Game::displayBoard()
 					std::cout << "[hidden]";
 			}
 			else
-				std::cout << "[NC] ";
+				std::cout << "[NC]";
 			
 		}
 		std::cout << "\n";
@@ -281,20 +281,16 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 }
 void Game::removeCardFromDeck(std::uint8_t id)
 {
-	for (auto row : m_cardDisplay)
-	{
-		for (auto cell : row)
-		{
-			if(cell.has_value())
+	for (int i=0;i<m_cardDisplay.size();i++)
+		for(int j=0;j<m_cardDisplay[i].size();j++)
+			if (m_cardDisplay[i][j].has_value())
 			{
-				if (cell.value().getBuilding()->getId() == id)
+				if (m_cardDisplay[i][j].value().getBuilding()->getId() == id)
 				{
-					cell=std::nullopt;
-					return;
+					m_cardDisplay[i][j] = std::nullopt;
+					break;
 				}
 			}
-		}
-	}
 }
 /*
 To do:
