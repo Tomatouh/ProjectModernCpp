@@ -145,6 +145,8 @@
     <ClCompile Include="card.cpp" />
     <ClCompile Include="card.cppm" />
     <ClCompile Include="cardsLoader.cppm" />
+    <ClCompile Include="displayCard.cpp" />
+    <ClCompile Include="displayCard.cppm" />
     <ClCompile Include="effects.cpp" />
     <ClCompile Include="effects.cppm" />
     <ClCompile Include="game.cpp" />

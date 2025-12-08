@@ -66,6 +66,12 @@
     <ClCompile Include="cardsLoader.cppm">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="displayCard.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="displayCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="card.cpp">

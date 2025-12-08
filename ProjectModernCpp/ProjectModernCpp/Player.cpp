@@ -103,7 +103,7 @@ void Player::addBuilding(const Building& building) {
     }
 
 	//Add appropriate resources
-    m_coins = m_coins - building.getCoins();
+    m_coins = m_coins - building.getCost().getCostCoins();
 	std::vector<ResourceType> buildingResource = building.getResources();
     for (auto resource : buildingResource)
     {

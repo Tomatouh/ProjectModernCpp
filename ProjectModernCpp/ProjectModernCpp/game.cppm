@@ -5,7 +5,7 @@ import card;
 import Building;
 import std;
 import cardsLoader;
-
+import displayCard;
 
 export class Game {
 private:
@@ -18,7 +18,7 @@ private:
 	std::vector<std::shared_ptr<Building>> m_ageIIDeck;
 	std::vector<std::shared_ptr<Building>> m_ageIIIDeck;
 	std::vector<std::shared_ptr<Card>> m_discardedCards;
-	std::vector<std::vector<std::pair<std::uint16_t, bool>>> m_cardDisplay;
+	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
 	bool endGame;
 	Building::Age m_currentAge;
 	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
@@ -26,6 +26,7 @@ private:
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
 	std::shared_ptr <Building> selectAcceptableCard();
+	void removeCardFromDeck(std::uint8_t id);
 public:
 
 	Game();

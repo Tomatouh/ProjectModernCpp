@@ -36,16 +36,19 @@ void Game::initAgeIBoard()
 	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIDeck;
 	for (int i = 0; i < 5; ++i)
 	{
-		std::vector<std::pair<std::uint16_t, bool>> row;
+		std::vector<std::optional<displayCard>> row;
 		for (int j = 0; j < i + 2; ++j)
 		{
 			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
-			std::pair<std::uint16_t, bool> card;
+			displayCard card;
 			std::uint16_t index1 = dist(gen);
-			card.first = copyDeck[index1].get()->getId();
+			card.setBuilding(copyDeck[index1]);
 			copyDeck.erase(copyDeck.begin() + index1);
-			if (!(i % 2)) card.second = true;
-			row.push_back(card);
+			if (!(i % 2))
+				card.setFaceUp(true);
+			else
+				card.setFaceUp(false);
+			row.push_back(std::make_optional(card));
 			
 		}
 		m_cardDisplay.push_back(row);
@@ -60,16 +63,19 @@ void Game::initAgeIIBoard()
 	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIIDeck;
 	for (int i = 5; i > 0; --i)
 	{
-		std::vector<std::pair<std::uint16_t, bool>> row;
-		for (int j = 0; j < i + 1; ++j)
+		std::vector<std::optional<displayCard>> row;
+		for (int j = 0; j < i + 2; ++j)
 		{
 			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
-			std::pair<std::uint16_t, bool> card;
+			displayCard card;
 			std::uint16_t index1 = dist(gen);
-			card.first = copyDeck[index1].get()->getId();
+			card.setBuilding(copyDeck[index1]);
 			copyDeck.erase(copyDeck.begin() + index1);
-			if (!(i % 2)) card.second = true;
-			row.push_back(card);
+			if (!(i % 2))
+				card.setFaceUp(true);
+			else
+				card.setFaceUp(false);
+			row.push_back(std::make_optional(card));
 
 		}
 		m_cardDisplay.push_back(row);
@@ -99,12 +105,15 @@ void Game::initAgeIIIBoard()
 		for (int j = 0; j < m_cardDisplay[i].size(); ++j)
 		{
 			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
-			std::pair<std::uint16_t, bool> card;
+			displayCard card;
 			std::uint16_t index1 = dist(gen);
-			card.first = copyDeck[index1].get()->getId();
+			card.setBuilding(copyDeck[index1]);
 			copyDeck.erase(copyDeck.begin() + index1);
-			if (!(i % 2)) card.second = true;
-			m_cardDisplay[i][j] = card;
+			if (!(i % 2))
+				card.setFaceUp(true);
+			else
+				card.setFaceUp(false);
+			m_cardDisplay[i][j] = std::make_optional(card);
 		}
 	}
 }
@@ -115,9 +124,16 @@ void Game::displayBoard()
 	{
 		for (int j = 0; j < m_cardDisplay[i].size(); ++j)
 		{
-
-			if (m_cardDisplay[i][j].second) std::cout << "[" << m_cardDisplay[i][j].first << "] ";
-			else std::cout << "[hidden]";
+			if (m_cardDisplay[i][j].has_value())
+			{
+				if (m_cardDisplay[i][j].value().isFaceUp())
+					std::cout << "[" << (int)m_cardDisplay[i][j].value().getBuilding()->getId() << "] ";
+				else
+					std::cout << "[hidden]";
+			}
+			else
+				std::cout << "[NC] ";
+			
 		}
 		std::cout << "\n";
 	}
@@ -181,7 +197,7 @@ std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 	}
 }
 
-bool CheckPlayerResources(const std::unique_ptr<Player> player, const std::shared_ptr<Building>& building)
+bool CheckPlayerResources(const std::unique_ptr<Player>& player, const std::shared_ptr<Building>& building)
 {
 	uint16_t auxWood = 0;
 	uint16_t auxStone = 0;
@@ -233,7 +249,7 @@ bool CheckPlayerResources(const std::unique_ptr<Player> player, const std::share
 	return true;
 }
 
-bool CheckPlayerCoins(const std::unique_ptr<Player> player, const std::shared_ptr<Building>& building)
+bool CheckPlayerCoins(const std::unique_ptr<Player>& player, const std::shared_ptr<Building>& building)
 {
 	if (player->getCoins() < building->getCost().getCostCoins())
 		return false;
@@ -250,7 +266,8 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 		acceptableCard = 0;
 		for (auto lastRowCard : m_cardDisplay[m_cardDisplay.size() - 1])
 		{
-			if (id == lastRowCard.first)
+			if (lastRowCard.has_value())
+			if (id == lastRowCard.value().getBuilding()->getId())
 			{
 				acceptableCard = 1;
 				break;
@@ -261,6 +278,23 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 	} while (!acceptableCard);
 
 	return getBuildingById(id);
+}
+void Game::removeCardFromDeck(std::uint8_t id)
+{
+	for (auto row : m_cardDisplay)
+	{
+		for (auto cell : row)
+		{
+			if(cell.has_value())
+			{
+				if (cell.value().getBuilding()->getId() == id)
+				{
+					cell=std::nullopt;
+					return;
+				}
+			}
+		}
+	}
 }
 /*
 To do:
@@ -280,17 +314,24 @@ void Game::run()
 		displayBoard();
 		std::cout << "1.build\n2.discard\n3.wonder\nmove:";
 		std::cin >> move;
-		std::cout << move;
 		if (move == '1')
 		{
 			std::shared_ptr <Building> building = selectAcceptableCard();
-			if(CheckPlayerResources(std::move(currentPlayer),building) || CheckPlayerCoins(std::move(currentPlayer), building))
+			if(CheckPlayerResources(currentPlayer,building) && CheckPlayerCoins(currentPlayer, building))
 				currentPlayer->addBuilding(*building);
+			else
+			{
+				std::cout << "You don't have enough resources/coins to build this building. Retry\n";
+				continue;
+			}
+
 
 			if (player1Turn)
 				m_board.setPos(m_board.getPos() + building->getShields());
 			else
 				m_board.setPos(m_board.getPos() - building->getShields());
+
+			removeCardFromDeck(building->getId());
 		}
 		if (move == '2')
 		{
