@@ -239,7 +239,34 @@ bool CheckPlayerCoins(const std::unique_ptr<Player> player, const std::shared_pt
 		return false;
 	return true;
 }
+std::shared_ptr <Building> Game::selectAcceptableCard()
+{
+	int id;
+	bool acceptableCard;
+	do
+	{
+		std::cout << "\ncard id:";
+		std::cin >> id;
+		acceptableCard = 0;
+		for (auto lastRowCard : m_cardDisplay[m_cardDisplay.size() - 1])
+		{
+			if (id == lastRowCard.first)
+			{
+				acceptableCard = 1;
+				break;
+			}
+		}
+		if (!acceptableCard)
+			std::cout << "Bad Card. Choose again\n";
+	} while (!acceptableCard);
 
+	return getBuildingById(id);
+}
+/*
+To do:
+Make it so that wonders actually have an effect
+Implement correct functionality for each age deck
+*/
 void Game::run()
 {
 	std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
@@ -256,46 +283,25 @@ void Game::run()
 		std::cout << move;
 		if (move == '1')
 		{
-			int id;
-			bool acceptableCard;
-			do
-			{
-				std::cout << "\ncard id:";
-				std::cin >> id;
-				acceptableCard = 0;
-				for (auto lastRowCard:m_cardDisplay[m_cardDisplay.size()-1])
-				{
-					if (id == lastRowCard.first)
-					{
-						acceptableCard = 1;
-						break;
-					}
-				}
-				if (!acceptableCard)
-					std::cout << "Bad Card. Choose again\n";
-			} while (!acceptableCard);
-
-			std::shared_ptr <Building> building = getBuildingById(id);
-
+			std::shared_ptr <Building> building = selectAcceptableCard();
 			if(CheckPlayerResources(std::move(currentPlayer),building) || CheckPlayerCoins(std::move(currentPlayer), building))
 				currentPlayer->addBuilding(*building);
 
 			if (player1Turn)
-			{
 				m_board.setPos(m_board.getPos() + building->getShields());
-			}
 			else
-			{
 				m_board.setPos(m_board.getPos() - building->getShields());
-			}
 		}
 		if (move == '2')
 		{
-
+			std::shared_ptr <Building> building = selectAcceptableCard();
+			std::uint8_t profit = 2 + currentPlayer->getYellowBuildings().size();
+			currentPlayer->addCoin(profit);
+			m_discardedCards.push_back(building);
 		}
 		if (move == '3')
 		{
-
+			std::cout << "WIP\n";
 		}
 
 		std::swap(currentPlayer, otherPlayer);

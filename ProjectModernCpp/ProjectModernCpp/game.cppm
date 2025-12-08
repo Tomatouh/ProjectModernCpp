@@ -25,6 +25,7 @@ private:
 	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
+	std::shared_ptr <Building> selectAcceptableCard();
 public:
 
 	Game();
