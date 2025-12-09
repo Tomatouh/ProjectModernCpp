@@ -167,6 +167,12 @@ Building Player::discardBuilding(Building::Color color, std::uint8_t id)
     
 }
 
+void Player::addWonder(const std::shared_ptr<Card>& wonder)
+{
+    std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> card{ wonder, std::make_optional(nullptr) };
+    m_wonders.push_back(card);
+}
+
 const std::vector<Building>& Player::getBrownBuildings() const noexcept { return m_brownBuildings; }
 const std::vector<Building>& Player::getGreyBuildings() const noexcept { return m_greyBuildings; }
 const std::vector<Building>& Player::getBlueBuildings() const noexcept { return m_blueBuildings; }
@@ -175,7 +181,7 @@ const std::vector<Building>& Player::getYellowBuildings() const noexcept { retur
 const std::vector<Building>& Player::getRedBuildings() const noexcept { return m_redBuildings; }
 const std::vector<Building>& Player::getPurpleBuildings() const noexcept { return m_purpleBuildings; }
 
-const std::array<std::pair<std::shared_ptr<Card>, std::shared_ptr<Building>>, Player::k_numberOfWonders> Player::getWonders() const noexcept { return m_wonders; }
+const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> Player::getWonders() const noexcept { return m_wonders; }
 
 
 uint16_t Player::getVictoryPoints() const noexcept { return m_victoryPoints; }

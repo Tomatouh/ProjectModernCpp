@@ -12,9 +12,6 @@ import buildingResource;
 export class Player {
 public:
 
-    const static std::uint16_t k_startCoin1Amount = 7, k_startCoin3Amount = 0, k_startCoin6Amount = 0;
-    const static std::uint16_t k_numberOfWonders = 4;
-
     Player();
     explicit Player(std::string name, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
     Player(const Player& other);
@@ -31,6 +28,7 @@ public:
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
     Building discardBuilding(Building::Color color, std::uint8_t id);
+    void addWonder(const std::shared_ptr<Card>& wonder);
 
 
     // Getters for Buildings, by colour
@@ -41,7 +39,7 @@ public:
     const std::vector<Building>& getYellowBuildings() const noexcept;
     const std::vector<Building>& getRedBuildings() const noexcept;
     const std::vector<Building>& getPurpleBuildings() const noexcept;
-    const std::array<std::pair<std::shared_ptr<Card>, std::shared_ptr<Building>>, Player::k_numberOfWonders> getWonders() const noexcept;
+    const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> getWonders() const noexcept;
 
 
     uint16_t getVictoryPoints() const noexcept;
@@ -125,7 +123,7 @@ private:
     bool m_hasUrbanismProgressToken = 0;
     bool m_hasArchitectureProgressToken = 0;
     // Wonders
-    std::array<std::pair<std::shared_ptr<Card>, std::shared_ptr<Building>>, k_numberOfWonders> m_wonders;
+    std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> m_wonders;
 
     bool hasDiscountFor(ResourceType type) const;
 

@@ -1318,7 +1318,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
         std::vector<Card::Effect> effects = { Card::Effect::addCoins, Card::Effect::playSecondTurn};
         Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
         std::string name = "The Temple of Artemis";
-        uint8_t id = 84;
+        uint8_t id = 85;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 12;

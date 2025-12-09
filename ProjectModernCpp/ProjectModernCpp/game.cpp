@@ -13,10 +13,10 @@ module game;
 //{
 //}
 
-Game::Game() : m_player1(), m_player2(), m_board(0), 
-m_wondersDeck(loadWondersDeck()), 
-m_ageIDeck(loadAgeIDeck()), 
-m_ageIIDeck(loadAgeIIDeck()), 
+Game::Game() : m_player1(), m_player2(), m_board(0),
+m_wondersDeck(loadWondersDeck()),
+m_ageIDeck(loadAgeIDeck()),
+m_ageIIDeck(loadAgeIIDeck()),
 m_ageIIIDeck(loadAgeIIIDeck()),
 m_discardedCards(),
 m_cardDisplay(),
@@ -25,12 +25,12 @@ m_currentAge(Building::Age::AGEI)
 {
 	m_player1.setPlayerName("player1");
 	m_player2.setPlayerName("player2");
-	
+
 }
 
 void Game::initAgeIBoard()
 {
-	
+
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIDeck;
@@ -49,7 +49,7 @@ void Game::initAgeIBoard()
 			else
 				card.setFaceUp(false);
 			row.push_back(std::make_optional(card));
-			
+
 		}
 		m_cardDisplay.push_back(row);
 		row.clear();
@@ -133,7 +133,7 @@ void Game::displayBoard()
 			}
 			else
 				std::cout << "[NC]";
-			
+
 		}
 		std::cout << "\n";
 	}
@@ -160,7 +160,7 @@ void Game::loadProgressTokens()
 
 void Game::initProgressTokens()
 {
-	
+
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	for (int i = 0; i < m_progressTokens.size(); ++i)
@@ -170,14 +170,14 @@ void Game::initProgressTokens()
 		m_progressTokens[i] = m_progressTokensDeck[index];
 		m_progressTokensDeck.erase(m_progressTokensDeck.begin() + index);
 	}
-	
+
 }
 
 std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 {
 	if (m_currentAge == Building::Age::AGEI)
 	{
-		for(int i=0;i<m_ageIDeck.size();i++)
+		for (int i = 0; i < m_ageIDeck.size(); i++)
 			if (m_ageIDeck[i]->getId() == searchId)
 				return m_ageIDeck[i];
 	}
@@ -267,11 +267,11 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 		for (auto lastRowCard : m_cardDisplay[m_cardDisplay.size() - 1])
 		{
 			if (lastRowCard.has_value())
-			if (id == lastRowCard.value().getBuilding()->getId())
-			{
-				acceptableCard = 1;
-				break;
-			}
+				if (id == lastRowCard.value().getBuilding()->getId())
+				{
+					acceptableCard = 1;
+					break;
+				}
 		}
 		if (!acceptableCard)
 			std::cout << "Bad Card. Choose again\n";
@@ -279,10 +279,21 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 
 	return getBuildingById(id);
 }
+std::shared_ptr<Card> Game::selectWonder(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId)
+{
+	for (int i = 0; i < wonders.size(); ++i)
+	{
+		if (wonders[i].has_value() && searchId == wonders[i]->get()->getId())
+		{
+			return wonders[i].value();
+		}
+	}
+	return nullptr;
+}
 void Game::removeCardFromDeck(std::uint8_t id)
 {
-	for (int i=0;i<m_cardDisplay.size();i++)
-		for(int j=0;j<m_cardDisplay[i].size();j++)
+	for (int i = 0; i < m_cardDisplay.size(); i++)
+		for (int j = 0; j < m_cardDisplay[i].size(); j++)
 			if (m_cardDisplay[i][j].has_value())
 			{
 				if (m_cardDisplay[i][j].value().getBuilding()->getId() == id)
@@ -292,6 +303,41 @@ void Game::removeCardFromDeck(std::uint8_t id)
 				}
 			}
 }
+
+void Game::removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId)
+{
+	for (int i = 0; i < wonders.size(); ++i)
+	{
+		if (wonders[i].has_value() && searchId == wonders[i]->get()->getId())
+		{
+			wonders[i] = std::nullopt;
+			break;
+		}
+	}
+}
+
+void Game::showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wonders)
+{
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	for (int i = 0; i < 4; ++i) {
+		std::uniform_int_distribution<> dist(0, m_wondersDeck.size() - 1);
+		std::uint16_t index = dist(gen);
+		wonders.push_back(std::make_optional(m_wondersDeck[index]));
+		m_wondersDeck.erase(m_wondersDeck.begin() + index);
+	}
+	for (int i = 0; i < wonders.size(); ++i) {
+		if (wonders[i].has_value())
+		{
+			std::cout << "[" << wonders[i].value().get()->getId() << "] ";
+		}
+		else std::cout << "[taken] ";
+	}
+	std::cout << "\n";
+
+}
+
 /*
 To do:
 Make it so that wonders actually have an effect
@@ -301,19 +347,77 @@ void Game::run()
 {
 	std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
 	std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_player2);
-	bool player1Turn= true;
+	bool player1Turn = true;
 	initAgeIBoard();
 	m_currentAge = Building::Age::AGEI;
 	std::uint8_t move;
+	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
+	std::uint16_t iteration = 0;
+	while (true)
+	{
+		bool setup = true;
+		showFourWonders(wonders);
+		std::uint16_t step = 0;
+		bool secondTurn = true;
+		while (setup) {
+			std::uint16_t id;
+			std::cout << "current player: " << currentPlayer->name() << "\n";
+			std::cout << "choose one wonder: ";
+			std::cin >> id;
+			std::shared_ptr<Card> selectedWonder = selectWonder(wonders, id);
+			if (selectedWonder)
+			{
+				currentPlayer->addWonder(selectedWonder);
+				removeWonderFromDisplay(wonders, id);
+			}
+			else {
+				std::cout << "wonder not available\n";
+				continue;
+			}
+			if (iteration == 0) {
+				if (currentPlayer->name() == "player2" && secondTurn) {
+					secondTurn = false;
+					step++;
+
+				}
+				else {
+					step++;
+					std::swap(currentPlayer, otherPlayer);
+				}
+			}
+			else if (iteration == 1)
+			{
+				if (currentPlayer->name() == "player1" && secondTurn) {
+					secondTurn = false;
+					step++;
+
+				}
+				else {
+					step++;
+					std::swap(currentPlayer, otherPlayer);
+				}
+			}
+			if (step == 4)
+			{
+				setup = false;
+			}
+		}
+		if (iteration == 1) break;
+		iteration++;
+		wonders.clear();
+		system("cls");
+	}
+	system("cls");
 	while (!endGame)
 	{
 		displayBoard();
+		std::cout << "current player: " << currentPlayer->name() << "\n";
 		std::cout << "1.build\n2.discard\n3.wonder\nmove:";
 		std::cin >> move;
 		if (move == '1')
 		{
 			std::shared_ptr <Building> building = selectAcceptableCard();
-			if(CheckPlayerResources(currentPlayer,building) && CheckPlayerCoins(currentPlayer, building))
+			if (CheckPlayerResources(currentPlayer, building) && CheckPlayerCoins(currentPlayer, building))
 				currentPlayer->addBuilding(*building);
 			else
 			{
@@ -346,4 +450,4 @@ void Game::run()
 		system("cls");
 	}
 }
-	
+

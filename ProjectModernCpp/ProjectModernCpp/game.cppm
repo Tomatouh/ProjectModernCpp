@@ -26,7 +26,9 @@ private:
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
 	std::shared_ptr <Building> selectAcceptableCard();
+	std::shared_ptr<Card> selectWonder(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchID);
 	void removeCardFromDeck(std::uint8_t id);
+	void removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId);
 public:
 
 	Game();
@@ -48,6 +50,8 @@ public:
 
 	void loadProgressTokens();
 	void initProgressTokens();
+
+	void showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wonders);
 
 	void run();
 };

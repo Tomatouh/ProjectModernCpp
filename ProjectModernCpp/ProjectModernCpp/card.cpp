@@ -2,10 +2,10 @@ module card;
 
 
 
-	Card::Cost::Cost(std::uint8_t link, const std::vector<ResourceType>& resources, std::uint8_t coins) : m_link(link), m_resources(resources), m_coins(coins)
+	Card::Cost::Cost(std::uint16_t link, const std::vector<ResourceType>& resources, std::uint16_t coins) : m_link(link), m_resources(resources), m_coins(coins)
 	{
 	}
-	std::uint8_t Card::Cost::getLink() const
+	std::uint16_t Card::Cost::getLink() const
 	{
 		return m_link;
 	}
@@ -18,18 +18,18 @@ module card;
 		return m_resources;
 	}*/
 
-	std::uint8_t Card::Cost::getCostCoins() const
+	std::uint16_t Card::Cost::getCostCoins() const
 	{
 		return m_coins;
 	}
 	
-	std::uint8_t Card::getCoins() const
+	std::uint16_t Card::getCoins() const
 	{
 		return m_coins;
 	}
 
-	Card::Card(const std::vector<Effect>& effects, const Card::Cost& cost, std::string_view name, std::uint8_t id, 
-		std::uint8_t victoryPoints, std::uint8_t shields, std::uint8_t coins) : m_effects(effects),
+	Card::Card(const std::vector<Effect>& effects, const Card::Cost& cost, std::string_view name, std::uint16_t id, 
+		std::uint16_t victoryPoints, std::uint16_t shields, std::uint16_t coins) : m_effects(effects),
 		m_cost(cost), m_name(name), m_id(id), m_victoryPoints(victoryPoints), m_shields(shields), m_coins(coins)
 	{
 	}
@@ -79,17 +79,17 @@ module card;
 		return m_name;
 	}
 
-	std::uint8_t Card::getId() const
+	std::uint16_t Card::getId() const
 	{
 		return m_id;
 	}
 
-	std::uint8_t Card::getVictoryPoints() const
+	std::uint16_t Card::getVictoryPoints() const
 	{
 		return m_victoryPoints;
 	}
 
-	std::uint8_t Card::getShields() const
+	std::uint16_t Card::getShields() const
 	{
 		return m_shields;
 	}
