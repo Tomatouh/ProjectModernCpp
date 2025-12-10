@@ -11,18 +11,21 @@ export class Game {
 private:
 	const static std::uint16_t k_boardSize = 20;
 	const static std::uint16_t k_tokensNumber = 5;
-	Player m_player1, m_player2;
+	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
 	std::vector<std::shared_ptr<Building>> m_ageIDeck;
 	std::vector<std::shared_ptr<Building>> m_ageIIDeck;
 	std::vector<std::shared_ptr<Building>> m_ageIIIDeck;
-	std::vector<std::shared_ptr<Card>> m_discardedCards;
+	std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
 	bool endGame;
 	Building::Age m_currentAge;
 	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
 	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
+	std::unordered_map<Card::Effect, std::function<void()>> m_cardEffects;
+	std::shared_ptr<Building> m_selectedBuilding;
+
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
 	std::shared_ptr <Building> selectAcceptableCard();

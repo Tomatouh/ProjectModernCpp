@@ -13,19 +13,32 @@ module game;
 //{
 //}
 
-Game::Game() : m_player1(), m_player2(), m_board(0),
+Game::Game() : m_currentPlayer(), m_otherPlayer(), m_board(0),
 m_wondersDeck(loadWondersDeck()),
 m_ageIDeck(loadAgeIDeck()),
 m_ageIIDeck(loadAgeIIDeck()),
 m_ageIIIDeck(loadAgeIIIDeck()),
-m_discardedCards(),
+m_discardedCards(std::make_shared<std::vector<std::shared_ptr<Card>>>()),
 m_cardDisplay(),
 endGame(false),
 m_currentAge(Building::Age::AGEI)
 {
-	m_player1.setPlayerName("player1");
-	m_player2.setPlayerName("player2");
-
+	Player player1, player2;
+	m_currentPlayer = std::make_shared<Player>(player1);
+	m_otherPlayer = std::make_shared<Player>(player2);
+	m_currentPlayer->setPlayerName("player1");
+	m_otherPlayer->setPlayerName("player2");
+	m_currentPlayer->setOtherPlayer(m_otherPlayer);
+	m_otherPlayer->setOtherPlayer(m_currentPlayer);
+	m_currentPlayer->setDiscardPile(m_discardedCards);
+	m_otherPlayer->setDiscardPile(m_discardedCards);
+	initProgressTokens();
+	m_cardEffects = { 
+		{Card::Effect::addCoins, []() {
+			
+			std::cout << "added coins\n"; } },
+		{Card::Effect::addResource, []() {std::cout << "added resources\n"; }}
+	};
 }
 
 void Game::initAgeIBoard()
@@ -160,7 +173,7 @@ void Game::loadProgressTokens()
 
 void Game::initProgressTokens()
 {
-
+	loadProgressTokens();
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	for (int i = 0; i < m_progressTokens.size(); ++i)
@@ -197,7 +210,7 @@ std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 	}
 }
 
-bool CheckPlayerResources(const std::unique_ptr<Player>& player, const std::shared_ptr<Building>& building)
+bool CheckPlayerResources(const std::shared_ptr<Player>& player, const std::shared_ptr<Building>& building)
 {
 	uint16_t auxWood = 0;
 	uint16_t auxStone = 0;
@@ -249,7 +262,7 @@ bool CheckPlayerResources(const std::unique_ptr<Player>& player, const std::shar
 	return true;
 }
 
-bool CheckPlayerCoins(const std::unique_ptr<Player>& player, const std::shared_ptr<Building>& building)
+bool CheckPlayerCoins(const std::shared_ptr<Player>& player, const std::shared_ptr<Building>& building)
 {
 	if (player->getCoins() < building->getCost().getCostCoins())
 		return false;
@@ -345,8 +358,8 @@ Implement correct functionality for each age deck
 */
 void Game::run()
 {
-	std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
-	std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_player2);
+	/*std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
+	std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_player2);*/
 	bool player1Turn = true;
 	initAgeIBoard();
 	m_currentAge = Building::Age::AGEI;
@@ -361,13 +374,13 @@ void Game::run()
 		bool secondTurn = true;
 		while (setup) {
 			std::uint16_t id;
-			std::cout << "current player: " << currentPlayer->name() << "\n";
+			std::cout << "current player: " << m_currentPlayer->name() << "\n";
 			std::cout << "choose one wonder: ";
 			std::cin >> id;
 			std::shared_ptr<Card> selectedWonder = selectWonder(wonders, id);
 			if (selectedWonder)
 			{
-				currentPlayer->addWonder(selectedWonder);
+				m_currentPlayer->addWonder(selectedWonder);
 				removeWonderFromDisplay(wonders, id);
 			}
 			else {
@@ -375,26 +388,26 @@ void Game::run()
 				continue;
 			}
 			if (iteration == 0) {
-				if (currentPlayer->name() == "player2" && secondTurn) {
+				if (m_currentPlayer->name() == "player2" && secondTurn) {
 					secondTurn = false;
 					step++;
 
 				}
 				else {
 					step++;
-					std::swap(currentPlayer, otherPlayer);
+					std::swap(m_currentPlayer, m_otherPlayer);
 				}
 			}
 			else if (iteration == 1)
 			{
-				if (currentPlayer->name() == "player1" && secondTurn) {
+				if (m_currentPlayer->name() == "player1" && secondTurn) {
 					secondTurn = false;
 					step++;
 
 				}
 				else {
 					step++;
-					std::swap(currentPlayer, otherPlayer);
+					std::swap(m_currentPlayer, m_otherPlayer);
 				}
 			}
 			if (step == 4)
@@ -411,14 +424,14 @@ void Game::run()
 	while (!endGame)
 	{
 		displayBoard();
-		std::cout << "current player: " << currentPlayer->name() << "\n";
+		std::cout << "current player: " << m_currentPlayer->name() << "\n";
 		std::cout << "1.build\n2.discard\n3.wonder\nmove:";
 		std::cin >> move;
 		if (move == '1')
 		{
-			std::shared_ptr <Building> building = selectAcceptableCard();
-			if (CheckPlayerResources(currentPlayer, building) && CheckPlayerCoins(currentPlayer, building))
-				currentPlayer->addBuilding(*building);
+			m_selectedBuilding = selectAcceptableCard();
+			if (CheckPlayerResources(m_currentPlayer, m_selectedBuilding) && CheckPlayerCoins(m_currentPlayer, m_selectedBuilding))
+				m_currentPlayer->addBuilding(*m_selectedBuilding);
 			else
 			{
 				std::cout << "You don't have enough resources/coins to build this building. Retry\n";
@@ -427,25 +440,26 @@ void Game::run()
 
 
 			if (player1Turn)
-				m_board.setPos(m_board.getPos() + building->getShields());
+				m_board.setPos(m_board.getPos() + m_selectedBuilding->getShields());
 			else
-				m_board.setPos(m_board.getPos() - building->getShields());
+				m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());
 
-			removeCardFromDeck(building->getId());
+			removeCardFromDeck(m_selectedBuilding->getId());
 		}
 		if (move == '2')
 		{
-			std::shared_ptr <Building> building = selectAcceptableCard();
-			std::uint8_t profit = 2 + currentPlayer->getYellowBuildings().size();
-			currentPlayer->addCoin(profit);
-			m_discardedCards.push_back(building);
+			m_selectedBuilding = selectAcceptableCard();
+			std::uint8_t profit = 2 + m_currentPlayer->getYellowBuildings().size();
+			m_currentPlayer->addCoin(profit);
+			m_discardedCards->push_back(m_selectedBuilding);
+			removeCardFromDeck(m_selectedBuilding->getId());
 		}
 		if (move == '3')
 		{
 			std::cout << "WIP\n";
 		}
 
-		std::swap(currentPlayer, otherPlayer);
+		std::swap(m_currentPlayer, m_otherPlayer);
 		player1Turn = !player1Turn;
 		system("cls");
 	}

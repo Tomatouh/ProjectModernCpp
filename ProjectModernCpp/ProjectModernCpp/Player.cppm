@@ -87,6 +87,11 @@ public:
 
     std::uint16_t getTradeCost(ResourceType type, const Player& opponent) const;
 
+    const std::shared_ptr<Player> getOtherPlayer();
+    void setOtherPlayer(const std::shared_ptr<Player>& otherPlayer);
+    const std::shared_ptr<std::vector<std::shared_ptr<Card>>> getDiscardPile();
+    void setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Card>>>& discardPile);
+
 private:
 
     std::string m_name;
@@ -124,7 +129,10 @@ private:
     bool m_hasArchitectureProgressToken = 0;
     // Wonders
     std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> m_wonders;
-
+    // pointer to the other player
+    std::weak_ptr<Player> m_otherPlayer;
+    // pointer to the discard pile
+    std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardPile;
     bool hasDiscountFor(ResourceType type) const;
 
     std::uint16_t countOpponentProduction(ResourceType type) const;
