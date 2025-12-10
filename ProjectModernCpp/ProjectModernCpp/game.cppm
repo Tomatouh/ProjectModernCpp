@@ -23,7 +23,7 @@ private:
 	Building::Age m_currentAge;
 	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
 	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
-	std::unordered_map<Card::Effect, std::function<void()>> m_cardEffects;
+	std::unordered_map<Card::Effect, std::function<void(std::shared_ptr<Player> player, std::shared_ptr<Card> card)>> m_cardEffects;
 	std::shared_ptr<Building> m_selectedBuilding;
 
 
@@ -47,6 +47,8 @@ public:
 	void initAgeIBoard();
 	void initAgeIIBoard();
 	void initAgeIIIBoard();
+
+	void initCardEffects();
 
 	void displayBoard();
 	void clearBoard();

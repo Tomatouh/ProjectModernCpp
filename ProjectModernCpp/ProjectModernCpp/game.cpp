@@ -33,12 +33,7 @@ m_currentAge(Building::Age::AGEI)
 	m_currentPlayer->setDiscardPile(m_discardedCards);
 	m_otherPlayer->setDiscardPile(m_discardedCards);
 	initProgressTokens();
-	m_cardEffects = { 
-		{Card::Effect::addCoins, []() {
-			
-			std::cout << "added coins\n"; } },
-		{Card::Effect::addResource, []() {std::cout << "added resources\n"; }}
-	};
+	initCardEffects();
 }
 
 void Game::initAgeIBoard()
@@ -129,6 +124,41 @@ void Game::initAgeIIIBoard()
 			m_cardDisplay[i][j] = std::make_optional(card);
 		}
 	}
+}
+
+void Game::initCardEffects()
+{
+	m_cardEffects = {
+		{Card::Effect::addCoins, [](std::shared_ptr<Player> player, std::shared_ptr<Card> card) {
+			player->addCoin(card->getCoins());
+			std::cout << "added " << card->getCoins() << " to " << player->name() << "\n"; }},
+		{Card::Effect::addResource, [](std::shared_ptr<Player> player, std::shared_ptr<Card> card) {
+			auto building = std::dynamic_pointer_cast<Building>(card);
+			for (const auto& resource : building->getResources())
+			{
+				switch (resource)
+				{
+				case ResourceType::WOOD:
+					player->addWood();
+					break;
+				case ResourceType::CLAY:
+					player->addClay();
+					break;
+				case ResourceType::STONE:
+					player->addStone();
+					break;
+				case ResourceType::GLASS:
+					player->addGlass();
+					break;
+				case ResourceType::PAPYRUS:
+					player->addPapyrus();
+					break;
+				default:
+					break;
+				}
+			}
+		}}
+	};
 }
 
 void Game::displayBoard()
