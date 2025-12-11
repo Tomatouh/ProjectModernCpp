@@ -19,7 +19,14 @@ private:
 	std::vector<std::shared_ptr<Building>> m_ageIIIDeck;
 	std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
-	bool endGame;
+	enum GameState {
+		GAMESTART,
+		ONGOING,
+		MILITARY,
+		SCIENTIFIC,
+		CIVILIAN
+				};
+	GameState m_gamestate=GAMESTART;
 	Building::Age m_currentAge;
 	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
 	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
@@ -45,11 +52,11 @@ public:
 		const std::vector<std::shared_ptr<Card>>& ageIIDeck,
 		const std::vector<std::shared_ptr<Card>>& m_ageIIIDeck,
 		const std::vector<std::shared_ptr<Card>>& m_discardedCards);*/
-
+	void setGamestate(GameState& gamestate);
 	void initAgeIBoard();
 	void initAgeIIBoard();
 	void initAgeIIIBoard();
-
+	
 	void initCardEffects();
 
 	void displayBoard();

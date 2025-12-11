@@ -1,11 +1,12 @@
 export module board;
 import <cstdint>;
+
 export class Board {
 private:
 private:
-    int const static startPos = 0;
+    int const static k_startPos = 0;
 
-    int pos = startPos;
+    int pos = k_startPos;
 	int const static k_zone_start = 0;
 	int const static k_zone_win = 9;
     int const static k_zone1_start = 1;
@@ -25,9 +26,9 @@ public:
     void setPos(int newPos) noexcept { pos = newPos; }
     explicit Board(int initialZone) noexcept : zone{initialZone} {}
 
-    void checkZone(bool Player);
+    void checkZones();
 
-    void move(uint8_t steps, bool player) noexcept(false);
+    void move (const int& steps) noexcept(false);
     int getZone() const noexcept { return zone; }
     void setZone(int newZone) noexcept { zone = newZone; }
 };

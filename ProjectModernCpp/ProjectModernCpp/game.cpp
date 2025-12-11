@@ -20,7 +20,6 @@ m_ageIIDeck(loadAgeIIDeck()),
 m_ageIIIDeck(loadAgeIIIDeck()),
 m_discardedCards(std::make_shared<std::vector<std::shared_ptr<Card>>>()),
 m_cardDisplay(),
-endGame(false),
 m_currentAge(Building::Age::AGEI)
 {
 	Player player1, player2;
@@ -36,9 +35,15 @@ m_currentAge(Building::Age::AGEI)
 	initCardEffects();
 }
 
+void Game::setGamestate(GameState& gamestate)
+{
+	this->m_gamestate = gamestate;
+}
+
 void Game::initAgeIBoard()
 {
-
+	GameState state = ONGOING;
+	setGamestate(state);
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIDeck;

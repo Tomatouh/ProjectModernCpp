@@ -128,7 +128,7 @@ void twoCoinsPerWonder(Player& player)
 	player.addCoin(player.getWonders().size() * 2);
 }
 
-void addShields(bool player, Board& board, const Card& card)
+void addShields( Board& board, const Card& card)
 {
-	board.move(card.getShields(), player);
+	board.move(card.getShields());
 }

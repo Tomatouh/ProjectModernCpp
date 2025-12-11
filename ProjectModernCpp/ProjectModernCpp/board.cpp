@@ -1,10 +1,10 @@
 module board;
 
-void Board::checkZone(bool Player)
+void Board::checkZones()
 {
 	int pos =this->getPos();
 	if ( pos == Board::k_zone_start) return; 
-	if (Player) {
+	if (pos>0) {
 		if (pos < Board::k_zone2_start && pos >= Board::k_zone1_start) { zone = Board::k_zone1; }
 		else if (pos >= Board::k_zone2_start && pos < Board::k_zone3_start) { zone = Board::k_zone2; }
 		else if (pos >= Board::k_zone3_start && pos < Board::k_zone_win) { zone = Board::k_zone3; }
@@ -27,22 +27,18 @@ void Board::checkZone(bool Player)
 
 }
 
-void Board::move(uint8_t steps, bool player) noexcept(false)
+
+void Board::move(const  int & steps) noexcept(false)
 {
-	if (steps < this->getPos()) {
-		throw ("Steps cannot be negative");
+	if (steps <0) {
+		for (int i = 0; i > steps; i--) {
+			this->decrementPos();
+		}
 	}
-	else if (steps > winPosP2) {
-		throw ("Steps cannot be greater than 9");
-	}
-	if (player == false) {
+	else if (steps > 0) {
 		for (int i = 0; i < steps; ++i) {
 			this->incrementPos();
 		}
 	}
-	else {
-		for (int i = 0; i < steps; ++i) {
-			this->decrementPos();
-		}
-	}
+	checkZones();
 }
