@@ -7,9 +7,6 @@ import std;
 
 export void addCoins(Player& player, const Card& card);
 export void addVictorypoints(Player& player, const Card& card);
-export void addResources(Player& player, const Building& card);
-export void chooseRawResource(Player& player);
-export void chooseManufacturedGood(Player& player);
 export void addShields(bool player, Board& board, const Card& card);
 export void addScientificSymbol(Player& player, const Building& card);
 export void threeCoinsPerGray(Player& player);

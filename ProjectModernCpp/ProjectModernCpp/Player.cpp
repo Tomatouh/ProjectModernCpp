@@ -103,7 +103,7 @@ void Player::addBuilding(const Building& building) {
     }
 
 	//Add appropriate resources
-    m_coins = m_coins - building.getCost().getCostCoins();
+   /* m_coins = m_coins - building.getCost().getCostCoins();
 	std::vector<ResourceType> buildingResource = building.getResources();
     for (auto resource : buildingResource)
     {
@@ -136,7 +136,7 @@ void Player::addBuilding(const Building& building) {
         }
         }
 	}
-	m_victoryPoints = m_victoryPoints + building.getVictoryPoints();
+	m_victoryPoints = m_victoryPoints + building.getVictoryPoints();*/
 }
 
 Building Player::discardBuilding(Building::Color color, std::uint8_t id)
@@ -187,16 +187,52 @@ const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr
 uint16_t Player::getVictoryPoints() const noexcept { return m_victoryPoints; }
 void Player::addVictoryPoints(uint16_t points) noexcept { m_victoryPoints += points; }
 
+void Player::addResources(const std::vector<ResourceType>& resources)
+{
+    for (const auto& resource : resources) {
+        switch (resource)
+        {
+        case ResourceType::WOOD:
+        {
+            m_wood++;
+            break;
+        }
+        case ResourceType::STONE:
+        {
+            m_stone++;
+            break;
+        }
+        case ResourceType::CLAY:
+        {
+            m_clay++;
+            break;
+        }
+        case ResourceType::GLASS:
+        {
+            m_glass++;
+            break;
+        }
+        case ResourceType::PAPYRUS:
+        {
+            m_papyrus++;
+            break;
+        }
+        }
+    }
+}
+
+void Player::addProduction(const std::vector<ResourceType>& resources)
+{
+    for (const auto& resource : resources) {
+        m_productions[resource]++;
+    }
+}
+
 uint16_t Player::getWood() const noexcept { return m_wood; }
-void Player::addWood(uint16_t amount) noexcept { m_wood += amount; }
 uint16_t Player::getStone() const noexcept { return m_stone; }
-void Player::addStone(uint16_t amount) noexcept { m_stone += amount; }
 uint16_t Player::getClay() const noexcept { return m_clay; }
-void Player::addClay(uint16_t amount) noexcept { m_clay += amount; }
 uint16_t Player::getGlass() const noexcept { return m_glass; }
-void Player::addGlass(uint16_t amount) noexcept { m_glass += amount; }
 uint16_t Player::getPapyrus() const noexcept { return m_papyrus; }
-void Player::addPapyrus(uint16_t amount) noexcept { m_papyrus += amount; }
 
 void Player::showStatus(std::ostream& os) const {
     os << "Player " << m_name << " | coins=" << getCoins() <<"\n";

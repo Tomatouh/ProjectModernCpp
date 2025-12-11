@@ -30,7 +30,6 @@ public:
     Building discardBuilding(Building::Color color, std::uint8_t id);
     void addWonder(const std::shared_ptr<Card>& wonder);
 
-
     // Getters for Buildings, by colour
     const std::vector<Building>& getBrownBuildings() const noexcept;
     const std::vector<Building>& getGreyBuildings() const noexcept;
@@ -46,16 +45,16 @@ public:
     void addVictoryPoints(uint16_t points) noexcept;
 
 
+    void addResources(const std::vector<ResourceType>& resources);
+    void addProduction(const std::vector<ResourceType>& resources);
+    
+
+
     uint16_t getWood() const noexcept;
-    void addWood(uint16_t amount = 1) noexcept;
     uint16_t getStone() const noexcept;
-    void addStone(uint16_t amount = 1) noexcept;
     uint16_t getClay() const noexcept;
-    void addClay(uint16_t amount = 1) noexcept;
     uint16_t getGlass() const noexcept;
-    void addGlass(uint16_t amount = 1) noexcept;
     uint16_t getPapyrus() const noexcept;
-    void addPapyrus(uint16_t amount = 1) noexcept;
 
     void showStatus(std::ostream& os = std::cout) const;
     void showCards(std::ostream& os = std::cout) const;
@@ -133,6 +132,10 @@ private:
     std::weak_ptr<Player> m_otherPlayer;
     // pointer to the discard pile
     std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardPile;
+
+    // productions per turn
+    std::unordered_map<ResourceType, std::uint16_t> m_productions;
+
     bool hasDiscountFor(ResourceType type) const;
 
     std::uint16_t countOpponentProduction(ResourceType type) const;

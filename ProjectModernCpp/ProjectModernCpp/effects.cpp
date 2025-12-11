@@ -12,79 +12,8 @@ void addVictorypoints(Player& player, const Card& card) {
 	player.addVictoryPoints(card.getVictoryPoints());
 }
 
-void addResources(Player& player, const Building& building)
-{
-	for (const auto& resource : building.getResources())
-	{
-		switch (resource)
-		{
-		case ResourceType::WOOD:
-			player.addWood();
-			break;
-		case ResourceType::CLAY:
-			player.addClay();
-			break;
-		case ResourceType::STONE:
-			player.addStone();
-			break;
-		case ResourceType::GLASS:
-			player.addGlass();
-			break;
-		case ResourceType::PAPYRUS:
-			player.addPapyrus();
-			break;
-		default:
-			break;
-		}
-	}
-}
 
-void chooseRawResource(Player& player)
-{
-	std::cout << "Choose between WOOD, CLAY or STONE (type the initial lowercase letter of the desired resource): ";
-	char chosenRes;
-	while (true)
-	{
-		std::cin >> chosenRes;
 
-		switch (chosenRes)
-		{
-		case 'w':
-			player.addWood();
-			break;
-		case 'c':
-			player.addClay();
-			break;
-		case 's':
-			player.addStone();
-			break;
-		default:
-			std::cout << "Invalid input. Try again.";
-		}
-	}
-}
-
-void chooseManufacturedGood(Player& player)
-{
-	std::cout << "Choose between GLASS or PAPYRUS (type the initial lowercase letter of the desired resource): ";
-	char chosenRes;
-	while (true)
-	{
-		std::cin >> chosenRes;
-
-		switch (chosenRes)
-		{
-		case 'g':
-			player.addGlass();
-			break;
-		case 'p':
-			player.addPapyrus();
-			break;
-		default:
-			std::cout << "Invalid input. Try again.";
-		}
-	}
-}
 
 
 

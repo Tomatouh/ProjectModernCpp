@@ -129,35 +129,10 @@ void Game::initAgeIIIBoard()
 void Game::initCardEffects()
 {
 	m_cardEffects = {
-		{Card::Effect::addCoins, [](std::shared_ptr<Player> player, std::shared_ptr<Card> card) {
-			player->addCoin(card->getCoins());
-			std::cout << "added " << card->getCoins() << " to " << player->name() << "\n"; }},
-		{Card::Effect::addResource, [](std::shared_ptr<Player> player, std::shared_ptr<Card> card) {
-			auto building = std::dynamic_pointer_cast<Building>(card);
-			for (const auto& resource : building->getResources())
-			{
-				switch (resource)
-				{
-				case ResourceType::WOOD:
-					player->addWood();
-					break;
-				case ResourceType::CLAY:
-					player->addClay();
-					break;
-				case ResourceType::STONE:
-					player->addStone();
-					break;
-				case ResourceType::GLASS:
-					player->addGlass();
-					break;
-				case ResourceType::PAPYRUS:
-					player->addPapyrus();
-					break;
-				default:
-					break;
-				}
-			}
-		}}
+		{Card::Effect::addCoins, [](Game& game) {game.m_currentPlayer->addCoin(game.m_selectedBuilding->getCoins()); }},
+		{Card::Effect::addVictoryPoints, [](Game& game) {game.m_currentPlayer->addVictoryPoints(game.m_selectedBuilding->getVictoryPoints()); }},
+		{Card::Effect::addResource, [](Game& game) {game.m_currentPlayer->addResources(game.m_selectedBuilding->getResources()); }},
+		{Card::Effect::addScientificSymbol, [](Game& game) {game.m_currentPlayer->addScientificPoint(game.m_selectedBuilding->getScientificSymbol().value()); }}
 	};
 }
 
@@ -468,11 +443,10 @@ void Game::run()
 				continue;
 			}
 
-
-			if (player1Turn)
+			/*if (player1Turn && m_selectedBuilding->getColor() == Building::Color::RED)
 				m_board.setPos(m_board.getPos() + m_selectedBuilding->getShields());
 			else
-				m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());
+				m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());*/
 
 			removeCardFromDeck(m_selectedBuilding->getId());
 		}
