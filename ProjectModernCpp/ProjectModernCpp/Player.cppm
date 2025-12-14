@@ -84,9 +84,9 @@ public:
     void applyEffects();
     std::vector<ProgressToken> getProgressTokens();
 
-    std::uint16_t getTradeCost(ResourceType type, const Player& opponent) const;
+    std::uint16_t getTradeCost(ResourceType type,  Player& opponent) ;
 
-    const std::shared_ptr<Player> getOtherPlayer();
+    std::shared_ptr<Player> getOtherPlayer();
     void setOtherPlayer(const std::shared_ptr<Player>& otherPlayer);
     const std::shared_ptr<std::vector<std::shared_ptr<Card>>> getDiscardPile();
     void setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Card>>>& discardPile);
@@ -144,6 +144,6 @@ private:
 
     bool hasDiscountFor(ResourceType type) const;
 
-    std::uint16_t countOpponentProduction(ResourceType type) const;
+    std::uint16_t countOpponentProduction(ResourceType type) ;
 
 };

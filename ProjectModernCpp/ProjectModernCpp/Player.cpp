@@ -349,26 +349,14 @@ bool Player::hasDiscountFor(ResourceType type) const
     return false;
 }
 
-std::uint16_t Player::countOpponentProduction(ResourceType type) const {
+std::uint16_t Player::countOpponentProduction(ResourceType type) {
     std::uint16_t count = 0;
-
-    auto countInList = [&](const std::vector<Building>& buildings) {
-        for (const auto& b : buildings) {
-            for (const auto& r : b.getResources()) {
-                if (r == type) {
-                    count++;
-                }
-            }
-        }
-        };
-
-    countInList(m_brownBuildings);
-    countInList(m_greyBuildings);
+     Player other= * this->getOtherPlayer();
 
     return count;
 }
 
-std::uint16_t Player::getTradeCost(ResourceType type, const Player& opponent) const {
+std::uint16_t Player::getTradeCost(ResourceType type,  Player& opponent) {
     if (this->hasDiscountFor(type)) {
         return 1;
     }
@@ -380,7 +368,7 @@ std::uint16_t Player::getTradeCost(ResourceType type, const Player& opponent) co
     return baseCost + opponentTax;
 }
 
-const std::shared_ptr<Player> Player::getOtherPlayer()
+std::shared_ptr<Player> Player::getOtherPlayer()
 {
     return m_otherPlayer.lock();
 }

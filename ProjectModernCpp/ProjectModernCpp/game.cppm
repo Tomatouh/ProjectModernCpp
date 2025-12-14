@@ -19,14 +19,7 @@ private:
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
 	std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
-	enum GameState {
-		GAMESTART,
-		ONGOING,
-		MILITARY,
-		SCIENTIFIC,
-		CIVILIAN
-				};
-	GameState m_gamestate=GAMESTART;
+
 	Building::Age m_currentAge;
 	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
 	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
@@ -44,7 +37,14 @@ public:
 	Game();
 
 
-
+	enum GameState {
+		GAMESTART,
+		ONGOING,
+		MILITARY,
+		SCIENTIFIC,
+		CIVILIAN
+	};
+	GameState m_gamestate = GAMESTART;
 	/*Game(const Player& player1, const Player& player2,
 		const Board& board,
 		const std::vector<std::shared_ptr<Card>>& wondersCard,

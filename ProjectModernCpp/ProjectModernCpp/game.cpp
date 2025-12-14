@@ -46,7 +46,8 @@ void Game::initAgeIBoard()
 	setGamestate(state);
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::unordered_map<std::uint16_t, std::shared_ptr<Building>>copyDeck = m_ageIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> copyDeck = m_ageIDeck;
+
 	for (int i = 0; i < 5; ++i)
 	{
 		std::vector<std::optional<displayCard>> row;
@@ -54,15 +55,20 @@ void Game::initAgeIBoard()
 		{
 			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
 			displayCard card;
-			std::uint16_t index1 = dist(gen);
-			card.setBuilding(copyDeck[index1]);
-			copyDeck.erase(copyDeck.begin() + index1);
+
+			auto it = copyDeck.begin();
+			std::advance(it, dist(gen));
+
+			card.setBuilding(it->second);
+			std::uint16_t keyToErase = it->first;
+			copyDeck.erase(keyToErase);
+
 			if (!(i % 2))
 				card.setFaceUp(true);
 			else
 				card.setFaceUp(false);
-			row.push_back(std::make_optional(card));
 
+			row.push_back(std::make_optional(card));
 		}
 		m_cardDisplay.push_back(row);
 		row.clear();
@@ -81,9 +87,12 @@ void Game::initAgeIIBoard()
 		{
 			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
 			displayCard card;
-			std::uint16_t index1 = dist(gen);
-			card.setBuilding(copyDeck[index1]);
-			copyDeck.erase(copyDeck.begin() + index1);
+			auto it = copyDeck.begin();
+			std::advance(it, dist(gen));
+
+			card.setBuilding(it->second);
+			std::uint16_t keyToErase = it->first;
+			copyDeck.erase(keyToErase);
 			if (!(i % 2))
 				card.setFaceUp(true);
 			else
@@ -119,9 +128,12 @@ void Game::initAgeIIIBoard()
 		{
 			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
 			displayCard card;
-			std::uint16_t index1 = dist(gen);
-			card.setBuilding(copyDeck[index1]);
-			copyDeck.erase(copyDeck.begin() + index1);
+			auto it = copyDeck.begin();
+			std::advance(it, dist(gen));
+
+			card.setBuilding(it->second);
+			std::uint16_t keyToErase = it->first;
+			copyDeck.erase(keyToErase);
 			if (!(i % 2))
 				card.setFaceUp(true);
 			else
@@ -431,7 +443,7 @@ void Game::run()
 		system("cls");
 	}
 	system("cls");
-	while (!endGame)
+	while (this->m_gamestate==ONGOING)
 	{
 		displayBoard();
 		std::cout << "current player: " << m_currentPlayer->name() << "\n";
