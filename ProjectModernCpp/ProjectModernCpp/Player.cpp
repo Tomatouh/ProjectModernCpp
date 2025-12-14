@@ -413,3 +413,25 @@ void Player::setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Ca
 {
     m_discardPile = discardPile;
 }
+
+bool Player::hasChainId(std::uint16_t linkId) const
+{
+    if (linkId == 0) return false;
+
+    auto ownsBuildingInList = [&](const std::vector<Building>& buildingList) {
+        for (const auto& building : buildingList) {
+            if (building.getId() == linkId) return true;
+        }
+        return false;
+    };
+
+    if (ownsBuildingInList(m_brownBuildings)) return true;
+    if (ownsBuildingInList(m_greyBuildings)) return true;
+    if (ownsBuildingInList(m_blueBuildings)) return true;
+    if (ownsBuildingInList(m_greenBuildings)) return true;
+    if (ownsBuildingInList(m_yellowBuildings)) return true;
+    if (ownsBuildingInList(m_redBuildings)) return true;
+    if (ownsBuildingInList(m_purpleBuildings)) return true;
+
+    return false;
+}

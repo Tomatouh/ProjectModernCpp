@@ -91,6 +91,8 @@ public:
     const std::shared_ptr<std::vector<std::shared_ptr<Card>>> getDiscardPile();
     void setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Card>>>& discardPile);
 
+    bool hasChainId(std::uint16_t linkId) const;
+
 private:
 
     std::string m_name;
