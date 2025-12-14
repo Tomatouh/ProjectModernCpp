@@ -212,23 +212,17 @@ std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 {
 	if (m_currentAge == Building::Age::AGEI)
 	{
-		for (int i = 0; i < m_ageIDeck.size(); i++)
-			if (m_ageIDeck[i]->getId() == searchId)
-				return m_ageIDeck[i];
+		return m_ageIDeck[searchId];
 	}
 
 	if (m_currentAge == Building::Age::AGEII)
 	{
-		for (int i = 0; i < m_ageIIDeck.size(); i++)
-			if (m_ageIIDeck[i]->getId() == searchId)
-				return m_ageIIDeck[i];
+		return m_ageIIDeck[searchId];
 	}
 
 	if (m_currentAge == Building::Age::AGEIII)
 	{
-		for (int i = 0; i < m_ageIIIDeck.size(); i++)
-			if (m_ageIIIDeck[i]->getId() == searchId)
-				return m_ageIIIDeck[i];
+		return m_ageIIIDeck[searchId];
 	}
 }
 
@@ -302,11 +296,13 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 		for (auto lastRowCard : m_cardDisplay[m_cardDisplay.size() - 1])
 		{
 			if (lastRowCard.has_value())
+			{
 				if (id == lastRowCard.value().getBuilding()->getId())
 				{
 					acceptableCard = 1;
 					break;
 				}
+			}
 		}
 		if (!acceptableCard)
 			std::cout << "Bad Card. Choose again\n";
