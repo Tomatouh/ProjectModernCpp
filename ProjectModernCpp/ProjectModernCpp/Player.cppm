@@ -93,6 +93,8 @@ public:
 
     bool hasChainId(std::uint16_t linkId) const;
 
+    std::uint16_t getConstructionCost(const Building& building) const;
+
 private:
 
     std::string m_name;

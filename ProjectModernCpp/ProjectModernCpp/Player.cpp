@@ -435,3 +435,51 @@ bool Player::hasChainId(std::uint16_t linkId) const
 
     return false;
 }
+
+std::uint16_t Player::getConstructionCost(const Building& building) const {
+    if (hasChainId(building.getCost().getLink())) {
+        return 0;
+    }
+
+    std::uint16_t totalCoinsNeeded = building.getCost().getCostCoins();
+    std::vector<ResourceType> resourcesNeeded = building.getCost().getCostResources();
+
+    std::uint16_t availableWood = m_wood;
+    std::uint16_t availableStone = m_stone;
+    std::uint16_t availableClay = m_clay;
+    std::uint16_t availableGlass = m_glass;
+    std::uint16_t availablePapyrus = m_papyrus;
+
+    for (const auto& resource : resourcesNeeded) {
+        bool playerHasResource = false;
+
+        switch (resource) {
+        case ResourceType::WOOD:
+            if (availableWood > 0) { availableWood--; playerHasResource = true; }
+            break;
+        case ResourceType::STONE:
+            if (availableStone > 0) { availableStone--; playerHasResource = true; }
+            break;
+        case ResourceType::CLAY:
+            if (availableClay > 0) { availableClay--; playerHasResource = true; }
+            break;
+        case ResourceType::GLASS:
+            if (availableGlass > 0) { availableGlass--; playerHasResource = true; }
+            break;
+        case ResourceType::PAPYRUS:
+            if (availablePapyrus > 0) { availablePapyrus--; playerHasResource = true; }
+            break;
+        }
+
+        if (!playerHasResource) {
+            if (auto opponent = m_otherPlayer.lock()) {
+                totalCoinsNeeded += getTradeCost(resource, *opponent);
+            }
+            else {
+                totalCoinsNeeded += 2; 
+            }
+        }
+    }
+
+    return totalCoinsNeeded;
+}
