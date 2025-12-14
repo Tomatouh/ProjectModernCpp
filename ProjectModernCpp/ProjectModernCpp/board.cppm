@@ -3,7 +3,6 @@ import <cstdint>;
 
 export class Board {
 private:
-private:
     int const static k_startPos = 0;
 
     int pos = k_startPos;

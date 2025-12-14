@@ -46,7 +46,7 @@ void Game::initAgeIBoard()
 	setGamestate(state);
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>>copyDeck = m_ageIDeck;
 	for (int i = 0; i < 5; ++i)
 	{
 		std::vector<std::optional<displayCard>> row;
@@ -73,7 +73,7 @@ void Game::initAgeIIBoard()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> copyDeck = m_ageIIDeck;
 	for (int i = 5; i > 0; --i)
 	{
 		std::vector<std::optional<displayCard>> row;
@@ -101,7 +101,7 @@ void Game::initAgeIIIBoard()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::vector<std::shared_ptr<Building>> copyDeck = m_ageIIIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> copyDeck= m_ageIIIDeck;
 	m_cardDisplay.resize(7);
 	for (int i = 0; i <= 3; ++i)
 	{

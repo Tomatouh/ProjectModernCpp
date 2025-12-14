@@ -4,11 +4,11 @@ import Building;
 import buildingResource;
 import std;
 
-export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
+export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIDeck() {
     /*using std::make_unique;
     using std::vector;
     using std::string;*/
-    std::vector<std::shared_ptr<Building>> out;
+    std::unordered_map<std::uint16_t, std::shared_ptr<Building>> out;
 
     // BROWN CARDS
     {
@@ -24,7 +24,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::WOOD };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = {Card::Effect::addResource};
@@ -39,7 +39,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::WOOD };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -54,7 +54,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::CLAY };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -69,7 +69,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::CLAY };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -84,7 +84,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::STONE };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -99,7 +99,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::STONE };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // GREY CARDS
@@ -117,7 +117,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::GLASS };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -132,7 +132,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = { ResourceType::PAPYRUS };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // RED CARDS
@@ -150,7 +150,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         // must connect to horse breeders
@@ -166,7 +166,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         // must connect to barracks
@@ -182,7 +182,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         // must connect to Fortifications
@@ -198,7 +198,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     // GREEN CARDS
 
@@ -215,7 +215,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::SETSQUARE;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addScientificSymbol, Card::Effect::addVictoryPoints };
@@ -230,7 +230,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::WHEEL;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     
     // must connect to library
@@ -247,7 +247,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::FEATHER;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to dispensary
@@ -264,7 +264,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::BOWL;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // YELLOW CARDS
@@ -282,7 +282,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::oneCoinClay };
@@ -297,7 +297,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::oneCoinWood };
@@ -312,7 +312,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to lighthouse
@@ -329,7 +329,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // BLUE CARDS
@@ -348,7 +348,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to temple
@@ -365,7 +365,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to aqueduct
@@ -382,14 +382,14 @@ export std::vector<std::shared_ptr<Building>> loadAgeIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // Add more cards/buildings here...
     return out;
 }
-export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
-    std::vector<std::shared_ptr<Building>> out;
+export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIDeck() {
+    std::unordered_map<std::uint16_t, std::shared_ptr<Building>> out;
 
     // BROWN CARDS
     {
@@ -405,7 +405,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = { ResourceType::WOOD, ResourceType::WOOD };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -420,7 +420,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = { ResourceType::CLAY, ResourceType::CLAY };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -435,7 +435,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = { ResourceType::STONE, ResourceType::STONE };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // GREY CARDS
@@ -453,7 +453,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = { ResourceType::GLASS };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
     std::vector<Card::Effect> effects = { Card::Effect::addResource };
@@ -468,7 +468,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
     std::vector<ResourceType> resources = { ResourceType::PAPYRUS };
     std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-    out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // RED CARDS
@@ -486,7 +486,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addShields };
@@ -501,7 +501,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addShields };
@@ -516,7 +516,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to siege workshop
@@ -533,7 +533,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to circus
@@ -550,7 +550,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // GREEN CARDS
@@ -568,7 +568,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::FEATHER;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addScientificSymbol, Card::Effect::addVictoryPoints };
@@ -583,7 +583,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::BOWL;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to university
@@ -600,7 +600,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::WHEEL;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to observatory
@@ -617,7 +617,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::SETSQUARE;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // YELLOW CARDS
@@ -635,7 +635,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {ResourceType::GLASS, ResourceType::PAPYRUS};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::chooseRawResource };
@@ -650,7 +650,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = { ResourceType::WOOD, ResourceType::CLAY, ResourceType::STONE };
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::oneCoinPapyrus, Card::Effect::oneCoinGlass };
@@ -665,7 +665,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to arena
@@ -682,7 +682,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // BLUE CARDS
@@ -700,7 +700,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to gardens
@@ -717,7 +717,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to pantheon
@@ -734,7 +734,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     {
@@ -750,7 +750,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // must connect to senate
@@ -767,14 +767,13 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     return out;
 }
-export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
-    std::vector<std::shared_ptr<Building>> out;
-
+export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDeck() {
+    std::unordered_map<std::uint16_t, std::shared_ptr<Building>> out;
     // RED CARDS
 
     {
@@ -789,7 +788,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
     std::vector<Card::Effect> effects = { Card::Effect::addShields };
@@ -803,7 +802,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
     auto color = Building::Color::RED;
     std::vector<ResourceType> resources = {};
     std::optional<Building::ScientificSymbol> sym = std::nullopt;
-    out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+    out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addShields };
@@ -817,7 +816,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addShields };
@@ -831,7 +830,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addShields };
@@ -845,7 +844,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         auto color = Building::Color::RED;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // GREEN CARDS
@@ -863,7 +862,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::SUNDIAL;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addScientificSymbol, Card::Effect::addVictoryPoints };
@@ -878,7 +877,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::SUNDIAL;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addScientificSymbol, Card::Effect::addVictoryPoints };
@@ -893,7 +892,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::GLOBE;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addScientificSymbol, Card::Effect::addVictoryPoints };
@@ -908,7 +907,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = Building::ScientificSymbol::GLOBE;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // YELLOW CARDS
@@ -925,7 +924,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::twoCoinsPerBrown, Card::Effect::addVictoryPoints };
@@ -940,7 +939,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::oneCoinPerRed, Card::Effect::addVictoryPoints };
@@ -955,7 +954,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::oneCoinPerYellow, Card::Effect::addVictoryPoints };
@@ -970,7 +969,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::twoCoinsPerWonder, Card::Effect::addVictoryPoints };
@@ -985,7 +984,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // BLUE CARDS
@@ -1003,7 +1002,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
@@ -1018,7 +1017,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
@@ -1033,7 +1032,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
@@ -1048,7 +1047,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
@@ -1063,7 +1062,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
@@ -1078,7 +1077,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id,std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
 
     // PURPLE CARDS
@@ -1096,7 +1095,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::shipownersGuild };
@@ -1111,7 +1110,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::buildersGuild };
@@ -1126,7 +1125,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::magistratesGuild };
@@ -1141,7 +1140,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::scientistsGuild };
@@ -1156,7 +1155,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::moneylendersGuild };
@@ -1171,7 +1170,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::tacticiansGuild };
@@ -1186,7 +1185,7 @@ export std::vector<std::shared_ptr<Building>> loadAgeIIIDeck() {
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
-        out.push_back(std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym));
+        out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     return out;
 }

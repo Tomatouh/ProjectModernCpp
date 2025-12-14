@@ -14,9 +14,9 @@ private:
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
-	std::vector<std::shared_ptr<Building>> m_ageIDeck;
-	std::vector<std::shared_ptr<Building>> m_ageIIDeck;
-	std::vector<std::shared_ptr<Building>> m_ageIIIDeck;
+	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIDeck;
+	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIDeck;
+	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
 	std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
 	enum GameState {
