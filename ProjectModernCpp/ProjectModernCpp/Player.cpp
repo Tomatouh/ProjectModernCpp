@@ -78,6 +78,13 @@ uint16_t Player::getCoins() const noexcept {
 
 
 void Player::addBuilding(const Building& building) {
+
+    std::uint16_t cost = getConstructionCost(building);
+
+    if (cost > 0) {
+        payCoin(cost);
+    }
+
     switch (building.getColor()) {
     case Building::Color::BROWN:
         m_brownBuildings.push_back(building);
@@ -102,41 +109,20 @@ void Player::addBuilding(const Building& building) {
         break;
     }
 
-	//Add appropriate resources
-   /* m_coins = m_coins - building.getCost().getCostCoins();
-	std::vector<ResourceType> buildingResource = building.getResources();
-    for (auto resource : buildingResource)
+    std::vector<ResourceType> bResources = building.getResources();
+    for (auto resource : bResources)
     {
         switch (resource)
         {
-        case ResourceType::WOOD:
-        {
-            m_wood++;
-            break;
+        case ResourceType::WOOD:    m_wood++; break;
+        case ResourceType::STONE:   m_stone++; break;
+        case ResourceType::CLAY:    m_clay++; break;
+        case ResourceType::GLASS:   m_glass++; break;
+        case ResourceType::PAPYRUS: m_papyrus++; break;
         }
-        case ResourceType::STONE:
-        {
-            m_stone++;
-            break;
-        }
-        case ResourceType::CLAY:
-        {
-            m_clay++;
-            break;
-        }
-        case ResourceType::GLASS:
-        {
-            m_glass++;
-            break;
-        }
-        case ResourceType::PAPYRUS:
-        {
-            m_papyrus++;
-            break;
-        }
-        }
-	}
-	m_victoryPoints = m_victoryPoints + building.getVictoryPoints();*/
+        m_productions[resource]++;
+    }
+    addVictoryPoints(building.getVictoryPoints());
 }
 
 Building Player::discardBuilding(Building::Color color, std::uint8_t id)
