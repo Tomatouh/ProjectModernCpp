@@ -95,6 +95,8 @@ public:
 
     std::uint16_t getConstructionCost(const Building& building) const;
 
+    bool canBuild(const Building& building) const;
+
 private:
 
     std::string m_name;

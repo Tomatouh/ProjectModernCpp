@@ -483,3 +483,14 @@ std::uint16_t Player::getConstructionCost(const Building& building) const {
 
     return totalCoinsNeeded;
 }
+
+bool Player::canBuild(const Building& building) const
+{
+    std::uint16_t cost = getConstructionCost(building);
+
+    if (m_coins >= cost) {
+        return true;
+    }
+
+    return false;
+}
