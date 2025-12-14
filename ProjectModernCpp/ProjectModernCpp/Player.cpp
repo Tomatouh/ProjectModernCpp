@@ -350,10 +350,22 @@ bool Player::hasDiscountFor(ResourceType type) const
 }
 
 std::uint16_t Player::countOpponentProduction(ResourceType type) {
-    std::uint16_t count = 0;
+    std::uint16_t count=0;
      Player other= * this->getOtherPlayer();
-
-    return count;
+     switch (type)
+     {
+     case ResourceType::WOOD:
+         return other.getWood();
+     case ResourceType::CLAY:
+         return other.getClay();
+     case ResourceType::GLASS:
+         return other.getGlass();
+     case ResourceType::PAPYRUS:
+         return other.getPapyrus();
+     case ResourceType::STONE:
+         return other.getStone();
+     }
+     return count;
 }
 
 std::uint16_t Player::getTradeCost(ResourceType type,  Player& opponent) {
@@ -410,7 +422,7 @@ bool Player::hasChainId(std::uint16_t linkId) const
     return false;
 }
 
-std::uint16_t Player::getConstructionCost(const Building& building) const {
+std::uint16_t Player::getConstructionCost(const Building& building) {
     if (hasChainId(building.getCost().getLink())) {
         return 0;
     }
@@ -458,7 +470,7 @@ std::uint16_t Player::getConstructionCost(const Building& building) const {
     return totalCoinsNeeded;
 }
 
-bool Player::canBuild(const Building& building) const
+bool Player::canBuild(const Building& building) 
 {
     std::uint16_t cost = getConstructionCost(building);
 

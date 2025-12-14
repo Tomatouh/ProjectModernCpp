@@ -93,9 +93,9 @@ public:
 
     bool hasChainId(std::uint16_t linkId) const;
 
-    std::uint16_t getConstructionCost(const Building& building) const;
+    std::uint16_t getConstructionCost(const Building& building);
 
-    bool canBuild(const Building& building) const;
+    bool canBuild(const Building& building);
 
 private:
 
