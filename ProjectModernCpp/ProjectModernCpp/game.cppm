@@ -31,6 +31,7 @@ private:
 	std::shared_ptr <Building> selectAcceptableCard();
 	std::shared_ptr<Card> selectWonder(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchID);
 	void removeCardFromDeck(std::uint8_t id);
+	void turnCards();
 	void removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId);
 public:
 

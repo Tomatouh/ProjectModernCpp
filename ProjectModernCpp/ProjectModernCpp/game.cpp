@@ -211,19 +211,13 @@ void Game::initProgressTokens()
 std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 {
 	if (m_currentAge == Building::Age::AGEI)
-	{
 		return m_ageIDeck[searchId];
-	}
 
 	if (m_currentAge == Building::Age::AGEII)
-	{
 		return m_ageIIDeck[searchId];
-	}
 
 	if (m_currentAge == Building::Age::AGEIII)
-	{
 		return m_ageIIIDeck[searchId];
-	}
 }
 
 bool CheckPlayerResources(const std::shared_ptr<Player>& player, const std::shared_ptr<Building>& building)
@@ -369,6 +363,18 @@ void Game::showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wo
 
 }
 
+void Game::turnCards()
+{
+	for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
+	{
+		for (int j = 0; j < m_cardDisplay[i].size(); j++)
+		{
+			if (m_cardDisplay[i][j].has_value())
+				if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false)
+					m_cardDisplay[i][j].value().setFaceUp(true);
+		}
+	}
+}
 /*
 To do:
 Make it so that wonders actually have an effect
@@ -376,8 +382,6 @@ Implement correct functionality for each age deck
 */
 void Game::run()
 {
-	/*std::unique_ptr<Player> currentPlayer = std::make_unique<Player>(m_player1);
-	std::unique_ptr<Player> otherPlayer = std::make_unique<Player>(m_player2);*/
 	bool player1Turn = true;
 	initAgeIBoard();
 	m_currentAge = Building::Age::AGEI;
@@ -462,6 +466,7 @@ void Game::run()
 				m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());*/
 
 			removeCardFromDeck(m_selectedBuilding->getId());
+			turnCards();
 		}
 		if (move == '2')
 		{
@@ -470,6 +475,7 @@ void Game::run()
 			m_currentPlayer->addCoin(profit);
 			m_discardedCards->push_back(m_selectedBuilding);
 			removeCardFromDeck(m_selectedBuilding->getId());
+			turnCards();
 		}
 		if (move == '3')
 		{

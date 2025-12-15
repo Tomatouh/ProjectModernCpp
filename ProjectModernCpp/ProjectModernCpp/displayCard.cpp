@@ -3,10 +3,6 @@ bool displayCard::isFaceUp() const
 {
 	return m_isFaceUp;
 }
-void displayCard::flip()
-{
-	m_isFaceUp = !m_isFaceUp;
-}
 void displayCard::setFaceUp(bool isFaceUp)
 {
 	m_isFaceUp = isFaceUp;

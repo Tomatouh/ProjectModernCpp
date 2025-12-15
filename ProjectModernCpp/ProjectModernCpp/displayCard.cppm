@@ -11,5 +11,4 @@ public:
 	std::shared_ptr<Building> getBuilding() const;
 	void setFaceUp(bool isFaceUp);
 	void setBuilding(const std::shared_ptr<Building>& building);
-	void flip();
 };
