@@ -287,17 +287,18 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 		std::cout << "\ncard id:";
 		std::cin >> id;
 		acceptableCard = 0;
-		for (auto lastRowCard : m_cardDisplay[m_cardDisplay.size() - 1])
-		{
-			if (lastRowCard.has_value())
-			{
-				if (id == lastRowCard.value().getBuilding()->getId())
-				{
-					acceptableCard = 1;
-					break;
-				}
-			}
-		}
+
+		for(int i=0;i<m_cardDisplay.size();i++)
+			for(int j=0;j<m_cardDisplay[i].size();j++)
+				if (m_cardDisplay[i][j].has_value())
+					if (id == m_cardDisplay[i][j].value().getBuilding()->getId() && m_cardDisplay[i][j].value().isFaceUp()==true)
+					{
+						if (i == m_cardDisplay.size() - 1 || (m_cardDisplay[i+1][j].has_value() == false && m_cardDisplay[i+1][j+1].has_value() == false))
+						{
+							acceptableCard = 1;
+							break;
+						}
+					}
 		if (!acceptableCard)
 			std::cout << "Bad Card. Choose again\n";
 	} while (!acceptableCard);
