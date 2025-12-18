@@ -162,7 +162,7 @@ void Game::displayBoard()
 			if (m_cardDisplay[i][j].has_value())
 			{
 				if (m_cardDisplay[i][j].value().isFaceUp())
-					std::cout << "[" << (int)m_cardDisplay[i][j].value().getBuilding()->getId() << "] ";
+					std::cout << "[" << m_cardDisplay[i][j].value().getBuilding()->getId() << "] ";
 				else
 					std::cout << "[hidden]";
 			}
@@ -376,6 +376,30 @@ void Game::turnCards()
 		}
 	}
 }
+
+std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> Game::selectAcceptableWonder()
+{
+	int id;
+	bool acceptableWonder;
+	do
+	{
+		std::cout << "\nwonder id:";
+		std::cin >> id;
+		acceptableWonder = 0;
+		for (auto& wonder : m_currentPlayer->getWonders())
+		{
+			if (id == wonder.first->getId())
+			{
+				acceptableWonder = 1;
+				return wonder;
+			}
+		}
+		if (!acceptableWonder)
+			std::cout << "Bad Wonder. Choose again\n";
+	} while (!acceptableWonder);
+}
+
+
 /*
 To do:
 Make it so that wonders actually have an effect
@@ -480,7 +504,11 @@ void Game::run()
 		}
 		if (move == '3')
 		{
-			std::cout << "WIP\n";
+			std::cout << "Your wonders:\n";
+			for(auto wonder:m_currentPlayer->getWonders())
+				std::cout << "[" << wonder.first->getId() << "] ";
+			std::cout << "\n";
+			auto selectedWonder=selectAcceptableWonder();
 		}
 
 		std::swap(m_currentPlayer, m_otherPlayer);
