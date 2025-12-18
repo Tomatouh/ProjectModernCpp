@@ -391,6 +391,7 @@ std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> Game:
 			if (id == wonder.first->getId())
 			{
 				acceptableWonder = 1;
+
 				return wonder;
 			}
 		}
@@ -509,6 +510,8 @@ void Game::run()
 				std::cout << "[" << wonder.first->getId() << "] ";
 			std::cout << "\n";
 			auto selectedWonder=selectAcceptableWonder();
+			m_selectedBuilding = selectAcceptableCard();
+			
 		}
 
 		std::swap(m_currentPlayer, m_otherPlayer);
@@ -516,4 +519,3 @@ void Game::run()
 		system("cls");
 	}
 }
-
