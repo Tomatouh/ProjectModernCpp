@@ -44,6 +44,9 @@ public:
     uint16_t getVictoryPoints() const noexcept;
     void addVictoryPoints(uint16_t points) noexcept;
 
+    uint16_t getShields() const noexcept;
+    void addShields(uint16_t shields) noexcept;
+
 
     void addResources(const std::vector<ResourceType>& resources);
     void addProduction(const std::vector<ResourceType>& resources);
@@ -88,8 +91,9 @@ public:
 
     std::shared_ptr<Player> getOtherPlayer();
     void setOtherPlayer(const std::shared_ptr<Player>& otherPlayer);
-    const std::shared_ptr<std::vector<std::shared_ptr<Card>>> getDiscardPile();
-    void setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Card>>>& discardPile);
+    const std::shared_ptr<std::unordered_map<uint16_t,std::shared_ptr<Building>>> const getDiscardPile();
+    void setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>>& discardPile);
+	void removeCardFromDiscardPile(uint16_t cardId);
 
     bool hasChainId(std::uint16_t linkId) const;
 
@@ -102,6 +106,7 @@ private:
     std::string m_name;
     uint16_t m_coins;
     uint16_t m_victoryPoints;
+    uint16_t m_shields;
 
     // Resources
     uint16_t m_wood;
@@ -137,7 +142,7 @@ private:
     // pointer to the other player
     std::weak_ptr<Player> m_otherPlayer;
     // pointer to the discard pile
-    std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardPile;
+    std::shared_ptr<std::unordered_map<uint16_t,std::shared_ptr<Building>>> m_discardPile;
 
     // productions per turn
     std::unordered_map<ResourceType, std::uint16_t> m_productions;

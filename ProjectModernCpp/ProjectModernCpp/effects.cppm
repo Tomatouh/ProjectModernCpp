@@ -7,7 +7,7 @@ import std;
 
 export void addCoins(Player& player, const Card& card);
 export void addVictorypoints(Player& player, const Card& card);
-export void addShields(bool player, Board& board, const Card& card);
+//export void addShields(bool player, Board& board, const Card& card);
 export void addScientificSymbol(Player& player, const Building& card);
 export void threeCoinsPerGray(Player& player);
 export void twoCoinsPerBrown(Player& player);
@@ -25,3 +25,4 @@ export void discardGrey(Player& player, std::uint8_t idCard, std::vector<std::sh
 export void discardBrown(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards);
 export void twoCoinsPerWonder(Player& player);
 //export void drawProgress(Player& player)
+export void constructCard(std::shared_ptr<Player> player);

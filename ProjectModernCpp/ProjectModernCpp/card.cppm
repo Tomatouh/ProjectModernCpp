@@ -13,8 +13,8 @@ import <functional>;
 	public:
 		enum class Effect {
 			addResource,
-			chooseRawResource,
-			chooseManufacturedGood,
+			addRawResourceProduction,
+			addManufacturedGoodProduction,
 			addCoins,
 			addVictoryPoints,
 			addShields,

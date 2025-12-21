@@ -6,6 +6,7 @@ import Building;
 import std;
 import cardsLoader;
 import displayCard;
+import effects;
 
 export class Game {
 private:
@@ -17,7 +18,7 @@ private:
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIDeck;
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIDeck;
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
-	std::shared_ptr<std::vector<std::shared_ptr<Card>>> m_discardedCards;
+	std::shared_ptr<std::unordered_map<std::uint16_t, std::shared_ptr<Building>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
 
 	Building::Age m_currentAge;
@@ -25,6 +26,14 @@ private:
 	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
 	std::unordered_map<Card::Effect, std::function<void(Game& game)>> m_cardEffects;
 	std::shared_ptr<Building> m_selectedBuilding;
+	enum GameState {
+		GAMESTART,
+		ONGOING,
+		MILITARY,
+		SCIENTIFIC,
+		CIVILIAN
+	};
+	GameState m_gamestate = GAMESTART;
 
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
@@ -39,14 +48,7 @@ public:
 	Game();
 
 
-	enum GameState {
-		GAMESTART,
-		ONGOING,
-		MILITARY,
-		SCIENTIFIC,
-		CIVILIAN
-	};
-	GameState m_gamestate = GAMESTART;
+	
 	/*Game(const Player& player1, const Player& player2,
 		const Board& board,
 		const std::vector<std::shared_ptr<Card>>& wondersCard,

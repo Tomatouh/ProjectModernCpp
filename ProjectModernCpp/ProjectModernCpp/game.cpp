@@ -18,7 +18,7 @@ m_wondersDeck(loadWondersDeck()),
 m_ageIDeck(loadAgeIDeck()),
 m_ageIIDeck(loadAgeIIDeck()),
 m_ageIIIDeck(loadAgeIIIDeck()),
-m_discardedCards(std::make_shared<std::vector<std::shared_ptr<Card>>>()),
+m_discardedCards(std::make_shared<std::unordered_map<std::uint16_t, std::shared_ptr<Building>>>()),
 m_cardDisplay(),
 m_currentAge(Building::Age::AGEI)
 {
@@ -149,7 +149,12 @@ void Game::initCardEffects()
 		{Card::Effect::addCoins, [](Game& game) {game.m_currentPlayer->addCoin(game.m_selectedBuilding->getCoins()); }},
 		{Card::Effect::addVictoryPoints, [](Game& game) {game.m_currentPlayer->addVictoryPoints(game.m_selectedBuilding->getVictoryPoints()); }},
 		{Card::Effect::addResource, [](Game& game) {game.m_currentPlayer->addResources(game.m_selectedBuilding->getResources()); }},
-		{Card::Effect::addScientificSymbol, [](Game& game) {game.m_currentPlayer->addScientificPoint(game.m_selectedBuilding->getScientificSymbol().value()); }}
+		{Card::Effect::addScientificSymbol, [](Game& game) {game.m_currentPlayer->addScientificPoint(game.m_selectedBuilding->getScientificSymbol().value()); }},
+		{Card::Effect::addShields, [](Game& game) {game.m_currentPlayer->addShields(game.m_selectedBuilding->getShields()); }},
+		{Card::Effect::buildersGuild, [](Game& game){if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * std::max(game.m_currentPlayer->getWonders().size(), game.m_otherPlayer->getWonders().size())); }},
+		{Card::Effect::addManufacturedGoodProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); }},
+		{Card::Effect::addRawResourceProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); } },
+		{Card::Effect::constructCard, [](Game& game) {constructCard(game.m_currentPlayer); }}
 	};
 }
 
@@ -499,7 +504,7 @@ void Game::run()
 			m_selectedBuilding = selectAcceptableCard();
 			std::uint8_t profit = 2 + m_currentPlayer->getYellowBuildings().size();
 			m_currentPlayer->addCoin(profit);
-			m_discardedCards->push_back(m_selectedBuilding);
+			m_discardedCards->insert({ m_selectedBuilding->getId(), m_selectedBuilding });
 			removeCardFromDeck(m_selectedBuilding->getId());
 			turnCards();
 		}

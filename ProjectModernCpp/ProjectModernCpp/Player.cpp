@@ -10,6 +10,7 @@ import buildingResource;
 Player::Player() : m_name("player"),
 m_coins(7),
 m_victoryPoints(0),
+m_shields(0),
 m_wood(0),
 m_stone(0),
 m_clay(0),
@@ -24,6 +25,7 @@ Player::Player(std::string name,  uint16_t startCoin1Amount,
     uint16_t startCoin3Amount, uint16_t startCoin6Amount): m_name(std::move(name)),
     m_coins(7),
     m_victoryPoints(0),
+    m_shields(0),
     m_wood(0),
     m_stone(0),
     m_clay(0),
@@ -37,6 +39,7 @@ Player::Player(std::string name,  uint16_t startCoin1Amount,
 Player::Player(const Player& other) : m_name(other.m_name),
 m_coins(other.m_coins),
 m_victoryPoints(other.m_victoryPoints),
+m_shields(other.m_shields),
 m_wood(other.m_wood),
 m_stone(other.m_stone),
 m_clay(other.m_clay),
@@ -172,6 +175,13 @@ const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr
 
 uint16_t Player::getVictoryPoints() const noexcept { return m_victoryPoints; }
 void Player::addVictoryPoints(uint16_t points) noexcept { m_victoryPoints += points; }
+
+uint16_t Player::getShields() const noexcept { return m_shields; }
+void Player::addShields(uint16_t shields) noexcept
+{
+    m_shields += shields;
+}
+
 
 void Player::addResources(const std::vector<ResourceType>& resources)
 {
@@ -390,14 +400,19 @@ void Player::setOtherPlayer(const std::shared_ptr<Player>& otherPlayer)
     m_otherPlayer = otherPlayer;
 }
 
-const std::shared_ptr<std::vector<std::shared_ptr<Card>>> Player::getDiscardPile()
+const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>> const Player::getDiscardPile()
 {
     return m_discardPile;
 }
 
-void Player::setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Card>>>& discardPile)
+void Player::setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>>& discardPile)
 {
     m_discardPile = discardPile;
+}
+
+void Player::removeCardFromDiscardPile(uint16_t cardId)
+{
+	m_discardPile->erase(cardId);
 }
 
 bool Player::hasChainId(std::uint16_t linkId) const

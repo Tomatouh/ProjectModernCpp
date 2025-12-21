@@ -623,7 +623,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIDec
     // YELLOW CARDS
 
     {
-        std::vector<Card::Effect> effects = { Card::Effect::chooseManufacturedGood };
+        std::vector<Card::Effect> effects = { Card::Effect::addManufacturedGoodProduction };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY }, 3 };
         std::string name = "Forum";
         uint8_t id = 44;
@@ -638,7 +638,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIDec
         out.insert({ id, std::make_shared<Building>(effects, cost, name, id, vp, shields, coins, age, color, resources, sym) });
     }
     {
-        std::vector<Card::Effect> effects = { Card::Effect::chooseRawResource };
+        std::vector<Card::Effect> effects = { Card::Effect::addRawResourceProduction };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::GLASS, ResourceType::PAPYRUS }, 2 };
         std::string name = "Caravansery";
         uint8_t id = 45;
@@ -1237,7 +1237,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
         out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
     }
     {
-        std::vector<Card::Effect> effects = { Card::Effect::chooseRawResource, Card::Effect::addVictoryPoints };
+        std::vector<Card::Effect> effects = { Card::Effect::addRawResourceProduction, Card::Effect::addVictoryPoints };
         Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
         std::string name = "The Great Lighthouse";
         uint8_t id = 78;
@@ -1270,7 +1270,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
         out.push_back(std::make_shared<Card>(effects, cost, name, id, vp, shields, coins));
     }
     {
-        std::vector<Card::Effect> effects = { Card::Effect::chooseManufacturedGood, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
+        std::vector<Card::Effect> effects = { Card::Effect::addManufacturedGoodProduction, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
         Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
         std::string name = "Piraeus";
         uint8_t id = 81;
