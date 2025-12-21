@@ -21,8 +21,8 @@ export void scientistsGuild(Player& player1, const Player& player2, bool endGame
 export void tacticiansGuild(Player& player1, const Player& player2, bool endGame);
 export void shipownersGuild(Player& player1, const Player& player2, bool endGame);
 export void loseThreeCoins(Player& player);
-export void discardGrey(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards);
-export void discardBrown(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards);
+export void discardGrey(std::shared_ptr<Player> player);
+export void discardBrown(std::shared_ptr<Player> player);
 export void twoCoinsPerWonder(Player& player);
 //export void drawProgress(Player& player)
 export void constructCard(std::shared_ptr<Player> player);

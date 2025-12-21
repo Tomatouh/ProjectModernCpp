@@ -154,7 +154,9 @@ void Game::initCardEffects()
 		{Card::Effect::buildersGuild, [](Game& game){if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * std::max(game.m_currentPlayer->getWonders().size(), game.m_otherPlayer->getWonders().size())); }},
 		{Card::Effect::addManufacturedGoodProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); }},
 		{Card::Effect::addRawResourceProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); } },
-		{Card::Effect::constructCard, [](Game& game) {constructCard(game.m_currentPlayer); }}
+		{Card::Effect::constructCard, [](Game& game) {constructCard(game.m_currentPlayer); }},
+		{Card::Effect::discardBrown, [](Game& game) {discardBrown(game.m_currentPlayer); }},
+		{Card::Effect::discardGrey, [](Game& game) {discardGrey(game.m_currentPlayer); }}
 	};
 }
 

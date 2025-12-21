@@ -27,7 +27,7 @@ public:
     std::uint16_t getCoins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
-    Building discardBuilding(Building::Color color, std::uint8_t id);
+    void discardBuilding(Building::Color color, std::uint16_t id);
     void addWonder(const std::shared_ptr<Card>& wonder);
 
     // Getters for Buildings, by colour
@@ -49,6 +49,7 @@ public:
 
 
     void addResources(const std::vector<ResourceType>& resources);
+	void removeResources(const std::vector<ResourceType>& resources);
     void addProduction(const std::vector<ResourceType>& resources);
     
 

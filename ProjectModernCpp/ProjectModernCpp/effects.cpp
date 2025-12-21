@@ -111,16 +111,60 @@ void loseThreeCoins(Player& player)
 	player.addCoin(3);
 }
 
-void discardGrey(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards)
+void discardGrey(std::shared_ptr<Player> player)
 {	
-	std::shared_ptr<Card> discarded = std::make_shared<Card>(player.discardBuilding(Building::Color::GREY, idCard));
-	discardedCards.push_back(discarded);
+	Player otherPlayer = *(player->getOtherPlayer());
+	for (auto& greyCard : otherPlayer.getGreyBuildings())
+	{
+		std::cout << "[" << greyCard.getId() << "] ";
+	}
+	uint16_t idCard;
+	std::shared_ptr<Building> discarded;
+	std::cout << "\nCard id to discard: ";
+	while (true)
+	{
+		std::cin >> idCard;
+		auto it = std::find_if(otherPlayer.getGreyBuildings().begin(), otherPlayer.getGreyBuildings().end(),
+			[idCard](const Building& b) { return b.getId() == idCard; });
+		if (it != otherPlayer.getGreyBuildings().end()) {
+			discarded = std::make_shared<Building>(*it);
+			break;
+		}
+		std::cout << "Invalid input. Please enter a valid card id: ";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+
+	otherPlayer.discardBuilding(Building::Color::GREY, idCard);
+	otherPlayer.removeResources(discarded->getResources());
 }
 
-void discardBrown(Player& player, std::uint8_t idCard, std::vector<std::shared_ptr<Card>>& discardedCards)
+void discardBrown(std::shared_ptr<Player> player)
 {
-	std::shared_ptr<Card> discarded = std::make_shared<Card>(player.discardBuilding(Building::Color::BROWN, idCard));
-	discardedCards.push_back(discarded);
+	Player otherPlayer = *(player->getOtherPlayer());
+	for(auto& brownCard : otherPlayer.getBrownBuildings())
+	{
+		std::cout << "[" << brownCard.getId() << "] ";
+	}
+	uint16_t idCard;
+	std::shared_ptr<Building> discarded;
+	std::cout << "\nCard id to discard: ";
+	while(true)
+	{
+		std::cin >> idCard;
+		auto it = std::find_if(otherPlayer.getBrownBuildings().begin(), otherPlayer.getBrownBuildings().end(),
+			[idCard](const Building& b) { return b.getId() == idCard; });
+		if (it != otherPlayer.getBrownBuildings().end()) {
+			discarded = std::make_shared<Building>(*it);
+			break;
+		}
+		std::cout << "Invalid input. Please enter a valid card id: ";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+	
+	otherPlayer.discardBuilding(Building::Color::BROWN, idCard);
+	otherPlayer.removeResources(discarded->getResources());
 }
 
 void twoCoinsPerWonder(Player& player)

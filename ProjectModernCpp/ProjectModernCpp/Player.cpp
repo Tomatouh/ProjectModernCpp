@@ -128,7 +128,7 @@ void Player::addBuilding(const Building& building) {
     addVictoryPoints(building.getVictoryPoints());
 }
 
-Building Player::discardBuilding(Building::Color color, std::uint8_t id)
+void Player::discardBuilding(Building::Color color, std::uint16_t id)
 {
     Building found;
     std::vector<Building>::iterator it;
@@ -138,21 +138,22 @@ Building Player::discardBuilding(Building::Color color, std::uint8_t id)
         it = std::find_if(m_greyBuildings.begin(), m_greyBuildings.end(), [id](const Building& b) { return b.getId() == id; });
         if ( it == m_greyBuildings.end()) {
             std::cout << "building not found\n";
-            return Building();
+            return;
         }
         found = std::move(*it);
         m_greyBuildings.erase(it);
-        return found;
+		m_discardPile->insert({ id, std::make_shared<Building>(found) });
     case Building::Color::BROWN:
         it = std::find_if(m_brownBuildings.begin(), m_brownBuildings.end(), [id](const Building& b) { return b.getId() == id; });
         if ( it == m_brownBuildings.end()) {
             std::cout << "building not found\n";
-            return Building();
+            return;
         }
         found = std::move(*it);
         m_brownBuildings.erase(it);
-        return found;
+        m_discardPile->insert({ id, std::make_shared<Building>(found) });
     }
+   
     
 }
 
@@ -215,6 +216,40 @@ void Player::addResources(const std::vector<ResourceType>& resources)
         }
         }
     }
+}
+
+void Player::removeResources(const std::vector<ResourceType>& resources)
+{
+    for (const auto& resource : resources) {
+        switch (resource)
+        {
+        case ResourceType::WOOD:
+        {
+            m_wood--;
+            break;
+        }
+        case ResourceType::STONE:
+        {
+            m_stone--;
+            break;
+        }
+        case ResourceType::CLAY:
+        {
+            m_clay--;
+            break;
+        }
+        case ResourceType::GLASS:
+        {
+            m_glass--;
+            break;
+        }
+        case ResourceType::PAPYRUS:
+        {
+            m_papyrus--;
+            break;
+        }
+        }
+	}
 }
 
 void Player::addProduction(const std::vector<ResourceType>& resources)
