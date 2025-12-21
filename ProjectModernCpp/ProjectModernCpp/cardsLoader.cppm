@@ -1194,7 +1194,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
 
     {
         std::vector<Card::Effect> effects = { Card::Effect::addCoins, Card::Effect::loseThreeCoins, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::STONE, ResourceType::STONE, ResourceType::CLAY, ResourceType::CLAY, ResourceType::PAPYRUS}, 0 };
         std::string name = "The Appian Way";
         uint8_t id = 74;
         uint8_t vp = 3;
@@ -1205,7 +1205,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::discardGrey, Card::Effect::addShields, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::STONE, ResourceType::STONE, ResourceType::WOOD, ResourceType::GLASS}, 0 };
         std::string name = "Circus Maximus";
         uint8_t id = 75;
         uint8_t vp = 3;
@@ -1216,7 +1216,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addShields, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::CLAY, ResourceType::CLAY, ResourceType::CLAY, ResourceType::GLASS}, 0 };
         std::string name = "The Colossus";
         uint8_t id = 76;
         uint8_t vp = 3;
@@ -1227,7 +1227,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::drawProgress, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::WOOD, ResourceType::WOOD, ResourceType::WOOD, ResourceType::GLASS, ResourceType::PAPYRUS}, 0 };
         std::string name = "The Great Library";
         uint8_t id = 77;
         uint8_t vp = 4;
@@ -1238,7 +1238,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addRawResourceProduction, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::WOOD, ResourceType::STONE, ResourceType::PAPYRUS, ResourceType::PAPYRUS}, 0 };
         std::string name = "The Great Lighthouse";
         uint8_t id = 78;
         uint8_t vp = 4;
@@ -1249,7 +1249,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addCoins, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::WOOD,ResourceType::WOOD, ResourceType::GLASS, ResourceType::PAPYRUS}, 0 };
         std::string name = "The Hanging Gardens";
         uint8_t id = 79;
         uint8_t vp = 3;
@@ -1260,7 +1260,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::constructCard, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::CLAY, ResourceType::CLAY, ResourceType::GLASS, ResourceType::GLASS, ResourceType::PAPYRUS }, 0 };
         std::string name = "The Mausoleum";
         uint8_t id = 80;
         uint8_t vp = 2;
@@ -1271,7 +1271,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addManufacturedGoodProduction, Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::WOOD,ResourceType::WOOD, ResourceType::STONE, ResourceType::CLAY}, 0 };
         std::string name = "Piraeus";
         uint8_t id = 81;
         uint8_t vp = 2;
@@ -1282,7 +1282,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::STONE, ResourceType::STONE,ResourceType::STONE, ResourceType::PAPYRUS}, 0 };
         std::string name = "The Pyramids";
         uint8_t id = 82;
         uint8_t vp = 9;
@@ -1293,7 +1293,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::playSecondTurn, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::STONE, ResourceType::CLAY, ResourceType::GLASS, ResourceType::GLASS }, 0 };
         std::string name = "The Sphinx";
         uint8_t id = 83;
         uint8_t vp = 6;
@@ -1304,7 +1304,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::discardBrown, Card::Effect::addShields, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::STONE, ResourceType::WOOD, ResourceType::CLAY, ResourceType::PAPYRUS, ResourceType::PAPYRUS}, 0 };
         std::string name = "The Statue of Zeus";
         uint8_t id = 84;
         uint8_t vp = 3;
@@ -1315,7 +1315,7 @@ export std::vector<std::shared_ptr<Card>> loadWondersDeck() {
     }
     {
         std::vector<Card::Effect> effects = { Card::Effect::addCoins, Card::Effect::playSecondTurn};
-        Card::Cost cost{ 0, std::vector<ResourceType>{}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ResourceType::WOOD, ResourceType::STONE, ResourceType::GLASS, ResourceType::PAPYRUS}, 0 };
         std::string name = "The Temple of Artemis";
         uint8_t id = 85;
         uint8_t vp = 0;
