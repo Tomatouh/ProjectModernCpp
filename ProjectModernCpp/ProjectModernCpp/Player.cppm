@@ -6,7 +6,7 @@ import <iostream>;
 import <memory>;
 import <functional>;
 import card;
-import Building; // Building trebuie importat pentru a fi folosit in Player
+import Building;
 import buildingResource;
 
 export class Player {
@@ -50,6 +50,8 @@ public:
 
     void addResources(const std::vector<ResourceType>& resources);
 	void removeResources(const std::vector<ResourceType>& resources);
+
+	std::unordered_map<ResourceType, std::uint16_t> getProductions() const noexcept;
     void addProduction(const std::vector<ResourceType>& resources);
     
 
@@ -86,7 +88,8 @@ public:
         bool m_isOneTime;
     };
     void applyEffects();
-    std::vector<ProgressToken> getProgressTokens();
+    const std::vector<ProgressToken> getProgressTokens() const;
+    void addProgressToken(const ProgressToken& token);
 
     std::uint16_t getTradeCost(ResourceType type,  Player& opponent) ;
 
@@ -95,6 +98,9 @@ public:
     const std::shared_ptr<std::unordered_map<uint16_t,std::shared_ptr<Building>>> const getDiscardPile();
     void setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>>& discardPile);
 	void removeCardFromDiscardPile(uint16_t cardId);
+
+    std::unordered_map<ResourceType, bool> getTradeDiscounts() const noexcept;
+	void addTradeDiscount(ResourceType type) noexcept;
 
     bool hasChainId(std::uint16_t linkId) const;
 
@@ -147,6 +153,9 @@ private:
 
     // productions per turn
     std::unordered_map<ResourceType, std::uint16_t> m_productions;
+
+    // trade discounts
+	std::unordered_map<ResourceType, bool> m_tradeDiscounts;
 
     bool hasDiscountFor(ResourceType type) const;
 

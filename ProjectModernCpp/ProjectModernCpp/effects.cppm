@@ -5,24 +5,10 @@ import Player;
 import board; 
 import std;
 
-export void addCoins(Player& player, const Card& card);
-export void addVictorypoints(Player& player, const Card& card);
-//export void addShields(bool player, Board& board, const Card& card);
-export void addScientificSymbol(Player& player, const Building& card);
-export void threeCoinsPerGray(Player& player);
-export void twoCoinsPerBrown(Player& player);
-export void oneCoinPerYellow(Player& player);
-export void oneCoinPerRed(Player& player);
-export void buildersGuild(Player& player1, const Player& player2, bool endGame);
-export void tradersGuild(Player& player1, const Player& player2, bool endGame);
-export void moneylendersGuild(Player& player1, const Player& player2, bool endGame);
-export void magistratesGuild(Player& player1, const Player& player2, bool endGame);
-export void scientistsGuild(Player& player1, const Player& player2, bool endGame);
-export void tacticiansGuild(Player& player1, const Player& player2, bool endGame);
-export void shipownersGuild(Player& player1, const Player& player2, bool endGame);
-export void loseThreeCoins(Player& player);
+
+
 export void discardGrey(std::shared_ptr<Player> player);
 export void discardBrown(std::shared_ptr<Player> player);
-export void twoCoinsPerWonder(Player& player);
-//export void drawProgress(Player& player)
+export std::uint16_t maxConstructedWonders(std::shared_ptr<Player> player);
+export void drawProgress(std::shared_ptr<Player> player, std::vector< std::unique_ptr<Player::ProgressToken>>& m_progressTokensDeck);
 export void constructCard(std::shared_ptr<Player> player);

@@ -3,116 +3,12 @@ import card;
 import Player;
 import board;
 
-void addCoins(Player& player, const Card& card)
-{
-	player.addCoin(card.getCoins());
-
-}
-void addVictorypoints(Player& player, const Card& card) {
-	player.addVictoryPoints(card.getVictoryPoints());
-}
 
 
 
-
-
-
-void addScientificSymbol(Player& player, const Building& card)
-{
-	player.addBuilding(card);
-}
-
-void threeCoinsPerGray(Player& player)
-{
-	player.addCoin(player.getGreyBuildings().size() * 3);
-
-}
-
-void twoCoinsPerBrown(Player& player)
-{
-	player.addCoin(player.getBrownBuildings().size() * 2);
-}
-
-void oneCoinPerYellow(Player& player)
-{
-	player.addCoin(player.getYellowBuildings().size());
-}
-
-void oneCoinPerRed(Player& player)
-{
-	player.addCoin(player.getRedBuildings().size());
-}
-
-void buildersGuild(Player& player1, const Player& player2, bool endGame)
-{
-	if (endGame) player1.addVictoryPoints(2 * std::max(player1.getWonders().size(), player2.getWonders().size()));
-}
-
-void tradersGuild(Player& player1, const Player& player2, bool endGame)
-{
-	if (!endGame) {
-		player1.addCoin(std::max(player1.getYellowBuildings().size(), player2.getYellowBuildings().size()));
-	}
-	else {
-		player1.addVictoryPoints(std::max(player1.getYellowBuildings().size(), player2.getYellowBuildings().size()));
-	}
-
-}
-
-void moneylendersGuild(Player& player1, const Player& player2, bool endGame)
-{
-	if (endGame) player1.addVictoryPoints(std::max(player1.getVictoryPoints(), player2.getVictoryPoints()));
-}
-
-void magistratesGuild(Player& player1, const Player& player2, bool endGame)
-{
-	if (!endGame) {
-		player1.addCoin(std::max(player1.getBlueBuildings().size(), player2.getBlueBuildings().size()));
-	}
-	else {
-		player1.addVictoryPoints(std::max(player1.getBlueBuildings().size(), player2.getBlueBuildings().size()));
-	}
-}
-
-void scientistsGuild(Player& player1, const Player& player2, bool endGame)
-{
-	if (!endGame) {
-		player1.addCoin(std::max(player1.getGreenBuildings().size(), player2.getGreenBuildings().size()));
-	}
-	else {
-		player1.addVictoryPoints(std::max(player1.getGreenBuildings().size(), player2.getGreenBuildings().size()));
-	}
-}
-
-void tacticiansGuild(Player& player1, const Player& player2, bool endGame)
-{
-	if (!endGame) {
-		player1.addCoin(std::max(player1.getRedBuildings().size(), player2.getRedBuildings().size()));
-	}
-	else {
-		player1.addVictoryPoints(std::max(player1.getRedBuildings().size(), player2.getRedBuildings().size()));
-	}
-}
-
-void shipownersGuild(Player& player1, const Player& player2, bool endGame)
-{
-	if (!endGame) {
-		player1.addCoin(std::max(player1.getBrownBuildings().size() + player1.getGreyBuildings().size(),
-			player2.getBrownBuildings().size() + player2.getGreyBuildings().size()));
-	}
-	else {
-		player1.addVictoryPoints(std::max(player1.getBrownBuildings().size() + player1.getGreyBuildings().size(),
-			player2.getBrownBuildings().size() + player2.getGreyBuildings().size()));
-	}
-}
-
-void loseThreeCoins(Player& player)
-{
-	player.addCoin(3);
-}
 
 void discardGrey(std::shared_ptr<Player> player)
-{	
+{
 	Player otherPlayer = *(player->getOtherPlayer());
 	for (auto& greyCard : otherPlayer.getGreyBuildings())
 	{
@@ -142,14 +38,14 @@ void discardGrey(std::shared_ptr<Player> player)
 void discardBrown(std::shared_ptr<Player> player)
 {
 	Player otherPlayer = *(player->getOtherPlayer());
-	for(auto& brownCard : otherPlayer.getBrownBuildings())
+	for (auto& brownCard : otherPlayer.getBrownBuildings())
 	{
 		std::cout << "[" << brownCard.getId() << "] ";
 	}
 	uint16_t idCard;
 	std::shared_ptr<Building> discarded;
 	std::cout << "\nCard id to discard: ";
-	while(true)
+	while (true)
 	{
 		std::cin >> idCard;
 		auto it = std::find_if(otherPlayer.getBrownBuildings().begin(), otherPlayer.getBrownBuildings().end(),
@@ -162,19 +58,54 @@ void discardBrown(std::shared_ptr<Player> player)
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
-	
+
 	otherPlayer.discardBuilding(Building::Color::BROWN, idCard);
 	otherPlayer.removeResources(discarded->getResources());
 }
 
-void twoCoinsPerWonder(Player& player)
+std::uint16_t maxConstructedWonders(std::shared_ptr<Player> player)
 {
-	player.addCoin(player.getWonders().size() * 2);
+	std::uint16_t constructedWonders1 = 0, constructedWonders2 = 0;
+	for (int i = 0; i < player->getWonders().size(); ++i)
+	{
+		if (player->getWonders()[i].second.has_value())
+			constructedWonders1++;
+		if (player->getOtherPlayer()->getWonders()[i].second.has_value())
+			constructedWonders2++;
+	}
+	return std::max(constructedWonders1, constructedWonders2);
+}
+
+void drawProgress(std::shared_ptr<Player> player, std::vector<std::unique_ptr<Player::ProgressToken>>& m_progressTokensDeck)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	auto copyDeck = m_progressTokensDeck;
+	for (int i = 0; i < 2; ++i)
+	{
+		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
+		std::uint16_t index = dist(gen);
+		std::cout << "[" << index << "] ";
+		copyDeck.emplace_back(std::move(m_progressTokensDeck[index]));
+	}
+
+	std::cout << "\nProgress token id to choose: ";
+	std::uint16_t idToken;
+	while (!(std::cin >> idToken) || idToken >= copyDeck.size())
+	{
+		std::cout << "Invalid input. Please enter a valid progress token id: ";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+	player->addProgressToken(*copyDeck[idToken]);
+	copyDeck[idToken]->applyEffect(std::make_unique<Player>(player));
+	copyDeck.erase(copyDeck.begin() + idToken);
+	m_progressTokensDeck.insert(m_progressTokensDeck.end(), std::make_move_iterator(copyDeck.begin()), std::make_move_iterator(copyDeck.end()));
 }
 
 void constructCard(std::shared_ptr<Player> player)
 {
-	for(auto& pair : *(player->getDiscardPile()))
+	for (auto& pair : *(player->getDiscardPile()))
 	{
 		std::cout << "[" << pair.first << "] " << pair.second->getName() << "\n";
 	}
@@ -186,12 +117,9 @@ void constructCard(std::shared_ptr<Player> player)
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
-	
+
 	player->addBuilding(*(player->getDiscardPile()->at(idCard)));
 	player->removeCardFromDiscardPile(idCard);
 }
 
-void addShields( Board& board, const Card& card)
-{
-	board.move(card.getShields());
-}
+

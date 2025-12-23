@@ -22,8 +22,8 @@ private:
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
 
 	Building::Age m_currentAge;
-	std::vector< std::shared_ptr<Player::ProgressToken>> m_progressTokensDeck;
-	std::array<std::shared_ptr<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
+	std::vector< std::unique_ptr<Player::ProgressToken>> m_progressTokensDeck;
+	std::array<std::optional<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
 	std::unordered_map<Card::Effect, std::function<void(Game& game)>> m_cardEffects;
 	std::shared_ptr<Building> m_selectedBuilding;
 	enum GameState {

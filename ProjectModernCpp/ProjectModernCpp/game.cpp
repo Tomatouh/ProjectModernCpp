@@ -151,12 +151,71 @@ void Game::initCardEffects()
 		{Card::Effect::addResource, [](Game& game) {game.m_currentPlayer->addResources(game.m_selectedBuilding->getResources()); }},
 		{Card::Effect::addScientificSymbol, [](Game& game) {game.m_currentPlayer->addScientificPoint(game.m_selectedBuilding->getScientificSymbol().value()); }},
 		{Card::Effect::addShields, [](Game& game) {game.m_currentPlayer->addShields(game.m_selectedBuilding->getShields()); }},
-		{Card::Effect::buildersGuild, [](Game& game){if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * std::max(game.m_currentPlayer->getWonders().size(), game.m_otherPlayer->getWonders().size())); }},
+		{Card::Effect::buildersGuild, [](Game& game){if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * maxConstructedWonders(game.m_currentPlayer)); }},
 		{Card::Effect::addManufacturedGoodProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); }},
 		{Card::Effect::addRawResourceProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); } },
 		{Card::Effect::constructCard, [](Game& game) {constructCard(game.m_currentPlayer); }},
 		{Card::Effect::discardBrown, [](Game& game) {discardBrown(game.m_currentPlayer); }},
-		{Card::Effect::discardGrey, [](Game& game) {discardGrey(game.m_currentPlayer); }}
+		{Card::Effect::discardGrey, [](Game& game) {discardGrey(game.m_currentPlayer); }},
+		{Card::Effect::drawProgress, [](Game& game) {drawProgress(game.m_currentPlayer, game.m_progressTokensDeck); }},
+		{Card::Effect::loseThreeCoins, [](Game& game) {game.m_otherPlayer->addCoin(-3); }},
+		{Card::Effect::magistratesGuild, [](Game& game) {
+			if (game.m_gamestate != GameState::ONGOING)
+			{
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBlueBuildings().size(), game.m_otherPlayer->getBlueBuildings().size()));
+			}
+			else {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBlueBuildings().size(), game.m_otherPlayer->getBlueBuildings().size()));
+		} }},
+		{Card::Effect::moneylendersGuild, [](Game& game) {
+			if (game.m_gamestate != GameState::ONGOING)
+			{
+				game.m_currentPlayer->addVictoryPoints(game.m_currentPlayer->getCoins()/3);
+			}} },
+		{Card::Effect::scientistsGuild, [](Game& game) {
+			if (game.m_gamestate != GameState::ONGOING)
+			{
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getGreenBuildings().size(), game.m_otherPlayer->getGreenBuildings().size()));
+			}
+			else {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getGreenBuildings().size(), game.m_otherPlayer->getGreenBuildings().size()));
+		} }},
+		{Card::Effect::tacticiansGuild, [](Game& game) {
+			if (game.m_gamestate != GameState::ONGOING)
+			{
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getRedBuildings().size(), game.m_otherPlayer->getRedBuildings().size()));
+			}
+			else {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getRedBuildings().size(), game.m_otherPlayer->getRedBuildings().size()));
+		} }},
+		{Card::Effect::tradersGuild, [](Game& game) {
+			if (game.m_gamestate != GameState::ONGOING)
+			{
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getYellowBuildings().size(), game.m_otherPlayer->getYellowBuildings().size()));
+			}
+			else {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getYellowBuildings().size(), game.m_otherPlayer->getYellowBuildings().size()));
+		} }},
+		{Card::Effect::shipownersGuild, [](Game& game) {
+			if (game.m_gamestate != GameState::ONGOING)
+			{
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBrownBuildings().size() + game.m_currentPlayer->getGreyBuildings().size(),
+					game.m_otherPlayer->getBrownBuildings().size() + game.m_otherPlayer->getGreyBuildings().size()));
+			}
+			else {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBrownBuildings().size() + game.m_currentPlayer->getGreyBuildings().size(),
+					game.m_otherPlayer->getBrownBuildings().size() + game.m_otherPlayer->getGreyBuildings().size()));
+		} }},
+		{Card::Effect::threeCoinsPerGrey, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getGreyBuildings().size() * 3); }},
+		{Card::Effect::twoCoinsPerBrown, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getBrownBuildings().size() * 2); }},
+		{Card::Effect::oneCoinPerYellow, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getYellowBuildings().size()); }},
+		{Card::Effect::oneCoinPerRed, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getRedBuildings().size()); }},
+		{Card::Effect::twoCoinsPerWonder, [](Game& game) {game.m_currentPlayer->addCoin(maxConstructedWonders(game.m_currentPlayer) * 2); }},
+		{Card::Effect::oneCoinClay, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::CLAY); }},
+		{Card::Effect::oneCoinGlass, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::GLASS); }},
+		{Card::Effect::oneCoinPapyrus, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::PAPYRUS); }},
+		{Card::Effect::oneCoinStone, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::STONE); }},
+		{Card::Effect::oneCoinWood, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::WOOD); }}
 	};
 }
 
@@ -188,16 +247,16 @@ void Game::clearBoard()
 
 void Game::loadProgressTokens()
 {
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::agricultureToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::architectureToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::economyToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::lawToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::masonryToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::mathematicsToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::philosphyToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::strategyToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::theologyToken));
-	m_progressTokensDeck.push_back(std::make_shared<Player::ProgressToken>(Player::ProgressToken::urbanismToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::agricultureToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::architectureToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::economyToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::lawToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::masonryToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::mathematicsToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::philosphyToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::strategyToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::theologyToken));
+	m_progressTokensDeck.push_back(std::make_unique<Player::ProgressToken>(Player::ProgressToken::urbanismToken));
 }
 
 void Game::initProgressTokens()
@@ -209,7 +268,7 @@ void Game::initProgressTokens()
 	{
 		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
 		std::uint16_t index = dist(gen);
-		m_progressTokens[i] = m_progressTokensDeck[index];
+		m_progressTokens[i] = std::make_optional<Player::ProgressToken>(*m_progressTokensDeck[index]);
 		m_progressTokensDeck.erase(m_progressTokensDeck.begin() + index);
 	}
 

@@ -252,6 +252,11 @@ void Player::removeResources(const std::vector<ResourceType>& resources)
 	}
 }
 
+std::unordered_map<ResourceType, std::uint16_t> Player::getProductions() const noexcept
+{
+    return m_productions;
+}
+
 void Player::addProduction(const std::vector<ResourceType>& resources)
 {
     for (const auto& resource : resources) {
@@ -303,9 +308,13 @@ std::vector<uint16_t> Player::getScientificPoints() noexcept
 {
     return m_scientificPoints;
 }
-std::vector<Player::ProgressToken> Player::getProgressTokens()
+const std::vector<Player::ProgressToken> Player::getProgressTokens() const
 {
     return m_progressTokens;
+}
+void Player::addProgressToken(const ProgressToken& token)
+{
+	m_progressTokens.push_back(token);
 }
 void Player::applyEffects()
 {
@@ -373,7 +382,7 @@ Player::ProgressToken::ProgressToken(std::function<void(std::unique_ptr<Player> 
 
 bool Player::hasDiscountFor(ResourceType type) const
 {
-    std::uint8_t requiredId = 0;
+    /*std::uint8_t requiredId = 0;
 
     switch (type)
     {
@@ -390,8 +399,8 @@ bool Player::hasDiscountFor(ResourceType type) const
         {
             return true;
         }
-    }
-    return false;
+    }*/
+	return m_tradeDiscounts.at(type);
 }
 
 std::uint16_t Player::countOpponentProduction(ResourceType type) {
@@ -448,6 +457,16 @@ void Player::setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, s
 void Player::removeCardFromDiscardPile(uint16_t cardId)
 {
 	m_discardPile->erase(cardId);
+}
+
+std::unordered_map<ResourceType, bool> Player::getTradeDiscounts() const noexcept
+{
+    return m_tradeDiscounts;
+}
+
+void Player::addTradeDiscount(ResourceType type) noexcept
+{
+	m_tradeDiscounts[type] = true;
 }
 
 bool Player::hasChainId(std::uint16_t linkId) const
