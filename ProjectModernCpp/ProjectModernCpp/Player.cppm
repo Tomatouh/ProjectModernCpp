@@ -13,7 +13,7 @@ export class Player {
 public:
 
     Player();
-    explicit Player(std::string name, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
+    //explicit Player(std::string name, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
     Player(const Player& other);
 
     const std::string& name() const noexcept;
@@ -81,10 +81,10 @@ public:
         static ProgressToken strategyToken;
         static ProgressToken theologyToken;
         static ProgressToken urbanismToken;
-        void applyEffect(std::unique_ptr<Player> player);
-        ProgressToken(std::function<void(std::unique_ptr<Player> player)> effect, bool isOneTime);
+        void applyEffect(std::shared_ptr<Player> player);
+        ProgressToken(std::function<void(std::shared_ptr<Player> player)> effect, bool isOneTime);
     private:
-        std::function<void(std::unique_ptr<Player> player)> m_effect;
+        std::function<void(std::shared_ptr<Player> player)> m_effect;
         bool m_isOneTime;
     };
     void applyEffects();
@@ -95,7 +95,7 @@ public:
 
     std::shared_ptr<Player> getOtherPlayer();
     void setOtherPlayer(const std::shared_ptr<Player>& otherPlayer);
-    const std::shared_ptr<std::unordered_map<uint16_t,std::shared_ptr<Building>>> const getDiscardPile();
+    const std::shared_ptr<std::unordered_map<uint16_t,std::shared_ptr<Building>>> getDiscardPile() const;
     void setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>>& discardPile);
 	void removeCardFromDiscardPile(uint16_t cardId);
 

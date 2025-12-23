@@ -22,9 +22,9 @@ m_discardedCards(std::make_shared<std::unordered_map<std::uint16_t, std::shared_
 m_cardDisplay(),
 m_currentAge(Building::Age::AGEI)
 {
-	Player player1, player2;
-	m_currentPlayer = std::make_shared<Player>(player1);
-	m_otherPlayer = std::make_shared<Player>(player2);
+	//Player player1, player2;
+	m_currentPlayer = std::make_shared<Player>();
+	m_otherPlayer = std::make_shared<Player>();
 	m_currentPlayer->setPlayerName("player1");
 	m_otherPlayer->setPlayerName("player2");
 	m_currentPlayer->setOtherPlayer(m_otherPlayer);

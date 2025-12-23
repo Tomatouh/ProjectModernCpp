@@ -80,7 +80,7 @@ void drawProgress(std::shared_ptr<Player> player, std::vector<std::unique_ptr<Pl
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	auto copyDeck = m_progressTokensDeck;
+	auto copyDeck = std::move(m_progressTokensDeck);
 	for (int i = 0; i < 2; ++i)
 	{
 		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
@@ -98,7 +98,7 @@ void drawProgress(std::shared_ptr<Player> player, std::vector<std::unique_ptr<Pl
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
 	player->addProgressToken(*copyDeck[idToken]);
-	copyDeck[idToken]->applyEffect(std::make_unique<Player>(player));
+	copyDeck[idToken]->applyEffect(player);
 	copyDeck.erase(copyDeck.begin() + idToken);
 	m_progressTokensDeck.insert(m_progressTokensDeck.end(), std::make_move_iterator(copyDeck.begin()), std::make_move_iterator(copyDeck.end()));
 }

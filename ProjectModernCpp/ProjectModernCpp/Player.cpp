@@ -17,24 +17,24 @@ m_clay(0),
 m_glass(0),
 m_papyrus(0)
 {
-    for (uint16_t i = 0; i < 7; i++)
+    for (uint16_t i = 0; i < 6; i++)
         m_scientificPoints.push_back(0);
 }
 
-Player::Player(std::string name,  uint16_t startCoin1Amount,
-    uint16_t startCoin3Amount, uint16_t startCoin6Amount): m_name(std::move(name)),
-    m_coins(7),
-    m_victoryPoints(0),
-    m_shields(0),
-    m_wood(0),
-    m_stone(0),
-    m_clay(0),
-    m_glass(0),
-    m_papyrus(0)
-{
-    for (uint16_t i = 0; i < 7; i++)
-        m_scientificPoints.push_back(0);
-}
+//Player::Player(std::string name,  uint16_t startCoin1Amount,
+//    uint16_t startCoin3Amount, uint16_t startCoin6Amount): m_name(std::move(name)),
+//    m_coins(7),
+//    m_victoryPoints(0),
+//    m_shields(0),
+//    m_wood(0),
+//    m_stone(0),
+//    m_clay(0),
+//    m_glass(0),
+//    m_papyrus(0)
+//{
+//    for (uint16_t i = 0; i < 7; i++)
+//        m_scientificPoints.push_back(0);
+//}
 
 Player::Player(const Player& other) : m_name(other.m_name),
 m_coins(other.m_coins),
@@ -53,7 +53,8 @@ m_redBuildings(other.m_redBuildings),
 m_purpleBuildings(other.m_purpleBuildings),
 m_scientificPoints(other.m_scientificPoints),
 m_scientificPointTypeNumber(other.m_scientificPointTypeNumber),
-m_progressTokens(other.m_progressTokens)
+m_progressTokens(other.m_progressTokens),
+m_tradeDiscounts(other.m_tradeDiscounts)
 {
 }
 
@@ -318,21 +319,21 @@ void Player::addProgressToken(const ProgressToken& token)
 }
 void Player::applyEffects()
 {
-    std::unique_ptr<Player> aux(this);
+    std::shared_ptr<Player> aux(this);
     for (auto progresToken : m_progressTokens)
-        progresToken.applyEffect(std::move(aux));
+        progresToken.applyEffect(aux);
 }
-void Player::ProgressToken::applyEffect(std::unique_ptr<Player> player)
+void Player::ProgressToken::applyEffect(std::shared_ptr<Player> player)
 {
-    m_effect(std::move(player));
+    m_effect(player);
 }
 
-Player::ProgressToken Player::ProgressToken::agricultureToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::agricultureToken([](std::shared_ptr<Player> player) {
     player->addCoin(6);
     player->addVictoryPoints(4);
     }, true);
 
-Player::ProgressToken Player::ProgressToken::lawToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::lawToken([](std::shared_ptr<Player> player) {
     std::vector<uint16_t> vect = player->getScientificPoints();
     for(uint16_t i=0;i<vect.size();i++)
         if (vect[i] != 2)
@@ -342,39 +343,39 @@ Player::ProgressToken Player::ProgressToken::lawToken([](std::unique_ptr<Player>
         }
     }, true);
 
-Player::ProgressToken Player::ProgressToken::philosphyToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::philosphyToken([](std::shared_ptr<Player> player) {
     player->addVictoryPoints(6);
     }, true);
 
-Player::ProgressToken Player::ProgressToken::mathematicsToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::mathematicsToken([](std::shared_ptr<Player> player) {
     player->addVictoryPoints(player->getProgressTokens().size()*3);
     }, true);
 
-Player::ProgressToken Player::ProgressToken::economyToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::economyToken([](std::shared_ptr<Player> player) {
     player->m_hasEconomyProgressToken = 1;
     }, false);
 
-Player::ProgressToken Player::ProgressToken::masonryToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::masonryToken([](std::shared_ptr<Player> player) {
     player->m_hasMasonryProgressToken = 1;
     }, false);
 
-Player::ProgressToken Player::ProgressToken::strategyToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::strategyToken([](std::shared_ptr<Player> player) {
     player->m_hasStrategyProgressToken = 1;
     }, false);
 
-Player::ProgressToken Player::ProgressToken::theologyToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::theologyToken([](std::shared_ptr<Player> player) {
     player->m_hasTheologyProgressToken = 1;
     }, false);
 
-Player::ProgressToken Player::ProgressToken::urbanismToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::urbanismToken([](std::shared_ptr<Player> player) {
     player->m_hasUrbanismProgressToken = 1;
     }, false);
 
-Player::ProgressToken Player::ProgressToken::architectureToken([](std::unique_ptr<Player> player) {
+Player::ProgressToken Player::ProgressToken::architectureToken([](std::shared_ptr<Player> player) {
     player->m_hasArchitectureProgressToken = 1;
     }, false);
 
-Player::ProgressToken::ProgressToken(std::function<void(std::unique_ptr<Player> player)> effect, bool isOneTime)
+Player::ProgressToken::ProgressToken(std::function<void(std::shared_ptr<Player> player)> effect, bool isOneTime)
 {
     this->m_effect = effect;
     this->m_isOneTime = isOneTime;
@@ -444,7 +445,7 @@ void Player::setOtherPlayer(const std::shared_ptr<Player>& otherPlayer)
     m_otherPlayer = otherPlayer;
 }
 
-const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>> const Player::getDiscardPile()
+const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>> Player::getDiscardPile() const
 {
     return m_discardPile;
 }
