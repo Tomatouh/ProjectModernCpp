@@ -83,10 +83,29 @@ uint16_t Player::getCoins() const noexcept {
 
 void Player::addBuilding(const Building& building) {
 
-    std::uint16_t cost = getConstructionCost(building);
+    std::uint16_t totalCost = getConstructionCost(building);
+    
+    std::uint16_t cardBaseCost = building.getCost().getCostCoins();
 
-    if (cost > 0) {
-        payCoin(cost);
+    std::uint16_t tradeSpent = 0;
+    if (totalCost > cardBaseCost) {
+        tradeSpent = totalCost - cardBaseCost;
+    }
+
+    if (tradeSpent > 0) {
+        if (auto opponent = m_otherPlayer.lock()) {
+            if (opponent->m_hasEconomyProgressToken) {
+                opponent->addCoin(tradeSpent);
+            }
+        }
+    }
+
+    if (totalCost == 0 && building.getCost().getLink() != 0 && hasChainId(building.getCost().getLink()) && m_hasUrbanismProgressToken) {
+        addCoin(4);
+    }
+
+    if (totalCost > 0) {
+        payCoin(totalCost);
     }
 
     switch (building.getColor()) {
@@ -107,6 +126,9 @@ void Player::addBuilding(const Building& building) {
         break;
     case Building::Color::RED:
         m_redBuildings.push_back(building);
+        if (m_hasStrategyProgressToken) {
+            addShields(1);
+        }
         break;
     case Building::Color::PURPLE:
         m_purpleBuildings.push_back(building);
@@ -344,7 +366,7 @@ Player::ProgressToken Player::ProgressToken::lawToken([](std::shared_ptr<Player>
     }, true);
 
 Player::ProgressToken Player::ProgressToken::philosphyToken([](std::shared_ptr<Player> player) {
-    player->addVictoryPoints(6);
+    player->addVictoryPoints(7);
     }, true);
 
 Player::ProgressToken Player::ProgressToken::mathematicsToken([](std::shared_ptr<Player> player) {
@@ -369,6 +391,7 @@ Player::ProgressToken Player::ProgressToken::theologyToken([](std::shared_ptr<Pl
 
 Player::ProgressToken Player::ProgressToken::urbanismToken([](std::shared_ptr<Player> player) {
     player->m_hasUrbanismProgressToken = 1;
+    player->addCoin(6);
     }, false);
 
 Player::ProgressToken Player::ProgressToken::architectureToken([](std::shared_ptr<Player> player) {
