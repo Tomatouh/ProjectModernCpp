@@ -108,6 +108,8 @@ public:
 
     bool canBuild(const Building& building);
 
+    bool canBuildWonder(const Card& wonder);
+    void buildWonder(std::uint16_t wonderId, std::shared_ptr<Building> ageCardUsed);
 private:
 
     std::string m_name;

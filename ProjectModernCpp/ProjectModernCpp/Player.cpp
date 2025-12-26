@@ -550,3 +550,49 @@ bool Player::canBuild(const Building& building)
 
     return false;
 }
+
+bool Player::canBuildWonder(const Card& wonder)
+{
+    std::uint16_t totalCoinsNeeded = wonder.getCost().getCostCoins();
+    std::vector<ResourceType> resourcesNeeded = wonder.getCost().getCostResources();
+
+    std::uint16_t availableWood = m_wood;
+    std::uint16_t availableStone = m_stone;
+    std::uint16_t availableClay = m_clay;
+    std::uint16_t availableGlass = m_glass;
+    std::uint16_t availablePapyrus = m_papyrus;
+
+    for (const auto& resource : resourcesNeeded) {
+        bool playerHasResource = false;
+        switch (resource) {
+        case ResourceType::WOOD: if (availableWood > 0) { availableWood--; playerHasResource = true; } break;
+        case ResourceType::STONE: if (availableStone > 0) { availableStone--; playerHasResource = true; } break;
+        case ResourceType::CLAY: if (availableClay > 0) { availableClay--; playerHasResource = true; } break;
+        case ResourceType::GLASS: if (availableGlass > 0) { availableGlass--; playerHasResource = true; } break;
+        case ResourceType::PAPYRUS: if (availablePapyrus > 0) { availablePapyrus--; playerHasResource = true; } break;
+        }
+
+        if (!playerHasResource) {
+            if (auto opponent = m_otherPlayer.lock()) {
+                totalCoinsNeeded += getTradeCost(resource, *opponent);
+            }
+            else {
+                totalCoinsNeeded += 2;
+            }
+        }
+    }
+
+    return m_coins >= totalCoinsNeeded;
+}
+
+void Player::buildWonder(std::uint16_t wonderId, std::shared_ptr<Building> ageCardUsed)
+{
+    for (auto& wonderPair : m_wonders) {
+        if (wonderPair.first->getId() == wonderId) {
+            wonderPair.second = ageCardUsed;
+            addVictoryPoints(wonderPair.first->getVictoryPoints());
+            addShields(wonderPair.first->getShields());
+            return;
+        }
+    }
+}
