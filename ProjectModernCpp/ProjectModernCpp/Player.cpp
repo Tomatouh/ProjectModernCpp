@@ -663,3 +663,20 @@ void Player::applyTokenDiscount(std::vector<ResourceType>& resourcesNeeded, int 
         removedCount++;
     }
 }
+
+uint16_t Player::getCoinsPoints() const noexcept {
+    return m_coins / 3;
+}
+
+uint16_t Player::getBluePoints() const noexcept {
+    uint16_t bluePoints = 0;
+    for (const auto& building : m_blueBuildings) {
+        bluePoints += building.getVictoryPoints();
+    }
+    return bluePoints;
+}
+
+uint16_t Player::getFinalScore(uint16_t militaryPoints) const noexcept {
+    //militaryPoints = cate puncte de victorie ofera pozitia pionului pentru Player
+    return m_victoryPoints + getCoinsPoints() + militaryPoints;
+}

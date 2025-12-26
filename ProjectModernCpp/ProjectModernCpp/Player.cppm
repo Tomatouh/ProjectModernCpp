@@ -110,6 +110,10 @@ public:
 
     bool canBuildWonder(const Card& wonder);
     void buildWonder(std::uint16_t wonderId, std::shared_ptr<Building> ageCardUsed);
+
+    uint16_t getCoinsPoints() const noexcept;
+    uint16_t getBluePoints() const noexcept;
+    uint16_t getFinalScore(uint16_t militaryPoints = 0) const noexcept;
 private:
 
     std::string m_name;
