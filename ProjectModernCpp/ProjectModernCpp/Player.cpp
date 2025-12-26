@@ -500,6 +500,10 @@ std::uint16_t Player::getConstructionCost(const Building& building) {
     std::uint16_t totalCoinsNeeded = building.getCost().getCostCoins();
     std::vector<ResourceType> resourcesNeeded = building.getCost().getCostResources();
 
+    if (building.getColor() == Building::Color::BLUE && m_hasMasonryProgressToken) {
+        applyTokenDiscount(resourcesNeeded, 2);
+    }
+
     std::uint16_t availableWood = m_wood;
     std::uint16_t availableStone = m_stone;
     std::uint16_t availableClay = m_clay;
@@ -556,6 +560,10 @@ bool Player::canBuildWonder(const Card& wonder)
     std::uint16_t totalCoinsNeeded = wonder.getCost().getCostCoins();
     std::vector<ResourceType> resourcesNeeded = wonder.getCost().getCostResources();
 
+    if (m_hasArchitectureProgressToken) {
+        applyTokenDiscount(resourcesNeeded, 2);
+    }
+
     std::uint16_t availableWood = m_wood;
     std::uint16_t availableStone = m_stone;
     std::uint16_t availableClay = m_clay;
@@ -594,5 +602,41 @@ void Player::buildWonder(std::uint16_t wonderId, std::shared_ptr<Building> ageCa
             addShields(wonderPair.first->getShields());
             return;
         }
+    }
+}
+
+
+void Player::applyTokenDiscount(std::vector<ResourceType>& resourcesNeeded, int discountAmount) const {
+    auto tmpWood = m_wood;
+    auto tmpStone = m_stone;
+    auto tmpClay = m_clay;
+    auto tmpGlass = m_glass;
+    auto tmpPapyrus = m_papyrus;
+
+    std::vector<int> missingIndices;
+
+    for (size_t i = 0; i < resourcesNeeded.size(); ++i) {
+        bool has = false;
+        switch (resourcesNeeded[i]) {
+        case ResourceType::WOOD: if (tmpWood > 0) { tmpWood--; has = true; } break;
+        case ResourceType::STONE: if (tmpStone > 0) { tmpStone--; has = true; } break;
+        case ResourceType::CLAY: if (tmpClay > 0) { tmpClay--; has = true; } break;
+        case ResourceType::GLASS: if (tmpGlass > 0) { tmpGlass--; has = true; } break;
+        case ResourceType::PAPYRUS: if (tmpPapyrus > 0) { tmpPapyrus--; has = true; } break;
+        }
+        if (!has) missingIndices.push_back(i);
+    }
+
+    int removedCount = 0;
+
+
+    for (int i = missingIndices.size() - 1; i >= 0 && removedCount < discountAmount; --i) {
+        resourcesNeeded.erase(resourcesNeeded.begin() + missingIndices[i]);
+        removedCount++;
+    }
+
+    while (removedCount < discountAmount && !resourcesNeeded.empty()) {
+        resourcesNeeded.pop_back();
+        removedCount++;
     }
 }

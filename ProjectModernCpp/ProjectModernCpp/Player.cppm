@@ -163,4 +163,6 @@ private:
 
     std::uint16_t countOpponentProduction(ResourceType type) ;
 
+    void applyTokenDiscount(std::vector<ResourceType>& resourcesNeeded, int discountAmount) const;
+
 };
