@@ -571,6 +571,12 @@ void Game::run()
 		}
 		if (move == '3')
 		{
+			if (Game::m_constructedWonders == 7)
+			{
+				system("cls");
+				std::cout << "Nu se mai pot construi minuni";
+				continue;
+			}
 			std::cout << "Your wonders:\n";
 			for(auto wonder:m_currentPlayer->getWonders())
 				std::cout << "[" << wonder.first->getId() << "] ";
@@ -580,6 +586,8 @@ void Game::run()
 			if(m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
 			{
 				m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
+				Game::m_constructedWonders++;
+				removeCardFromDeck(m_selectedBuilding->getId());
 			}
 			else
 			{
@@ -594,3 +602,5 @@ void Game::run()
 		system("cls");
 	}
 }
+
+std::uint8_t Game::m_constructedWonders = 0;
