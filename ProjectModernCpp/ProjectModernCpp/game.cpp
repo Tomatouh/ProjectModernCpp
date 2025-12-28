@@ -577,7 +577,16 @@ void Game::run()
 			std::cout << "\n";
 			auto selectedWonder=selectAcceptableWonder();
 			m_selectedBuilding = selectAcceptableCard();
-			
+			if(m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
+			{
+				m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
+			}
+			else
+			{
+				system("cls");
+				std::cout << "You cannot build this wonder now. Retry\n";
+				continue;
+			}
 		}
 
 		std::swap(m_currentPlayer, m_otherPlayer);

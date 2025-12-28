@@ -19,6 +19,12 @@ m_papyrus(0)
 {
     for (uint16_t i = 0; i < 6; i++)
         m_scientificPoints.push_back(0);
+    
+	m_tradeDiscounts[ResourceType::WOOD] = false;
+	m_tradeDiscounts[ResourceType::STONE] = false;
+	m_tradeDiscounts[ResourceType::CLAY] = false;
+	m_tradeDiscounts[ResourceType::GLASS] = false;
+	m_tradeDiscounts[ResourceType::PAPYRUS] = false;
 }
 
 //Player::Player(std::string name,  uint16_t startCoin1Amount,
