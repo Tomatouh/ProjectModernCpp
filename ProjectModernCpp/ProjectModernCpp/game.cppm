@@ -1,3 +1,4 @@
+#include <SFML/Graphics.hpp>
 export module game;
 import Player;
 import board;
@@ -73,6 +74,7 @@ public:
 	void showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wonders);
 
 	void run();
+	void drawCurrentAgeCards(sf::RenderWindow& window);
 };
 
 

@@ -175,6 +175,8 @@
     <ClCompile Include="effects.cppm" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game.cppm" />
+    <ClCompile Include="guiCard.cpp" />
+    <ClCompile Include="guiCard.cppm" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player.cppm" />

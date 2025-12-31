@@ -473,6 +473,60 @@ To do:
 Make it so that wonders actually have an effect
 Implement correct functionality for each age deck
 */
+
+void handleEvents(const sf::Event& event,sf::RenderWindow& window)
+{
+	if (event.is<sf::Event::Closed>())
+		window.close();
+}
+
+std::pair<int, int> getNextCardPosition(Building::Age age)
+{
+	static int x = 0;
+	static int y = 0;
+	static std::uint8_t maxCardPositionReached = 2;
+	static std::uint8_t currentCardPosition = 0;
+	if (age == Building::Age::AGEI)
+	{
+		if (maxCardPositionReached==currentCardPosition)
+		{
+			x = 0;
+			y += 170;
+			currentCardPosition=0;
+			maxCardPositionReached++;
+			return { x, y - 170 };
+		}
+		else
+		{
+			x += 120;
+			currentCardPosition++;
+			return { x - 120, y };
+
+		}
+	}
+}
+void Game::drawCurrentAgeCards(sf::RenderWindow& window)
+{
+	int contor=0;
+	for(auto& row:m_cardDisplay)
+		for (auto& card : row)
+		{
+			contor++;
+			if(card.has_value())
+			{
+				guiCard gCard = card.value().getGuiCard();
+				gCard.setPosition(getNextCardPosition(m_currentAge));
+				window.draw(gCard);
+			}
+			else
+			{
+				guiCard gCard;
+				gCard.setPosition(getNextCardPosition(m_currentAge));
+				window.draw(gCard);
+			}
+		}
+	std::cout << "Ok";
+}
 void Game::run()
 {
 	bool player1Turn = true;
@@ -481,7 +535,21 @@ void Game::run()
 	std::uint8_t move;
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	std::uint16_t iteration = 0;
-	while (true)
+
+	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders");
+	while (window.isOpen())
+	{
+		std::optional<sf::Event> event;
+
+		drawCurrentAgeCards(window);
+		window.display();
+		while (event = window.waitEvent())
+		{
+			if(event.has_value())
+				handleEvents(event.value(), window);
+		}
+	}
+	/*while (true)
 	{
 		bool setup = true;
 		showFourWonders(wonders);
@@ -556,7 +624,7 @@ void Game::run()
 			/*if (player1Turn && m_selectedBuilding->getColor() == Building::Color::RED)
 				m_board.setPos(m_board.getPos() + m_selectedBuilding->getShields());
 			else
-				m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());*/
+				m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());/*
 
 			removeCardFromDeck(m_selectedBuilding->getId());
 			turnCards();
@@ -601,7 +669,7 @@ void Game::run()
 		std::swap(m_currentPlayer, m_otherPlayer);
 		player1Turn = !player1Turn;
 		system("cls");
-	}
+	}*/
 }
 
 std::uint8_t Game::m_constructedWonders = 0;

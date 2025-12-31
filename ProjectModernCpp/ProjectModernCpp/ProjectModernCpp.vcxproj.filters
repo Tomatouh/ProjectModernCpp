@@ -72,6 +72,12 @@
     <ClCompile Include="displayCard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="guiCard.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="guiCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="card.cpp">
