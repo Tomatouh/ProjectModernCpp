@@ -32,3 +32,7 @@ const sf::Font guiCard::font = []() {
 	sf::Font font("C:\\Windows\\Fonts\\arial.ttf");
 	return font;
 	}();
+void guiCard::setText(const std::string_view& newText)
+{
+	text.setString(newText.data());
+}

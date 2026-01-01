@@ -13,5 +13,6 @@ public:
 	guiCard();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void setPosition(std::pair<int,int> coords);
+	void setText(const std::string_view& newText);
 
 };

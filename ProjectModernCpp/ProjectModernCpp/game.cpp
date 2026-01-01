@@ -478,6 +478,8 @@ void handleEvents(const sf::Event& event,sf::RenderWindow& window)
 {
 	if (event.is<sf::Event::Closed>())
 		window.close();
+	if (event.is<sf::Event::Resized>())
+		window.display();
 }
 
 
@@ -487,22 +489,24 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 
 	if (age == Building::Age::AGEI)
 	{
-		static int x = 20;
+		static int x = 550;
 		static int y = 20;
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
-		if (x == 20 && y == 20)
+		static std::uint8_t centeringOffset = 1;
+		if (x == 550 && y == 20)
 		{
 			currentRowCard = 1;
 			x += 170;
-			return { 20,20 };
+			return { 550,20 };
 		}
 		if(currentRowCard==maxRowCards)
 			{
-			x = 20;
+			x = x - (maxRowCards+centeringOffset) * 170/2;
 			y += 175;
 			currentRowCard = 1;
 			maxRowCards++;
+			centeringOffset++;
 			return { x,y };
 		}
 		else
@@ -523,9 +527,19 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 			contor++;
 			if(card.has_value())
 			{
-				guiCard gCard = card.value().getGuiCard();
-				gCard.setPosition(getNextCardPosition(m_currentAge));
-				window.draw(gCard);
+				if(card.value().isFaceUp())
+				{
+					guiCard gCard = card.value().getGuiCard();
+					gCard.setPosition(getNextCardPosition(m_currentAge));
+					window.draw(gCard);
+				}
+				else
+				{
+					guiCard gCard;
+					gCard.setText("[Hidden card]");
+					gCard.setPosition(getNextCardPosition(m_currentAge));
+					window.draw(gCard);
+				}
 			}
 			else
 			{
