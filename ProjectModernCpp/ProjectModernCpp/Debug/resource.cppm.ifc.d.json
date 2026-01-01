@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\resource.cppm",
+        "ProvidedModule": "resource",
+        "Includes": [],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": [
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\cstdint",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\cstdint_BB1T88KHG9F4L7PK.ifc"
+            }
+        ]
+    }
+}

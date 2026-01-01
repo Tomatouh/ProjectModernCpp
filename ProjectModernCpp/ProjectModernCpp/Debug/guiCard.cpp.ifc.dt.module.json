@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Debug\\guiCard.obj",
+            "outputs": [
+                "Debug\\guiCard.cpp.ifc.dt.module.json",
+                "Debug\\guiCard.cpp.ifc.dt.d.json"
+            ],
+            "requires": [
+                {
+                    "logical-name": "guiCard"
+                }
+            ]
+        }
+    ]
+}

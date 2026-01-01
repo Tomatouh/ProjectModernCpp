@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Debug\\board.obj",
+            "outputs": [
+                "Debug\\board.cpp.ifc.dt.module.json",
+                "Debug\\board.cpp.ifc.dt.d.json"
+            ],
+            "requires": [
+                {
+                    "logical-name": "board"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Release\\displayCard.obj",
+            "outputs": [
+                "Release\\displayCard.cppm.ifc.dt.module.json",
+                "Release\\displayCard.cppm.ifc.dt.d.json",
+                "Release\\displayCard.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "displayCard",
+                    "source-path": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\displaycard.cppm",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "std"
+                },
+                {
+                    "logical-name": "Building"
+                }
+            ]
+        }
+    ]
+}

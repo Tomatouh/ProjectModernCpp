@@ -1,0 +1,19 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\displaycard.cppm",
+        "ProvidedModule": "displayCard",
+        "Includes": [],
+        "ImportedModules": [
+            {
+                "Name": "std",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\microsoft\\STL\\std.ixx.ifc"
+            },
+            {
+                "Name": "Building",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\Building.cppm.ifc"
+            }
+        ],
+        "ImportedHeaderUnits": []
+    }
+}

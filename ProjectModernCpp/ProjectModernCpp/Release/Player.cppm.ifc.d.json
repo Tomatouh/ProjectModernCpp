@@ -1,0 +1,56 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\player.cppm",
+        "ProvidedModule": "Player",
+        "Includes": [],
+        "ImportedModules": [
+            {
+                "Name": "card",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\card.cppm.ifc"
+            },
+            {
+                "Name": "Building",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\Building.cppm.ifc"
+            },
+            {
+                "Name": "buildingResource",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\buildingResource.cppm.ifc"
+            },
+            {
+                "Name": "std",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\microsoft\\STL\\std.ixx.ifc"
+            }
+        ],
+        "ImportedHeaderUnits": [
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\string",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\string_ZMWW5NLIA4GNKJSU.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\vector",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\vector_0A3HG0BMCA2LC5PP.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\cstdint",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\cstdint_BB1T88KHG9F4L7PK.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\iostream",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\iostream_6YTNORJJXX0QZ88Z.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\memory",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\memory_63JCTIR0E9EXPOQC.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\functional",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\functional_VWZX778RUNJ428Y8.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\string_view",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\string_view_PJ8509DJOB9C1API.ifc"
+            }
+        ]
+    }
+}

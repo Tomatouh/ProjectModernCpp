@@ -1,0 +1,38 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Release\\effects.cppm.obj",
+            "outputs": [
+                "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\vc143.pdb",
+                "Release\\",
+                "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\effects.cppm.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "effects",
+                    "source-path": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\effects.cppm",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "Building"
+                },
+                {
+                    "logical-name": "card"
+                },
+                {
+                    "logical-name": "Player"
+                },
+                {
+                    "logical-name": "board"
+                },
+                {
+                    "logical-name": "std"
+                }
+            ]
+        }
+    ]
+}

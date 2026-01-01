@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Debug\\unordered_set.obj",
+            "outputs": [
+                "Debug\\unordered_set_C5C62A8B416403D4.ifc.dt.module.json",
+                "Debug\\unordered_set_C5C62A8B416403D4.ifc.dt.d.json",
+                "Debug\\unordered_set.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\unordered_set",
+                    "source-path": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\unordered_set",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

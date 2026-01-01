@@ -1,0 +1,32 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Release\\Building.cppm.obj",
+            "outputs": [
+                "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\vc143.pdb",
+                "Release\\",
+                "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Release\\Building.cppm.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "Building",
+                    "source-path": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\building.cppm",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "buildingResource"
+                },
+                {
+                    "logical-name": "card"
+                },
+                {
+                    "logical-name": "std"
+                }
+            ]
+        }
+    ]
+}

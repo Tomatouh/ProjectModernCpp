@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Debug\\unordered_set_6Y083FE5TPHVHUGX.obj",
+            "outputs": [
+                "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\vc143.pdb",
+                "Debug\\unordered_set_6Y083FE5TPHVHUGX.module.json",
+                "Debug\\unordered_set_6Y083FE5TPHVHUGX.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\unordered_set",
+                    "source-path": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\unordered_set",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

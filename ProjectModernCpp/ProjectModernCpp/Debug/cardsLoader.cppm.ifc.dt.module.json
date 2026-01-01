@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Debug\\cardsLoader.obj",
+            "outputs": [
+                "Debug\\cardsLoader.cppm.ifc.dt.module.json",
+                "Debug\\cardsLoader.cppm.ifc.dt.d.json",
+                "Debug\\cardsLoader.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "cardsLoader",
+                    "source-path": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\cardsloader.cppm",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "card"
+                },
+                {
+                    "logical-name": "Building"
+                },
+                {
+                    "logical-name": "buildingResource"
+                },
+                {
+                    "logical-name": "std"
+                }
+            ]
+        }
+    ]
+}

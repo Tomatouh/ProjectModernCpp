@@ -1,0 +1,56 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\effects.cppm",
+        "ProvidedModule": "effects",
+        "Includes": [],
+        "ImportedModules": [
+            {
+                "Name": "Building",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\Building.cppm.ifc"
+            },
+            {
+                "Name": "card",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\card.cppm.ifc"
+            },
+            {
+                "Name": "Player",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\Player.cppm.ifc"
+            },
+            {
+                "Name": "board",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\board.cppm.ifc"
+            },
+            {
+                "Name": "std",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\microsoft\\STL\\std.ixx.ifc"
+            },
+            {
+                "Name": "buildingResource",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\buildingResource.cppm.ifc"
+            }
+        ],
+        "ImportedHeaderUnits": [
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\iostream",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\iostream_6YTNORJJXX0QZ88Z.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\string_view",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\string_view_PJ8509DJOB9C1API.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\functional",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\functional_VWZX778RUNJ428Y8.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\string",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\string_ZMWW5NLIA4GNKJSU.ifc"
+            },
+            {
+                "Header": "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\vector",
+                "BMI": "C:\\Users\\lupuf\\Git-projects\\ProjectModernCpp\\ProjectModernCpp\\ProjectModernCpp\\Debug\\vector_0A3HG0BMCA2LC5PP.ifc"
+            }
+        ]
+    }
+}

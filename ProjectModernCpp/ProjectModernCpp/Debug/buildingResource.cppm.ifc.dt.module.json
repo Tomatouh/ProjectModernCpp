@@ -1,0 +1,26 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Debug\\buildingResource.obj",
+            "outputs": [
+                "Debug\\buildingResource.cppm.ifc.dt.module.json",
+                "Debug\\buildingResource.cppm.ifc.dt.d.json",
+                "Debug\\buildingResource.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "buildingResource",
+                    "source-path": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\buildingresource.cppm",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "resource"
+                }
+            ]
+        }
+    ]
+}

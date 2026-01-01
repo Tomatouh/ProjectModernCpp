@@ -1,0 +1,47 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Release\\game.obj",
+            "outputs": [
+                "Release\\game.cppm.ifc.dt.module.json",
+                "Release\\game.cppm.ifc.dt.d.json",
+                "Release\\game.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "game",
+                    "source-path": "c:\\users\\lupuf\\git-projects\\projectmoderncpp\\projectmoderncpp\\projectmoderncpp\\game.cppm",
+                    "is-interface": true
+                }
+            ],
+            "requires": [
+                {
+                    "logical-name": "Player"
+                },
+                {
+                    "logical-name": "board"
+                },
+                {
+                    "logical-name": "card"
+                },
+                {
+                    "logical-name": "Building"
+                },
+                {
+                    "logical-name": "std"
+                },
+                {
+                    "logical-name": "cardsLoader"
+                },
+                {
+                    "logical-name": "displayCard"
+                },
+                {
+                    "logical-name": "effects"
+                }
+            ]
+        }
+    ]
+}

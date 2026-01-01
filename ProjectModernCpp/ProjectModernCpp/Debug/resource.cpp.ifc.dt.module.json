@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Debug\\resource.obj",
+            "outputs": [
+                "Debug\\resource.cpp.ifc.dt.module.json",
+                "Debug\\resource.cpp.ifc.dt.d.json"
+            ],
+            "requires": [
+                {
+                    "logical-name": "resource"
+                }
+            ]
+        }
+    ]
+}
