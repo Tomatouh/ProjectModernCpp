@@ -474,7 +474,7 @@ Make it so that wonders actually have an effect
 Implement correct functionality for each age deck
 */
 
-void handleEvents(const sf::Event& event,sf::RenderWindow& window)
+void Game::handleEvents(const sf::Event& event,sf::RenderWindow& window)
 {
 	if (event.is<sf::Event::Closed>())
 		window.close();
@@ -489,16 +489,16 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 
 	if (age == Building::Age::AGEI)
 	{
-		static int x = 550;
+		static int x = 570;
 		static int y = 20;
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
-		if (x == 550 && y == 20)
+		if (x == 570 && y == 20)
 		{
 			currentRowCard = 1;
 			x += 170;
-			return { 550,20 };
+			return { 570,20 };
 		}
 		if(currentRowCard==maxRowCards)
 			{

@@ -2,7 +2,7 @@
 module guiCard;
 guiCard::guiCard(std::shared_ptr<Card> fromCard):text(font, fromCard->getName(),20)
 {
-	box.setSize(sf::Vector2f(150.0f, 170.0f));
+	box.setSize(sf::Vector2f(160.0f, 170.0f));
 	box.setFillColor(sf::Color::White);
 	box.setOutlineColor(sf::Color::Black);
 	box.setOutlineThickness(2.f);
@@ -10,7 +10,7 @@ guiCard::guiCard(std::shared_ptr<Card> fromCard):text(font, fromCard->getName(),
 }
 guiCard::guiCard() :text(font, "", 20)
 {
-	box.setSize(sf::Vector2f(150.0f, 170.0f));
+	box.setSize(sf::Vector2f(160.0f, 170.0f));
 	box.setFillColor(sf::Color::White);
 	box.setOutlineColor(sf::Color::Black);
 	box.setOutlineThickness(2.f);
@@ -24,15 +24,18 @@ void guiCard::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void guiCard::setPosition(std::pair<int, int> coords)
 {
-	sf::Vector2f position(static_cast<float>(coords.first), static_cast<float>(coords.second));
-	box.setPosition(position);
-	text.setPosition(position);
+	sf::Vector2f boxPosition(coords.first, coords.second);
+	box.setPosition(boxPosition);
+
+
+	sf::Vector2f textPosition(coords.first+((160-text.getString().getSize()*12)/2), coords.second);
+	text.setPosition(textPosition);
 }
-const sf::Font guiCard::font = []() {
-	sf::Font font("C:\\Windows\\Fonts\\arial.ttf");
-	return font;
-	}();
 void guiCard::setText(const std::string_view& newText)
 {
 	text.setString(newText.data());
 }
+const sf::Font guiCard::font = []() {
+	sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+	return font;
+	}();

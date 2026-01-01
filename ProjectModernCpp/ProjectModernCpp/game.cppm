@@ -45,6 +45,8 @@ private:
 	void removeCardFromDeck(std::uint8_t id);
 	void turnCards();
 	void removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId);
+	void handleEvents(const sf::Event& event, sf::RenderWindow& window);
+	void drawCurrentAgeCards(sf::RenderWindow& window);
 public:
 
 	Game();
@@ -74,7 +76,7 @@ public:
 	void showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wonders);
 
 	void run();
-	void drawCurrentAgeCards(sf::RenderWindow& window);
+	
 };
 
 
