@@ -480,28 +480,37 @@ void handleEvents(const sf::Event& event,sf::RenderWindow& window)
 		window.close();
 }
 
+
+
 std::pair<int, int> getNextCardPosition(Building::Age age)
 {
-	static int x = 0;
-	static int y = 0;
-	static std::uint8_t maxCardPositionReached = 2;
-	static std::uint8_t currentCardPosition = 0;
+
 	if (age == Building::Age::AGEI)
 	{
-		if (maxCardPositionReached==currentCardPosition)
+		static int x = 20;
+		static int y = 20;
+		static std::uint8_t maxRowCards = 2;
+		static std::uint8_t currentRowCard = 0;
+		if (x == 20 && y == 20)
 		{
-			x = 0;
-			y += 170;
-			currentCardPosition=0;
-			maxCardPositionReached++;
-			return { x, y - 170 };
+			currentRowCard = 1;
+			x += 170;
+			return { 20,20 };
+		}
+		if(currentRowCard==maxRowCards)
+			{
+			x = 20;
+			y += 175;
+			currentRowCard = 1;
+			maxRowCards++;
+			return { x,y };
 		}
 		else
 		{
-			x += 120;
-			currentCardPosition++;
-			return { x - 120, y };
-
+			if(y!=20)
+				x += 170;
+			currentRowCard++;
+			return { x,y };
 		}
 	}
 }
@@ -541,6 +550,7 @@ void Game::run()
 	{
 		std::optional<sf::Event> event;
 
+		window.clear(sf::Color::White);
 		drawCurrentAgeCards(window);
 		window.display();
 		while (event = window.waitEvent())

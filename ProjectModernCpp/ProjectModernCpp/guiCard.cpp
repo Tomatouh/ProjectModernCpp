@@ -2,19 +2,19 @@
 module guiCard;
 guiCard::guiCard(std::shared_ptr<Card> fromCard):text(font, fromCard->getName(),20)
 {
-	box.setSize(sf::Vector2f(100.0f, 150.0f));
+	box.setSize(sf::Vector2f(150.0f, 170.0f));
 	box.setFillColor(sf::Color::White);
 	box.setOutlineColor(sf::Color::Black);
 	box.setOutlineThickness(2.f);
-	text.setFillColor(sf::Color::Green);
+	text.setFillColor(sf::Color::Black);
 }
 guiCard::guiCard() :text(font, "", 20)
 {
-	box.setSize(sf::Vector2f(100.0f, 150.0f));
+	box.setSize(sf::Vector2f(150.0f, 170.0f));
 	box.setFillColor(sf::Color::White);
 	box.setOutlineColor(sf::Color::Black);
 	box.setOutlineThickness(2.f);
-	text.setFillColor(sf::Color::Green);
+	text.setFillColor(sf::Color::Black);
 }
 void guiCard::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
