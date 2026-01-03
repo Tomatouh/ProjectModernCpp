@@ -120,6 +120,9 @@ public:
     std::uint16_t getConstructedWondersCount() const noexcept;
 
     bool hasScientificSupremacy() const noexcept;
+
+    bool hasTokenSelectionRight() const noexcept;
+    void consumeTokenSelectionRight() noexcept;
 private:
 
     std::string m_name;
@@ -149,6 +152,9 @@ private:
 
     // Progress token, might delete
     std::vector<ProgressToken> m_progressTokens;
+
+    //Daca jucatorul poate lua un ProgressToken
+    bool m_hasTokenSelectionRight = false;
     //Memorarea efectelor speciale pe care le poate avea un jucator (ProgressToken)
     bool m_hasEconomyProgressToken = 0;
     bool m_hasMasonryProgressToken = 0;

@@ -15,7 +15,8 @@ m_wood(0),
 m_stone(0),
 m_clay(0),
 m_glass(0),
-m_papyrus(0)
+m_papyrus(0),
+m_hasTokenSelectionRight(false)
 {
     for (uint16_t i = 0; i < 6; i++)
         m_scientificPoints.push_back(0);
@@ -320,8 +321,7 @@ void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
     m_scientificPoints[auxIndex]++;
     if (m_scientificPoints[auxIndex] == 2)
     {
-        //Add new progress token
-        std::cout << "Placeholder";
+        m_hasTokenSelectionRight = true;
     }
     else
     {
@@ -723,4 +723,14 @@ bool Player::hasScientificSupremacy() const noexcept
         return true;
     }
     return false;
+}
+
+bool Player::hasTokenSelectionRight() const noexcept
+{
+    return m_hasTokenSelectionRight;
+}
+
+void Player::consumeTokenSelectionRight() noexcept
+{
+    m_hasTokenSelectionRight = false;
 }
