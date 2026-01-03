@@ -65,6 +65,26 @@ m_tradeDiscounts(other.m_tradeDiscounts)
 {
 }
 
+Player::~Player()
+{
+    m_brownBuildings.clear();
+    m_greyBuildings.clear();
+    m_blueBuildings.clear();
+    m_greenBuildings.clear();
+    m_yellowBuildings.clear();
+    m_redBuildings.clear();
+    m_purpleBuildings.clear();
+
+    m_wonders.clear();
+    m_progressTokens.clear();
+    m_productions.clear();
+    m_tradeDiscounts.clear();
+    m_scientificPoints.clear();
+
+    m_discardPile.reset();
+    m_otherPlayer.reset();
+}
+
 const std::string& Player::name() const noexcept {
     return m_name;
 }

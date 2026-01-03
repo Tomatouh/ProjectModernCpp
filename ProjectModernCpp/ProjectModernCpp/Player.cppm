@@ -16,6 +16,8 @@ public:
     //explicit Player(std::string name, std::uint16_t startCoin1Amount, std::uint16_t startCoin3Amount, std::uint16_t startCoin6Amount);
     Player(const Player& other);
 
+    ~Player();
+
     const std::string& name() const noexcept;
 
     void setPlayerName(const std::string_view name);
