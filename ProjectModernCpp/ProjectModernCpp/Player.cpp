@@ -709,3 +709,15 @@ std::uint16_t Player::getBuildingCount(Building::Color color) const noexcept
         return 0;
     }
 }
+
+std::uint16_t Player::getConstructedWondersCount() const noexcept
+{
+    std::uint16_t count = 0;
+    for (const auto& wonderPair : m_wonders)
+    {
+        if (wonderPair.second.has_value()) {
+            count++;
+        }
+    }
+    return count;
+}
