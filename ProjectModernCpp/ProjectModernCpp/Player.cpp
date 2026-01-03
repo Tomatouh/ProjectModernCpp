@@ -327,11 +327,6 @@ void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
     {
         m_scientificPointTypeNumber++;
     }
-    if (m_scientificPointTypeNumber == 6)
-    {
-        std::cout << "Scientific victory for player " << this->name();
-        exit(0);
-    }
 }
 std::vector<uint16_t> Player::getScientificPoints() noexcept
 {
@@ -720,4 +715,12 @@ std::uint16_t Player::getConstructedWondersCount() const noexcept
         }
     }
     return count;
+}
+
+bool Player::hasScientificSupremacy() const noexcept
+{
+    if (m_scientificPointTypeNumber >= 6) {
+        return true;
+    }
+    return false;
 }

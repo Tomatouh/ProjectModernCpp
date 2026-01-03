@@ -118,6 +118,8 @@ public:
     std::uint16_t getBuildingCount(Building::Color color) const noexcept;
 
     std::uint16_t getConstructedWondersCount() const noexcept;
+
+    bool hasScientificSupremacy() const noexcept;
 private:
 
     std::string m_name;
