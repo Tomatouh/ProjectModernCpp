@@ -686,3 +686,26 @@ uint16_t Player::getFinalScore(uint16_t militaryPoints) const noexcept {
     //militaryPoints = cate puncte de victorie ofera pozitia pionului pentru Player
     return m_victoryPoints + getCoinsPoints() + militaryPoints;
 }
+
+std::uint16_t Player::getBuildingCount(Building::Color color) const noexcept
+{
+    switch (color)
+    {
+    case Building::Color::BROWN:
+        return static_cast<uint16_t>(m_brownBuildings.size());
+    case Building::Color::GREY:
+        return static_cast<uint16_t>(m_greyBuildings.size());
+    case Building::Color::BLUE:
+        return static_cast<uint16_t>(m_blueBuildings.size());
+    case Building::Color::GREEN:
+        return static_cast<uint16_t>(m_greenBuildings.size());
+    case Building::Color::YELLOW:
+        return static_cast<uint16_t>(m_yellowBuildings.size());
+    case Building::Color::RED:
+        return static_cast<uint16_t>(m_redBuildings.size());
+    case Building::Color::PURPLE:
+        return static_cast<uint16_t>(m_purpleBuildings.size());
+    default:
+        return 0;
+    }
+}

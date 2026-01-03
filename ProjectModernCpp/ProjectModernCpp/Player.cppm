@@ -114,6 +114,8 @@ public:
     uint16_t getCoinsPoints() const noexcept;
     uint16_t getBluePoints() const noexcept;
     uint16_t getFinalScore(uint16_t militaryPoints = 0) const noexcept;
+
+    std::uint16_t getBuildingCount(Building::Color color) const noexcept;
 private:
 
     std::string m_name;
