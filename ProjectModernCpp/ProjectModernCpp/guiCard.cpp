@@ -31,9 +31,28 @@ void guiCard::setPosition(std::pair<int, int> coords)
 	sf::Vector2f textPosition(coords.first+((160-text.getString().getSize()*12)/2), coords.second);
 	text.setPosition(textPosition);
 }
+
 void guiCard::setText(const std::string_view& newText)
 {
 	text.setString(newText.data());
+}
+void guiCard::setHighlighted(bool highlight)
+{
+	isHighlighted = highlight;
+	if (isHighlighted)
+	{
+		box.setOutlineColor(sf::Color::Red);
+		box.setOutlineThickness(4.f);
+	}
+	else
+	{
+		box.setOutlineColor(sf::Color::Black);
+		box.setOutlineThickness(2.f);
+	}
+}
+bool guiCard::getHighlighted() const
+{
+	return isHighlighted;
 }
 const sf::Font guiCard::font = []() {
 	sf::Font font("C:\\Windows\\Fonts\\cour.ttf");

@@ -45,8 +45,11 @@ private:
 	void removeCardFromDeck(std::uint8_t id);
 	void turnCards();
 	void removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId);
-	void handleEvents(const sf::Event& event, sf::RenderWindow& window);
+	bool findSelectedCard(const sf::Vector2i& mousePos);
+	//void handleEvents(const sf::Event& event, sf::RenderWindow& window);
+	void PollEvents(sf::RenderWindow& window);
 	void drawCurrentAgeCards(sf::RenderWindow& window);
+	void redrawCurrentAgeCards(sf::RenderWindow& window);
 public:
 
 	Game();

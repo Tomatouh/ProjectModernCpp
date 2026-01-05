@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 module game;
 
 
@@ -474,13 +476,17 @@ Make it so that wonders actually have an effect
 Implement correct functionality for each age deck
 */
 
-void Game::handleEvents(const sf::Event& event,sf::RenderWindow& window)
-{
-	if (event.is<sf::Event::Closed>())
-		window.close();
-	if (event.is<sf::Event::Resized>())
-		window.display();
-}
+//void Game::handleEvents(const sf::Event& event,sf::RenderWindow& window)
+//{
+//	if (event.is<sf::Event::Closed>())
+//		window.close();
+//	if (event.is<sf::Event::Resized>()) {
+//		window.clear(sf::Color::White);
+//		drawCurrentAgeCards(window);
+//		window.display();
+//	}
+//		
+//}
 
 
 
@@ -525,31 +531,114 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 		for (auto& card : row)
 		{
 			contor++;
+			//std::pair<int, int> pos = getNextCardPosition(m_currentAge);
+			if(card.has_value())
+			{
+				//card.value().setPosition(pos);
+				if(card.value().isFaceUp())
+				{
+					auto pos = getNextCardPosition(m_currentAge);
+					guiCard gCard = card.value().getGuiCard();
+					gCard.setPosition(pos);
+					card.value().setPosition(pos);
+					window.draw(gCard);
+				}
+				else
+				{
+					auto pos = getNextCardPosition(m_currentAge);
+
+					guiCard gCard;
+					gCard.setText("[Hidden card]");
+					gCard.setPosition(pos);
+					card.value().setPosition(pos);
+					window.draw(gCard);
+				}
+			}
+			else
+			{
+				auto pos = getNextCardPosition(m_currentAge);
+
+				guiCard gCard;
+				gCard.setPosition(pos);
+				card.value().setPosition(pos);
+				window.draw(gCard);
+			}
+		}
+	std::cout << "Ok";
+}
+
+void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
+{
+	for(auto& row:m_cardDisplay)
+		for (auto& card : row)
+		{
 			if(card.has_value())
 			{
 				if(card.value().isFaceUp())
 				{
 					guiCard gCard = card.value().getGuiCard();
-					gCard.setPosition(getNextCardPosition(m_currentAge));
+					gCard.setPosition(card.value().getPosition());
+					gCard.setHighlighted(card.value().isSelected());
 					window.draw(gCard);
 				}
 				else
 				{
 					guiCard gCard;
 					gCard.setText("[Hidden card]");
-					gCard.setPosition(getNextCardPosition(m_currentAge));
+					gCard.setPosition(card.value().getPosition());
+					gCard.setHighlighted(card.value().isSelected());
 					window.draw(gCard);
 				}
 			}
 			else
 			{
 				guiCard gCard;
-				gCard.setPosition(getNextCardPosition(m_currentAge));
+				gCard.setPosition(card.value().getPosition());
 				window.draw(gCard);
 			}
 		}
-	std::cout << "Ok";
 }
+
+bool Game::findSelectedCard(const sf::Vector2i& mousePos) {
+	bool found = false;
+	for (int i = 0; i < m_cardDisplay.size(); i++)
+		for (int j = 0; j < m_cardDisplay[i].size(); j++)
+			if (m_cardDisplay[i][j].has_value()) {
+				if (m_cardDisplay[i][j].value().isFaceUp() == true && m_cardDisplay[i][j].value().containsPoint(mousePos))
+				{
+					if (i == m_cardDisplay.size() - 1 || (m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false))
+					{
+						m_cardDisplay[i][j].value().setSelected(true);
+						found = true;
+					}
+					else {
+						m_cardDisplay[i][j].value().setSelected(false);
+					}
+				}
+				else{
+					m_cardDisplay[i][j].value().setSelected(false);
+				}
+			}
+	if(found)
+		return true;
+	return false;
+}
+
+void Game::PollEvents(sf::RenderWindow& window)
+{
+	
+	while (const std::optional event = window.pollEvent())
+	{
+		if (event->is<sf::Event::Closed>())
+			window.close();
+		if (event->is<sf::Event::Resized>()) {
+			window.clear(sf::Color::White);
+			redrawCurrentAgeCards(window);
+			window.display();
+		}
+	}
+}
+
 void Game::run()
 {
 	bool player1Turn = true;
@@ -559,19 +648,43 @@ void Game::run()
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	std::uint16_t iteration = 0;
 
-	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders");
+	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders"/*, sf::Style::Titlebar | sf::Style::Close*/);
+	window.setFramerateLimit(60);
+	bool alreadyDrawn = false;
+
 	while (window.isOpen())
 	{
-		std::optional<sf::Event> event;
+		
+		PollEvents(window);
 
-		window.clear(sf::Color::White);
-		drawCurrentAgeCards(window);
-		window.display();
-		while (event = window.waitEvent())
-		{
-			if(event.has_value())
-				handleEvents(event.value(), window);
+		if (window.hasFocus() && alreadyDrawn) {
+			if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+			{
+				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+				bool anySelected = findSelectedCard(mousePos);
+				
+				window.clear(sf::Color::White);
+				redrawCurrentAgeCards(window);
+				window.display();
+				
+				while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
+					PollEvents(window);
+					sf::sleep(sf::milliseconds(10));
+				}
+			}
 		}
+
+		if (!alreadyDrawn) {
+			window.clear(sf::Color::White);
+			drawCurrentAgeCards(window);
+			window.display();
+			alreadyDrawn = true;
+		}
+		
+
+
+		
 	}
 	/*while (true)
 	{
