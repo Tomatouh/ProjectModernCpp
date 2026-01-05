@@ -650,7 +650,7 @@ void Game::selectCardEffect(sf::RenderWindow& window)
 		{
 			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
-			bool anySelected = findSelectedCard(mousePos);
+			bool anySelected = findSelectedCard(mousePos, window);
 
 			window.clear(sf::Color::White);
 			redrawCurrentAgeCards(window);
@@ -801,12 +801,12 @@ void Game::wondersSetup(sf::RenderWindow& window)
 	}
 }
 
-bool Game::findSelectedCard(const sf::Vector2i& mousePos) {
+bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow& window) {
 	bool found = false;
 	for (int i = 0; i < m_cardDisplay.size(); i++)
 		for (int j = 0; j < m_cardDisplay[i].size(); j++)
 			if (m_cardDisplay[i][j].has_value()) {
-				if (m_cardDisplay[i][j].value().isFaceUp() == true && m_cardDisplay[i][j].value().containsPoint(mousePos))
+				if (m_cardDisplay[i][j].value().isFaceUp() == true && m_cardDisplay[i][j].value().containsPoint(mousePos, window))
 				{
 					if (i == m_cardDisplay.size() - 1 || (m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false))
 					{

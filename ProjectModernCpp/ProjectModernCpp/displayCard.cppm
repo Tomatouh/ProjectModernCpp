@@ -22,5 +22,5 @@ public:
 	const std::pair<int, int>& getPosition() const;
 	void setSelected(bool isSelected);
 	bool isSelected() const;
-	bool containsPoint(const sf::Vector2i& point) const;
+	bool containsPoint(const sf::Vector2i& point, const sf::RenderWindow& window) const;
 };

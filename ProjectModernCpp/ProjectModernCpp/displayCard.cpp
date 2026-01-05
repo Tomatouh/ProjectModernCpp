@@ -42,11 +42,13 @@ bool displayCard::isSelected() const
 	return m_isSelected;
 }
 
-bool displayCard::containsPoint(const sf::Vector2i& point) const
+bool displayCard::containsPoint(const sf::Vector2i& point, const sf::RenderWindow& window) const
 {
+	sf::Vector2f worldPos = window.mapPixelToCoords(point);
+
 	const int x = m_position.first;
 	const int y = m_position.second;
 	const int w = BoxSizes::boxWidth;
 	const int h = BoxSizes::boxHeight;
-	return (point.x >= x && point.x <= x + w && point.y >= y && point.y <= y + h);
+	return (worldPos.x >= x && worldPos.x <= x + w && worldPos.y >= y && worldPos.y <= y + h);
 }
