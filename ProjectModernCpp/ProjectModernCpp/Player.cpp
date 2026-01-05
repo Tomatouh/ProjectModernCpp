@@ -209,7 +209,7 @@ void Player::discardBuilding(Building::Color color, std::uint16_t id)
 
 void Player::addWonder(const std::shared_ptr<Card>& wonder)
 {
-    std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> card{ wonder, std::make_optional(nullptr) };
+    std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> card{ wonder, std::nullopt };
     m_wonders.push_back(card);
 }
 

@@ -599,36 +599,68 @@ void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 		}
 }
 
+void drawCardSet(const std::vector<Building>& Buildings,int& xPos, int& yPos, sf::RenderWindow& window)
+{
+	int spacing = 5;
+	for (const auto& card : Buildings) {
+
+		auto cardPtr = std::make_shared<Building>(card);
+		guiCard gCard(cardPtr);
+		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxWidth / 2.f), static_cast<float>(BoxSizes::boxHeight / 2.f)));
+		gCard.setPosition({ xPos, yPos });
+		window.draw(gCard);
+		yPos += BoxSizes::boxHeight / 2 + spacing;
+	}
+	yPos += spacing * 2;
+}
+
+int drawPlayerColumn(const std::shared_ptr<Player>& player, int xPos, sf::RenderWindow& window) {
+	int yPos = 20;
+	
+	drawCardSet(player->getBrownBuildings(), xPos, yPos, window);
+	drawCardSet(player->getGreyBuildings(), xPos, yPos, window);
+	drawCardSet(player->getYellowBuildings(), xPos, yPos, window);
+	drawCardSet(player->getRedBuildings(), xPos, yPos, window);
+	drawCardSet(player->getGreenBuildings(), xPos, yPos, window);
+	drawCardSet(player->getBlueBuildings(), xPos, yPos, window);
+
+	return yPos;
+}
+
+void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int startYPos, sf::RenderWindow& window)
+{
+	int spacing = 5;
+	int wonderYPos = startYPos;
+
+	const int winW = static_cast<int>(window.getSize().x);
+	const int cardW = static_cast<int>(BoxSizes::boxWidth / 2);
+	const int margin = 20;
+
+	if (xPos >= winW - cardW - margin && ) xPos -= 420;
+
+	for (const auto& wonderPair : player->getWonders()) {
+		auto wonderPtr = wonderPair.first;
+		guiCard gCard(wonderPtr);
+		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxWidth / 2.f), static_cast<float>(BoxSizes::boxHeight / 2.f)));
+		gCard.setPosition({ xPos, wonderYPos });
+		if (wonderPair.second.has_value()) {
+			gCard.setHighlighted(true);
+		}
+		window.draw(gCard);
+		wonderYPos += BoxSizes::boxHeight / 2 + spacing;
+	}
+}
+
 void Game::drawPlayerCards(sf::RenderWindow& window)
 {
 	constexpr int spacing = 5;
 	const auto winSize = window.getSize();
 	const int winWidth = static_cast<int>(winSize.x);
 	const int leftX = 20;
-	const int rightX = winWidth - BoxSizes::boxWidth / 2 - 20;
+	const int rightX = std::max(20, winWidth - static_cast<int>(BoxSizes::boxWidth / 2) - 20);
 	const int startY = 20;
 
-	auto drawPlayerColumn = [&](const std::shared_ptr<Player>& player, int xPos) {
-		int yPos = startY;
-		auto drawCardSet = [&](const std::vector<Building>& cardSet) {
-			for (const auto& card : cardSet) {
-
-				auto cardPtr = std::make_shared<Building>(card);
-				guiCard gCard(cardPtr);
-				gCard.setSize(sf::Vector2f(BoxSizes::boxWidth / 2, BoxSizes::boxHeight / 2));
-				gCard.setPosition({ xPos, yPos });
-				window.draw(gCard);
-				yPos += BoxSizes::boxHeight / 2 + spacing;
-			}
-			yPos += spacing * 2;
-			};
-		drawCardSet(player->getBrownBuildings());
-		drawCardSet(player->getGreyBuildings());
-		drawCardSet(player->getYellowBuildings());
-		drawCardSet(player->getRedBuildings());
-		drawCardSet(player->getGreenBuildings());
-		drawCardSet(player->getBlueBuildings());
-		};
+	
 	std::shared_ptr<Player> leftPlayer = nullptr, rightPlayer = nullptr;
 	if (m_currentPlayer->name() == "player1") {
 		leftPlayer = m_currentPlayer;
@@ -638,8 +670,11 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 		leftPlayer = m_otherPlayer;
 		rightPlayer = m_currentPlayer;
 	}
-	drawPlayerColumn(leftPlayer, leftX);
-	drawPlayerColumn(rightPlayer, rightX);
+	int leftBottomY = drawPlayerColumn(leftPlayer, leftX, window);
+	int rightBottomY = drawPlayerColumn(rightPlayer, rightX, window);
+
+	drawPlayerWonders(leftPlayer, leftX, leftBottomY, window);
+	drawPlayerWonders(rightPlayer, rightX, rightBottomY, window);
 
 }
 
@@ -654,6 +689,7 @@ void Game::selectCardEffect(sf::RenderWindow& window)
 
 			window.clear(sf::Color::White);
 			redrawCurrentAgeCards(window);
+			drawPlayerCards(window);
 			window.display();
 
 			while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
@@ -728,7 +764,7 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 			guiCard placeholder;
 			placeholder.setText("[Taken]");
 			placeholder.setPosition(pos);
-			placeholder.setSize({cardW, cardH });
+			placeholder.setSize({ cardW, cardH });
 			window.draw(placeholder);
 		}
 	}
@@ -834,12 +870,15 @@ void Game::PollEvents(sf::RenderWindow& window)
 		if (event->is<sf::Event::Closed>())
 			window.close();
 		if (event->is<sf::Event::Resized>()) {
+			window.setView(window.getDefaultView());
 			window.clear(sf::Color::White);
 			m_wonderRects.clear();
 			if (m_gamestate == GAMESTART)
 				drawWondersSelection(window);
-			if (m_gamestate == ONGOING)
+			if (m_gamestate == ONGOING) {
 				redrawCurrentAgeCards(window);
+				drawPlayerCards(window);
+			}
 			window.display();
 		}
 	}
@@ -855,7 +894,7 @@ void Game::run()
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	//std::uint16_t iteration = 0;
 
-	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders"/*, sf::Style::Titlebar | sf::Style::Close*/);
+	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders");
 	window.setFramerateLimit(60);
 	bool alreadyDrawn = false;
 	int step = 1;
@@ -1005,4 +1044,4 @@ void Game::run()
 	}
 }
 
-	std::uint8_t Game::m_constructedWonders = 0;
+std::uint8_t Game::m_constructedWonders = 0;
