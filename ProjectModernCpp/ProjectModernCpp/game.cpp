@@ -636,7 +636,7 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 	const int cardW = static_cast<int>(BoxSizes::boxWidth / 2);
 	const int margin = 20;
 
-	if (xPos >= winW - cardW - margin && ) xPos -= 420;
+	if (xPos >= winW - cardW - margin /*&&*/) xPos -= 420;
 
 	for (const auto& wonderPair : player->getWonders()) {
 		auto wonderPtr = wonderPair.first;
