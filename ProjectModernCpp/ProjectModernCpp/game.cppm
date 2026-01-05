@@ -8,6 +8,7 @@ import std;
 import cardsLoader;
 import displayCard;
 import effects;
+import guiCard;
 
 export class Game {
 private:
@@ -17,6 +18,8 @@ private:
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
+	std::vector<std::optional<std::shared_ptr<Card>>> m_wondersDisplay;
+	std::vector<sf::FloatRect> m_wonderRects;
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIDeck;
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIDeck;
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
@@ -50,6 +53,12 @@ private:
 	void PollEvents(sf::RenderWindow& window);
 	void drawCurrentAgeCards(sf::RenderWindow& window);
 	void redrawCurrentAgeCards(sf::RenderWindow& window);
+	void drawPlayerCards(sf::RenderWindow& window);
+	void selectCardEffect(sf::RenderWindow& window);
+	std::pair<int, int> getWonderPosition(int index,const sf::RenderWindow& window);
+	int wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
+	void drawWondersSelection(sf::RenderWindow& window);
+	void wondersSetup(sf::RenderWindow& window);
 public:
 
 	Game();

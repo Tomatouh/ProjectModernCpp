@@ -45,8 +45,8 @@ void Game::setGamestate(GameState& gamestate)
 
 void Game::initAgeIBoard()
 {
-	GameState state = ONGOING;
-	setGamestate(state);
+	/*GameState state = ONGOING;
+	setGamestate(state);*/
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> copyDeck = m_ageIDeck;
@@ -113,7 +113,7 @@ void Game::initAgeIIIBoard()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> copyDeck= m_ageIIIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> copyDeck = m_ageIIIDeck;
 	m_cardDisplay.resize(7);
 	for (int i = 0; i <= 3; ++i)
 	{
@@ -154,7 +154,7 @@ void Game::initCardEffects()
 		{Card::Effect::addResource, [](Game& game) {game.m_currentPlayer->addResources(game.m_selectedBuilding->getResources()); }},
 		{Card::Effect::addScientificSymbol, [](Game& game) {game.m_currentPlayer->addScientificPoint(game.m_selectedBuilding->getScientificSymbol().value()); }},
 		{Card::Effect::addShields, [](Game& game) {game.m_currentPlayer->addShields(game.m_selectedBuilding->getShields()); }},
-		{Card::Effect::buildersGuild, [](Game& game){if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * maxConstructedWonders(game.m_currentPlayer)); }},
+		{Card::Effect::buildersGuild, [](Game& game) {if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * maxConstructedWonders(game.m_currentPlayer)); }},
 		{Card::Effect::addManufacturedGoodProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); }},
 		{Card::Effect::addRawResourceProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); } },
 		{Card::Effect::constructCard, [](Game& game) {constructCard(game.m_currentPlayer); }},
@@ -173,7 +173,7 @@ void Game::initCardEffects()
 		{Card::Effect::moneylendersGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
 			{
-				game.m_currentPlayer->addVictoryPoints(game.m_currentPlayer->getCoins()/3);
+				game.m_currentPlayer->addVictoryPoints(game.m_currentPlayer->getCoins() / 3);
 			}} },
 		{Card::Effect::scientistsGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
@@ -357,12 +357,12 @@ std::shared_ptr <Building> Game::selectAcceptableCard()
 		std::cin >> id;
 		acceptableCard = 0;
 
-		for(int i=0;i<m_cardDisplay.size();i++)
-			for(int j=0;j<m_cardDisplay[i].size();j++)
+		for (int i = 0; i < m_cardDisplay.size(); i++)
+			for (int j = 0; j < m_cardDisplay[i].size(); j++)
 				if (m_cardDisplay[i][j].has_value())
-					if (id == m_cardDisplay[i][j].value().getBuilding()->getId() && m_cardDisplay[i][j].value().isFaceUp()==true)
+					if (id == m_cardDisplay[i][j].value().getBuilding()->getId() && m_cardDisplay[i][j].value().isFaceUp() == true)
 					{
-						if (i == m_cardDisplay.size() - 1 || (m_cardDisplay[i+1][j].has_value() == false && m_cardDisplay[i+1][j+1].has_value() == false))
+						if (i == m_cardDisplay.size() - 1 || (m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false))
 						{
 							acceptableCard = 1;
 							break;
@@ -495,21 +495,21 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 
 	if (age == Building::Age::AGEI)
 	{
-		static int x = 570;
+		static int x = 620;
 		static int y = 20;
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
-		if (x == 570 && y == 20)
+		if (x == 620 && y == 20)
 		{
 			currentRowCard = 1;
-			x += 170;
-			return { 570,20 };
+			x += BoxSizes::boxHeight;
+			return { 620,20 };
 		}
-		if(currentRowCard==maxRowCards)
-			{
-			x = x - (maxRowCards+centeringOffset) * 170/2;
-			y += 175;
+		if (currentRowCard == maxRowCards)
+		{
+			x = x - (maxRowCards + centeringOffset) * BoxSizes::boxHeight / 2;
+			y += BoxSizes::boxHeight + 5;
 			currentRowCard = 1;
 			maxRowCards++;
 			centeringOffset++;
@@ -517,8 +517,8 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		}
 		else
 		{
-			if(y!=20)
-				x += 170;
+			if (y != 20)
+				x += BoxSizes::boxHeight;
 			currentRowCard++;
 			return { x,y };
 		}
@@ -526,16 +526,16 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 }
 void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 {
-	int contor=0;
-	for(auto& row:m_cardDisplay)
+	int contor = 0;
+	for (auto& row : m_cardDisplay)
 		for (auto& card : row)
 		{
 			contor++;
 			//std::pair<int, int> pos = getNextCardPosition(m_currentAge);
-			if(card.has_value())
+			if (card.has_value())
 			{
 				//card.value().setPosition(pos);
-				if(card.value().isFaceUp())
+				if (card.value().isFaceUp())
 				{
 					auto pos = getNextCardPosition(m_currentAge);
 					guiCard gCard = card.value().getGuiCard();
@@ -547,7 +547,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 				{
 					auto pos = getNextCardPosition(m_currentAge);
 
-					guiCard gCard;
+					guiCard gCard = card.value().getGuiCard();
 					gCard.setText("[Hidden card]");
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
@@ -569,12 +569,12 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 
 void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 {
-	for(auto& row:m_cardDisplay)
+	for (auto& row : m_cardDisplay)
 		for (auto& card : row)
 		{
-			if(card.has_value())
+			if (card.has_value())
 			{
-				if(card.value().isFaceUp())
+				if (card.value().isFaceUp())
 				{
 					guiCard gCard = card.value().getGuiCard();
 					gCard.setPosition(card.value().getPosition());
@@ -583,7 +583,7 @@ void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 				}
 				else
 				{
-					guiCard gCard;
+					guiCard gCard = card.value().getGuiCard();
 					gCard.setText("[Hidden card]");
 					gCard.setPosition(card.value().getPosition());
 					gCard.setHighlighted(card.value().isSelected());
@@ -597,6 +597,208 @@ void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 				window.draw(gCard);
 			}
 		}
+}
+
+void Game::drawPlayerCards(sf::RenderWindow& window)
+{
+	constexpr int spacing = 5;
+	const auto winSize = window.getSize();
+	const int winWidth = static_cast<int>(winSize.x);
+	const int leftX = 20;
+	const int rightX = winWidth - BoxSizes::boxWidth / 2 - 20;
+	const int startY = 20;
+
+	auto drawPlayerColumn = [&](const std::shared_ptr<Player>& player, int xPos) {
+		int yPos = startY;
+		auto drawCardSet = [&](const std::vector<Building>& cardSet) {
+			for (const auto& card : cardSet) {
+
+				auto cardPtr = std::make_shared<Building>(card);
+				guiCard gCard(cardPtr);
+				gCard.setSize(sf::Vector2f(BoxSizes::boxWidth / 2, BoxSizes::boxHeight / 2));
+				gCard.setPosition({ xPos, yPos });
+				window.draw(gCard);
+				yPos += BoxSizes::boxHeight / 2 + spacing;
+			}
+			yPos += spacing * 2;
+			};
+		drawCardSet(player->getBrownBuildings());
+		drawCardSet(player->getGreyBuildings());
+		drawCardSet(player->getYellowBuildings());
+		drawCardSet(player->getRedBuildings());
+		drawCardSet(player->getGreenBuildings());
+		drawCardSet(player->getBlueBuildings());
+		};
+	std::shared_ptr<Player> leftPlayer = nullptr, rightPlayer = nullptr;
+	if (m_currentPlayer->name() == "player1") {
+		leftPlayer = m_currentPlayer;
+		rightPlayer = m_otherPlayer;
+	}
+	else {
+		leftPlayer = m_otherPlayer;
+		rightPlayer = m_currentPlayer;
+	}
+	drawPlayerColumn(leftPlayer, leftX);
+	drawPlayerColumn(rightPlayer, rightX);
+
+}
+
+void Game::selectCardEffect(sf::RenderWindow& window)
+{
+	if (window.hasFocus()) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+			bool anySelected = findSelectedCard(mousePos);
+
+			window.clear(sf::Color::White);
+			redrawCurrentAgeCards(window);
+			window.display();
+
+			while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
+				PollEvents(window);
+				sf::sleep(sf::milliseconds(10));
+			}
+		}
+	}
+}
+
+std::pair<int, int> Game::getWonderPosition(int index, const sf::RenderWindow& window)
+{
+	int total = static_cast<int>(m_wondersDisplay.size());
+	const int cardW = BoxSizes::boxWidth * 2;
+	const int cardH = BoxSizes::boxHeight * 2;
+	const int padding = 20;
+	const int winW = static_cast<int>(window.getSize().x);
+	int totalWidth = total * cardW + (total - 1) * padding;
+	int startX = std::max(0, (winW - totalWidth) / 2);
+	int x = startX + index * (cardW + padding);
+	int y = 200;
+	return { x, y };
+}
+
+int Game::wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+
+	int total = static_cast<int>(m_wondersDisplay.size());
+	if (total == 0) return -1;
+	const int cardW = BoxSizes::boxWidth * 2;
+	const int cardH = BoxSizes::boxHeight * 2;
+	for (int i = 0; i < total; ++i) {
+		auto pos = getWonderPosition(i, window);
+		sf::FloatRect rect(sf::Vector2f(pos.first, pos.second), sf::Vector2f(cardW, cardH));
+		if (rect.contains(worldPos)) return i;
+	}
+	return -1;
+}
+
+void Game::drawWondersSelection(sf::RenderWindow& window)
+{
+
+	if (m_wondersDisplay.empty())
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		for (int i = 0; i < 4; ++i)
+		{
+			std::uniform_int_distribution<> dist(0, m_wondersDeck.size() - 1);
+			std::uint16_t index = dist(gen);
+			m_wondersDisplay.push_back(std::make_optional(m_wondersDeck[index]));
+			m_wondersDeck.erase(m_wondersDeck.begin() + index);
+		}
+	}
+
+	int total = static_cast<int>(m_wondersDisplay.size());
+	const float cardW = BoxSizes::boxWidth * 2;
+	const float cardH = BoxSizes::boxHeight * 2;
+	for (int i = 0; i < total; ++i)
+	{
+		auto pos = getWonderPosition(i, window);
+
+		if (m_wondersDisplay[i].has_value())
+		{
+			guiCard gCard(m_wondersDisplay[i].value());
+			gCard.setPosition(pos);
+			gCard.setSize({ cardW, cardH });
+			window.draw(gCard);
+		}
+		else {
+			guiCard placeholder;
+			placeholder.setText("[Taken]");
+			placeholder.setPosition(pos);
+			placeholder.setSize({cardW, cardH });
+			window.draw(placeholder);
+		}
+	}
+}
+
+void Game::wondersSetup(sf::RenderWindow& window)
+{
+	int step = 1;
+	if (m_gamestate == GAMESTART) {
+		while (step <= 2) {
+			window.clear(sf::Color::White);
+			drawWondersSelection(window);
+			window.display();
+			int iteration = 1;
+			while (iteration <= 4) {
+				PollEvents(window);
+				if (window.hasFocus() && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+
+					sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+					int index = wonderIndexAtPosition(mousePos, window);
+					if (index >= 0 && index < static_cast<int>(m_wondersDisplay.size())
+						&& m_wondersDisplay[index].has_value()) {
+						m_currentPlayer->addWonder(m_wondersDisplay[index].value());
+						m_wondersDisplay[index] = std::nullopt;
+
+
+						switch (step) {
+						case 1:
+							if (m_currentPlayer.get()->name() == "player1") {
+								std::swap(m_currentPlayer, m_otherPlayer);
+								iteration++;
+							}
+							else if (m_currentPlayer.get()->name() == "player2" && iteration == 3) {
+								std::swap(m_currentPlayer, m_otherPlayer);
+								iteration++;
+							}
+							else { iteration++; }
+							break;
+						case 2:
+							if (m_currentPlayer.get()->name() == "player2") {
+								std::swap(m_currentPlayer, m_otherPlayer);
+								iteration++;
+							}
+							else if (m_currentPlayer.get()->name() == "player1" && iteration == 3) {
+								std::swap(m_currentPlayer, m_otherPlayer);
+								iteration++;
+
+							}
+							else { iteration++; }
+							break;
+						}
+
+
+						window.clear(sf::Color::White);
+						drawWondersSelection(window);
+						window.display();
+
+						while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
+							PollEvents(window);
+							sf::sleep(sf::milliseconds(10));
+						}
+					}
+				}
+
+			}
+			m_wondersDisplay.clear();
+			step++;
+		}
+		m_gamestate = ONGOING;
+	}
 }
 
 bool Game::findSelectedCard(const sf::Vector2i& mousePos) {
@@ -615,25 +817,29 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos) {
 						m_cardDisplay[i][j].value().setSelected(false);
 					}
 				}
-				else{
+				else {
 					m_cardDisplay[i][j].value().setSelected(false);
 				}
 			}
-	if(found)
+	if (found)
 		return true;
 	return false;
 }
 
 void Game::PollEvents(sf::RenderWindow& window)
 {
-	
+
 	while (const std::optional event = window.pollEvent())
 	{
 		if (event->is<sf::Event::Closed>())
 			window.close();
 		if (event->is<sf::Event::Resized>()) {
 			window.clear(sf::Color::White);
-			redrawCurrentAgeCards(window);
+			m_wonderRects.clear();
+			if (m_gamestate == GAMESTART)
+				drawWondersSelection(window);
+			if (m_gamestate == ONGOING)
+				redrawCurrentAgeCards(window);
 			window.display();
 		}
 	}
@@ -641,172 +847,162 @@ void Game::PollEvents(sf::RenderWindow& window)
 
 void Game::run()
 {
+	m_gamestate = GAMESTART;
 	bool player1Turn = true;
 	initAgeIBoard();
 	m_currentAge = Building::Age::AGEI;
 	std::uint8_t move;
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
-	std::uint16_t iteration = 0;
+	//std::uint16_t iteration = 0;
 
 	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders"/*, sf::Style::Titlebar | sf::Style::Close*/);
 	window.setFramerateLimit(60);
 	bool alreadyDrawn = false;
+	int step = 1;
 
 	while (window.isOpen())
 	{
-		
+
 		PollEvents(window);
-
-		if (window.hasFocus() && alreadyDrawn) {
-			if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-			{
-				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-
-				bool anySelected = findSelectedCard(mousePos);
-				
-				window.clear(sf::Color::White);
-				redrawCurrentAgeCards(window);
-				window.display();
-				
-				while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
-					PollEvents(window);
-					sf::sleep(sf::milliseconds(10));
-				}
-			}
+		wondersSetup(window);
+		if (alreadyDrawn) {
+			selectCardEffect(window);
 		}
 
-		if (!alreadyDrawn) {
+		if (!alreadyDrawn && m_gamestate == ONGOING) {
 			window.clear(sf::Color::White);
 			drawCurrentAgeCards(window);
+			drawPlayerCards(window);
 			window.display();
 			alreadyDrawn = true;
 		}
-		
 
 
-		
-	}
-	/*while (true)
-	{
-		bool setup = true;
-		showFourWonders(wonders);
-		std::uint16_t step = 0;
-		bool secondTurn = true;
-		while (setup) {
-			std::uint16_t id;
+
+
+
+		/*while (true)
+		{
+			bool setup = true;
+			showFourWonders(wonders);
+			std::uint16_t step = 0;
+			bool secondTurn = true;
+			while (setup) {
+				std::uint16_t id;
+				std::cout << "current player: " << m_currentPlayer->name() << "\n";
+				std::cout << "choose one wonder: ";
+				std::cin >> id;
+				std::shared_ptr<Card> selectedWonder = selectWonder(wonders, id);
+				if (selectedWonder)
+				{
+					m_currentPlayer->addWonder(selectedWonder);
+					removeWonderFromDisplay(wonders, id);
+				}
+				else {
+					std::cout << "wonder not available\n";
+					continue;
+				}
+				if (iteration == 0) {
+					if (m_currentPlayer->name() == "player2" && secondTurn) {
+						secondTurn = false;
+						step++;
+
+					}
+					else {
+						step++;
+						std::swap(m_currentPlayer, m_otherPlayer);
+					}
+				}
+				else if (iteration == 1)
+				{
+					if (m_currentPlayer->name() == "player1" && secondTurn) {
+						secondTurn = false;
+						step++;
+
+					}
+					else {
+						step++;
+						std::swap(m_currentPlayer, m_otherPlayer);
+					}
+				}
+				if (step == 4)
+				{
+					setup = false;
+				}
+			}
+			if (iteration == 1) break;
+			iteration++;
+			wonders.clear();
+			system("cls");
+		}
+		system("cls");
+		while (this->m_gamestate==ONGOING)
+		{
+			displayBoard();
 			std::cout << "current player: " << m_currentPlayer->name() << "\n";
-			std::cout << "choose one wonder: ";
-			std::cin >> id;
-			std::shared_ptr<Card> selectedWonder = selectWonder(wonders, id);
-			if (selectedWonder)
+			std::cout << "1.build\n2.discard\n3.wonder\nmove:";
+			std::cin >> move;
+			if (move == '1')
 			{
-				m_currentPlayer->addWonder(selectedWonder);
-				removeWonderFromDisplay(wonders, id);
-			}
-			else {
-				std::cout << "wonder not available\n";
-				continue;
-			}
-			if (iteration == 0) {
-				if (m_currentPlayer->name() == "player2" && secondTurn) {
-					secondTurn = false;
-					step++;
-
+				m_selectedBuilding = selectAcceptableCard();
+				if (CheckPlayerResources(m_currentPlayer, m_selectedBuilding) && CheckPlayerCoins(m_currentPlayer, m_selectedBuilding))
+					m_currentPlayer->addBuilding(*m_selectedBuilding);
+				else
+				{
+					std::cout << "You don't have enough resources/coins to build this building. Retry\n";
+					continue;
 				}
-				else {
-					step++;
-					std::swap(m_currentPlayer, m_otherPlayer);
-				}
-			}
-			else if (iteration == 1)
-			{
-				if (m_currentPlayer->name() == "player1" && secondTurn) {
-					secondTurn = false;
-					step++;
 
-				}
-				else {
-					step++;
-					std::swap(m_currentPlayer, m_otherPlayer);
-				}
-			}
-			if (step == 4)
-			{
-				setup = false;
-			}
-		}
-		if (iteration == 1) break;
-		iteration++;
-		wonders.clear();
-		system("cls");
-	}
-	system("cls");
-	while (this->m_gamestate==ONGOING)
-	{
-		displayBoard();
-		std::cout << "current player: " << m_currentPlayer->name() << "\n";
-		std::cout << "1.build\n2.discard\n3.wonder\nmove:";
-		std::cin >> move;
-		if (move == '1')
-		{
-			m_selectedBuilding = selectAcceptableCard();
-			if (CheckPlayerResources(m_currentPlayer, m_selectedBuilding) && CheckPlayerCoins(m_currentPlayer, m_selectedBuilding))
-				m_currentPlayer->addBuilding(*m_selectedBuilding);
-			else
-			{
-				std::cout << "You don't have enough resources/coins to build this building. Retry\n";
-				continue;
-			}
+				/*if (player1Turn && m_selectedBuilding->getColor() == Building::Color::RED)
+					m_board.setPos(m_board.getPos() + m_selectedBuilding->getShields());
+				else
+					m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());/*
 
-			/*if (player1Turn && m_selectedBuilding->getColor() == Building::Color::RED)
-				m_board.setPos(m_board.getPos() + m_selectedBuilding->getShields());
-			else
-				m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());/*
-
-			removeCardFromDeck(m_selectedBuilding->getId());
-			turnCards();
-		}
-		if (move == '2')
-		{
-			m_selectedBuilding = selectAcceptableCard();
-			std::uint8_t profit = 2 + m_currentPlayer->getYellowBuildings().size();
-			m_currentPlayer->addCoin(profit);
-			m_discardedCards->insert({ m_selectedBuilding->getId(), m_selectedBuilding });
-			removeCardFromDeck(m_selectedBuilding->getId());
-			turnCards();
-		}
-		if (move == '3')
-		{
-			if (Game::m_constructedWonders == 7)
-			{
-				system("cls");
-				std::cout << "Nu se mai pot construi minuni";
-				continue;
-			}
-			std::cout << "Your wonders:\n";
-			for(auto wonder:m_currentPlayer->getWonders())
-				std::cout << "[" << wonder.first->getId() << "] ";
-			std::cout << "\n";
-			auto selectedWonder=selectAcceptableWonder();
-			m_selectedBuilding = selectAcceptableCard();
-			if(m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
-			{
-				m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
-				Game::m_constructedWonders++;
 				removeCardFromDeck(m_selectedBuilding->getId());
+				turnCards();
 			}
-			else
+			if (move == '2')
 			{
-				system("cls");
-				std::cout << "You cannot build this wonder now. Retry\n";
-				continue;
+				m_selectedBuilding = selectAcceptableCard();
+				std::uint8_t profit = 2 + m_currentPlayer->getYellowBuildings().size();
+				m_currentPlayer->addCoin(profit);
+				m_discardedCards->insert({ m_selectedBuilding->getId(), m_selectedBuilding });
+				removeCardFromDeck(m_selectedBuilding->getId());
+				turnCards();
 			}
-		}
+			if (move == '3')
+			{
+				if (Game::m_constructedWonders == 7)
+				{
+					system("cls");
+					std::cout << "Nu se mai pot construi minuni";
+					continue;
+				}
+				std::cout << "Your wonders:\n";
+				for(auto wonder:m_currentPlayer->getWonders())
+					std::cout << "[" << wonder.first->getId() << "] ";
+				std::cout << "\n";
+				auto selectedWonder=selectAcceptableWonder();
+				m_selectedBuilding = selectAcceptableCard();
+				if(m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
+				{
+					m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
+					Game::m_constructedWonders++;
+					removeCardFromDeck(m_selectedBuilding->getId());
+				}
+				else
+				{
+					system("cls");
+					std::cout << "You cannot build this wonder now. Retry\n";
+					continue;
+				}
+			}
 
-		std::swap(m_currentPlayer, m_otherPlayer);
-		player1Turn = !player1Turn;
-		system("cls");
-	}*/
+			std::swap(m_currentPlayer, m_otherPlayer);
+			player1Turn = !player1Turn;
+			system("cls");
+		}*/
+	}
 }
 
-std::uint8_t Game::m_constructedWonders = 0;
+	std::uint8_t Game::m_constructedWonders = 0;

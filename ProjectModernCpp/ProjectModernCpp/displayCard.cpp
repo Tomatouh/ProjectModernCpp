@@ -21,7 +21,7 @@ guiCard displayCard::getGuiCard() const
 	guiCard g(std::static_pointer_cast<Card>(m_building));
 	g.setPosition(m_position);
 	g.setHighlighted(m_isSelected);
-	return guiCard(std::static_pointer_cast<Card>(m_building));
+	return g;
 }
 void displayCard::setPosition(std::pair<int, int> pos)
 {
@@ -46,7 +46,7 @@ bool displayCard::containsPoint(const sf::Vector2i& point) const
 {
 	const int x = m_position.first;
 	const int y = m_position.second;
-	const int w = 160;
-	const int h = 170;
+	const int w = BoxSizes::boxWidth;
+	const int h = BoxSizes::boxHeight;
 	return (point.x >= x && point.x <= x + w && point.y >= y && point.y <= y + h);
 }
