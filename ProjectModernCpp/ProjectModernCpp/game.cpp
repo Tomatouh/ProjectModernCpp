@@ -678,26 +678,14 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 
 }
 
-void Game::selectCardEffect(sf::RenderWindow& window)
+void Game::selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
-	if (window.hasFocus()) {
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-		{
-			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+	bool anySelected = findSelectedCard(mousePos, window);
 
-			bool anySelected = findSelectedCard(mousePos, window);
-
-			window.clear(sf::Color::White);
-			redrawCurrentAgeCards(window);
-			drawPlayerCards(window);
-			window.display();
-
-			while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
-				PollEvents(window);
-				sf::sleep(sf::milliseconds(10));
-			}
-		}
-	}
+	window.clear(sf::Color::White);
+	redrawCurrentAgeCards(window);
+	drawPlayerCards(window);
+	window.display();
 }
 
 std::pair<int, int> Game::getWonderPosition(int index, const sf::RenderWindow& window)
@@ -866,15 +854,29 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow
 	return false;
 }
 
-void Game::handleClick(sf::RenderWindow& window, sf::Vector2i mousePos)
+void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
+	static bool alreadyDrawn = false;
 	if (m_gamestate == GAMESTART)
 		wondersSetup(window, mousePos);
+	if (m_gamestate == ONGOING)
+	{
+		if (alreadyDrawn) {
+			selectCardEffect(window, sf::Mouse::getPosition(window));
+		}
+
+		if (!alreadyDrawn && m_gamestate == ONGOING) {
+			window.clear(sf::Color::White);
+			drawCurrentAgeCards(window);
+			drawPlayerCards(window);
+			window.display();
+			alreadyDrawn = true;
+		}
+	}
 }
 
 void Game::PollEvents(sf::RenderWindow& window)
 {
-	bool alreadyDrawn = false;
 	while (const std::optional event = window.waitEvent())
 	{
 		if (event->is<sf::Event::Closed>())
@@ -894,21 +896,6 @@ void Game::PollEvents(sf::RenderWindow& window)
 		if(event->is<sf::Event::MouseButtonPressed>())
 		{
 			handleClick(window, sf::Mouse::getPosition(window));
-		}
-
-		if (m_gamestate == ONGOING)
-		{
-			if (alreadyDrawn) {
-				selectCardEffect(window);
-			}
-
-			if (!alreadyDrawn && m_gamestate == ONGOING) {
-				window.clear(sf::Color::White);
-				drawCurrentAgeCards(window);
-				drawPlayerCards(window);
-				window.display();
-				alreadyDrawn = true;
-			}
 		}
 	}
 }
