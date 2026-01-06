@@ -58,7 +58,7 @@ private:
 	std::pair<int, int> getWonderPosition(int index,const sf::RenderWindow& window);
 	int wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
 	void drawWondersSelection(sf::RenderWindow& window);
-	void wondersSetup(sf::RenderWindow& window);
+	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
 public:
 
 	Game();
@@ -86,6 +86,8 @@ public:
 	void initProgressTokens();
 
 	void showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wonders);
+
+	void handleClick(sf::RenderWindow& window, sf::Vector2i mousePos);
 
 	void run();
 	

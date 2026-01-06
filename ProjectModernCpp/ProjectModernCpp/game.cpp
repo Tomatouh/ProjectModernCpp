@@ -770,20 +770,15 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 	}
 }
 
-void Game::wondersSetup(sf::RenderWindow& window)
+void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 {
-	int step = 1;
+	static int step = 1;
 	if (m_gamestate == GAMESTART) {
-		while (step <= 2) {
-			window.clear(sf::Color::White);
-			drawWondersSelection(window);
-			window.display();
-			int iteration = 1;
-			while (iteration <= 4) {
-				PollEvents(window);
-				if (window.hasFocus() && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-
-					sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+		if (step <= 2) {
+			static int iteration = 1;
+			if (iteration < 4) {
+				//PollEvents(window);
+					//sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 					int index = wonderIndexAtPosition(mousePos, window);
 					if (index >= 0 && index < static_cast<int>(m_wondersDisplay.size())
 						&& m_wondersDisplay[index].has_value()) {
@@ -822,17 +817,26 @@ void Game::wondersSetup(sf::RenderWindow& window)
 						drawWondersSelection(window);
 						window.display();
 
-						while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
+						/*while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
 							PollEvents(window);
 							sf::sleep(sf::milliseconds(10));
-						}
+						}*/
 					}
 				}
-
+			else
+			{
+				m_wondersDisplay.clear();
+				step++;
+				iteration = 1;
+				if (step == 2)
+				{
+					window.clear(sf::Color::White);
+					drawWondersSelection(window);
+					window.display();
+				}
 			}
-			m_wondersDisplay.clear();
-			step++;
 		}
+		if (step > 2)
 		m_gamestate = ONGOING;
 	}
 }
@@ -862,10 +866,16 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow
 	return false;
 }
 
+void Game::handleClick(sf::RenderWindow& window, sf::Vector2i mousePos)
+{
+	if (m_gamestate == GAMESTART)
+		wondersSetup(window, mousePos);
+}
+
 void Game::PollEvents(sf::RenderWindow& window)
 {
-
-	while (const std::optional event = window.pollEvent())
+	bool alreadyDrawn = false;
+	while (const std::optional event = window.waitEvent())
 	{
 		if (event->is<sf::Event::Closed>())
 			window.close();
@@ -880,6 +890,25 @@ void Game::PollEvents(sf::RenderWindow& window)
 				drawPlayerCards(window);
 			}
 			window.display();
+		}
+		if(event->is<sf::Event::MouseButtonPressed>())
+		{
+			handleClick(window, sf::Mouse::getPosition(window));
+		}
+
+		if (m_gamestate == ONGOING)
+		{
+			if (alreadyDrawn) {
+				selectCardEffect(window);
+			}
+
+			if (!alreadyDrawn && m_gamestate == ONGOING) {
+				window.clear(sf::Color::White);
+				drawCurrentAgeCards(window);
+				drawPlayerCards(window);
+				window.display();
+				alreadyDrawn = true;
+			}
 		}
 	}
 }
@@ -896,25 +925,16 @@ void Game::run()
 
 	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders");
 	window.setFramerateLimit(60);
-	bool alreadyDrawn = false;
 	int step = 1;
 
 	while (window.isOpen())
 	{
-
+		window.clear(sf::Color::White);
+		drawWondersSelection(window);
+		window.display();
 		PollEvents(window);
-		wondersSetup(window);
-		if (alreadyDrawn) {
-			selectCardEffect(window);
-		}
-
-		if (!alreadyDrawn && m_gamestate == ONGOING) {
-			window.clear(sf::Color::White);
-			drawCurrentAgeCards(window);
-			drawPlayerCards(window);
-			window.display();
-			alreadyDrawn = true;
-		}
+		//wondersSetup(window);
+		
 
 
 
