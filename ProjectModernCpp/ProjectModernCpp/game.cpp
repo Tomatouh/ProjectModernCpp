@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <fstream>
 module game;
 
 
@@ -37,6 +38,48 @@ m_currentAge(Building::Age::AGEI)
 	initProgressTokens();
 	initCardEffects();
 }
+	void Game::loadGame()
+	{
+		std::ifstream f("save.txt", std::ios::in);
+		if (!f)
+			return;
+		else
+		{
+			//load game state from file
+		}
+	}
+	void Game::saveGame()
+	{
+		std::ofstream f("save.txt", std::ios::out);
+		std::vector<Building> playerBuildings;
+		playerBuildings.insert(playerBuildings.end(),
+			this->m_currentPlayer->getBrownBuildings().begin(),
+			this->m_currentPlayer->getBrownBuildings().end());
+		playerBuildings.insert(playerBuildings.end(),
+			this->m_currentPlayer->getGreyBuildings().begin(),
+			this->m_currentPlayer->getGreyBuildings().end());
+		playerBuildings.insert(playerBuildings.end(),
+			this->m_currentPlayer->getRedBuildings().begin(),
+			this->m_currentPlayer->getRedBuildings().end());
+		playerBuildings.insert(playerBuildings.end(),
+			this->m_currentPlayer->getYellowBuildings().begin(),
+			this->m_currentPlayer->getYellowBuildings().end());
+		playerBuildings.insert(playerBuildings.end(),
+			this->m_currentPlayer->getBlueBuildings().begin(),
+			this->m_currentPlayer->getBlueBuildings().end());
+		playerBuildings.insert(playerBuildings.end(),
+			this->m_currentPlayer->getGreenBuildings().begin(),
+			this->m_currentPlayer->getGreenBuildings().end());
+		playerBuildings.insert(playerBuildings.end(),
+			this->m_currentPlayer->getPurpleBuildings().begin(),
+			this->m_currentPlayer->getPurpleBuildings().end());
+		f << "b";
+		for (int i = 0; i < this->m_currentPlayer->getBuildingCount(); i++) {
+			f << playerBuildings[i].getId() << " ";
+		}
+		f << "\n";
+
+	}
 
 void Game::setGamestate(GameState& gamestate)
 {
@@ -911,6 +954,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 
 void Game::run()
 {
+	//loadGame();
 	m_gamestate = GAMESTART;
 	bool player1Turn = true;
 	initAgeIBoard();

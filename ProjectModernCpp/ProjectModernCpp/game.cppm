@@ -64,8 +64,8 @@ public:
 
 	Game();
 
-
-	
+	void saveGame();
+	void loadGame();
 	/*Game(const Player& player1, const Player& player2,
 		const Board& board,
 		const std::vector<std::shared_ptr<Card>>& wondersCard,

@@ -20,12 +20,12 @@ m_hasTokenSelectionRight(false)
 {
     for (uint16_t i = 0; i < 6; i++)
         m_scientificPoints.push_back(0);
-    
-	m_tradeDiscounts[ResourceType::WOOD] = false;
-	m_tradeDiscounts[ResourceType::STONE] = false;
-	m_tradeDiscounts[ResourceType::CLAY] = false;
-	m_tradeDiscounts[ResourceType::GLASS] = false;
-	m_tradeDiscounts[ResourceType::PAPYRUS] = false;
+
+    m_tradeDiscounts[ResourceType::WOOD] = false;
+    m_tradeDiscounts[ResourceType::STONE] = false;
+    m_tradeDiscounts[ResourceType::CLAY] = false;
+    m_tradeDiscounts[ResourceType::GLASS] = false;
+    m_tradeDiscounts[ResourceType::PAPYRUS] = false;
 }
 
 //Player::Player(std::string name,  uint16_t startCoin1Amount,
@@ -96,12 +96,12 @@ void Player::setPlayerName(const std::string_view name)
 
 void Player::addCoin(std::uint16_t amount) noexcept
 {
-	m_coins += amount;
+    m_coins += amount;
 }
 
 void Player::payCoin(uint16_t amount) noexcept {
-	m_coins -= amount;
-    
+    m_coins -= amount;
+
 }
 uint16_t Player::getCoins() const noexcept {
     return m_coins;
@@ -111,7 +111,7 @@ uint16_t Player::getCoins() const noexcept {
 void Player::addBuilding(const Building& building) {
 
     std::uint16_t totalCost = getConstructionCost(building);
-    
+
     std::uint16_t cardBaseCost = building.getCost().getCostCoins();
 
     std::uint16_t tradeSpent = 0;
@@ -182,20 +182,20 @@ void Player::discardBuilding(Building::Color color, std::uint16_t id)
 {
     Building found;
     std::vector<Building>::iterator it;
-    switch(color)
+    switch (color)
     {
     case Building::Color::GREY:
         it = std::find_if(m_greyBuildings.begin(), m_greyBuildings.end(), [id](const Building& b) { return b.getId() == id; });
-        if ( it == m_greyBuildings.end()) {
+        if (it == m_greyBuildings.end()) {
             std::cout << "building not found\n";
             return;
         }
         found = std::move(*it);
         m_greyBuildings.erase(it);
-		m_discardPile->insert({ id, std::make_shared<Building>(found) });
+        m_discardPile->insert({ id, std::make_shared<Building>(found) });
     case Building::Color::BROWN:
         it = std::find_if(m_brownBuildings.begin(), m_brownBuildings.end(), [id](const Building& b) { return b.getId() == id; });
-        if ( it == m_brownBuildings.end()) {
+        if (it == m_brownBuildings.end()) {
             std::cout << "building not found\n";
             return;
         }
@@ -203,8 +203,8 @@ void Player::discardBuilding(Building::Color color, std::uint16_t id)
         m_brownBuildings.erase(it);
         m_discardPile->insert({ id, std::make_shared<Building>(found) });
     }
-   
-    
+
+
 }
 
 void Player::addWonder(const std::shared_ptr<Card>& wonder)
@@ -299,7 +299,7 @@ void Player::removeResources(const std::vector<ResourceType>& resources)
             break;
         }
         }
-	}
+    }
 }
 
 std::unordered_map<ResourceType, std::uint16_t> Player::getProductions() const noexcept
@@ -321,7 +321,7 @@ uint16_t Player::getGlass() const noexcept { return m_glass; }
 uint16_t Player::getPapyrus() const noexcept { return m_papyrus; }
 
 void Player::showStatus(std::ostream& os) const {
-    os << "Player " << m_name << " | coins=" << getCoins() <<"\n";
+    os << "Player " << m_name << " | coins=" << getCoins() << "\n";
 }
 
 void Player::showCards(std::ostream& os) const {
@@ -358,7 +358,7 @@ const std::vector<Player::ProgressToken> Player::getProgressTokens() const
 }
 void Player::addProgressToken(const ProgressToken& token)
 {
-	m_progressTokens.push_back(token);
+    m_progressTokens.push_back(token);
 }
 void Player::applyEffects()
 {
@@ -378,7 +378,7 @@ Player::ProgressToken Player::ProgressToken::agricultureToken([](std::shared_ptr
 
 Player::ProgressToken Player::ProgressToken::lawToken([](std::shared_ptr<Player> player) {
     std::vector<uint16_t> vect = player->getScientificPoints();
-    for(uint16_t i=0;i<vect.size();i++)
+    for (uint16_t i = 0; i < vect.size(); i++)
         if (vect[i] != 2)
         {
             player->addScientificPoint((Building::ScientificSymbol)i);
@@ -391,7 +391,7 @@ Player::ProgressToken Player::ProgressToken::philosphyToken([](std::shared_ptr<P
     }, true);
 
 Player::ProgressToken Player::ProgressToken::mathematicsToken([](std::shared_ptr<Player> player) {
-    player->addVictoryPoints(player->getProgressTokens().size()*3);
+    player->addVictoryPoints(player->getProgressTokens().size() * 3);
     }, true);
 
 Player::ProgressToken Player::ProgressToken::economyToken([](std::shared_ptr<Player> player) {
@@ -445,29 +445,29 @@ bool Player::hasDiscountFor(ResourceType type) const
             return true;
         }
     }*/
-	return m_tradeDiscounts.at(type);
+    return m_tradeDiscounts.at(type);
 }
 
 std::uint16_t Player::countOpponentProduction(ResourceType type) {
-    std::uint16_t count=0;
-     Player other= * this->getOtherPlayer();
-     switch (type)
-     {
-     case ResourceType::WOOD:
-         return other.getWood();
-     case ResourceType::CLAY:
-         return other.getClay();
-     case ResourceType::GLASS:
-         return other.getGlass();
-     case ResourceType::PAPYRUS:
-         return other.getPapyrus();
-     case ResourceType::STONE:
-         return other.getStone();
-     }
-     return count;
+    std::uint16_t count = 0;
+    Player other = *this->getOtherPlayer();
+    switch (type)
+    {
+    case ResourceType::WOOD:
+        return other.getWood();
+    case ResourceType::CLAY:
+        return other.getClay();
+    case ResourceType::GLASS:
+        return other.getGlass();
+    case ResourceType::PAPYRUS:
+        return other.getPapyrus();
+    case ResourceType::STONE:
+        return other.getStone();
+    }
+    return count;
 }
 
-std::uint16_t Player::getTradeCost(ResourceType type,  Player& opponent) {
+std::uint16_t Player::getTradeCost(ResourceType type, Player& opponent) {
     if (this->hasDiscountFor(type)) {
         return 1;
     }
@@ -501,7 +501,7 @@ void Player::setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, s
 
 void Player::removeCardFromDiscardPile(uint16_t cardId)
 {
-	m_discardPile->erase(cardId);
+    m_discardPile->erase(cardId);
 }
 
 std::unordered_map<ResourceType, bool> Player::getTradeDiscounts() const noexcept
@@ -511,7 +511,7 @@ std::unordered_map<ResourceType, bool> Player::getTradeDiscounts() const noexcep
 
 void Player::addTradeDiscount(ResourceType type) noexcept
 {
-	m_tradeDiscounts[type] = true;
+    m_tradeDiscounts[type] = true;
 }
 
 bool Player::hasChainId(std::uint16_t linkId) const
@@ -523,7 +523,7 @@ bool Player::hasChainId(std::uint16_t linkId) const
             if (building.getId() == linkId) return true;
         }
         return false;
-    };
+        };
 
     if (ownsBuildingInList(m_brownBuildings)) return true;
     if (ownsBuildingInList(m_greyBuildings)) return true;
@@ -580,7 +580,7 @@ std::uint16_t Player::getConstructionCost(const Building& building) {
                 totalCoinsNeeded += getTradeCost(resource, *opponent);
             }
             else {
-                totalCoinsNeeded += 2; 
+                totalCoinsNeeded += 2;
             }
         }
     }
@@ -588,7 +588,7 @@ std::uint16_t Player::getConstructionCost(const Building& building) {
     return totalCoinsNeeded;
 }
 
-bool Player::canBuild(const Building& building) 
+bool Player::canBuild(const Building& building)
 {
     std::uint16_t cost = getConstructionCost(building);
 
@@ -700,29 +700,6 @@ uint16_t Player::getBluePoints() const noexcept {
 uint16_t Player::getFinalScore(uint16_t militaryPoints) const noexcept {
     //militaryPoints = cate puncte de victorie ofera pozitia pionului pentru Player
     return m_victoryPoints + getCoinsPoints() + militaryPoints;
-}
-
-std::uint16_t Player::getBuildingCount(Building::Color color) const noexcept
-{
-    switch (color)
-    {
-    case Building::Color::BROWN:
-        return static_cast<uint16_t>(m_brownBuildings.size());
-    case Building::Color::GREY:
-        return static_cast<uint16_t>(m_greyBuildings.size());
-    case Building::Color::BLUE:
-        return static_cast<uint16_t>(m_blueBuildings.size());
-    case Building::Color::GREEN:
-        return static_cast<uint16_t>(m_greenBuildings.size());
-    case Building::Color::YELLOW:
-        return static_cast<uint16_t>(m_yellowBuildings.size());
-    case Building::Color::RED:
-        return static_cast<uint16_t>(m_redBuildings.size());
-    case Building::Color::PURPLE:
-        return static_cast<uint16_t>(m_purpleBuildings.size());
-    default:
-        return 0;
-    }
 }
 
 std::uint16_t Player::getConstructedWondersCount() const noexcept

@@ -10,10 +10,13 @@ import <vector>;
 
 /*
 * TODO: fix the trade function for compatibility with everything
-		save function: 
+		save/load function: 
 				-behaviour:if there is a file named "save.txt", begin save load, if not, begin game as normal
-				-individual card vectors from player, whose turn is it, current game state-presume ONGOING, make sure it checks it's ongoing before saving.
-				-victory points for each player, each player's data is saved separately, player 1 first, military score and peon position, whether or not certain zones were triggered
+				-individual card vectors from player, 
+				-whose turn is it, 
+				-current game state-presume ONGOING, make sure it checks it's ongoing before saving.
+				-victory points for each player, each player's data is saved separately, player 1 first, 
+				-peon position, whether or not certain zones were triggered
 				-progress tokens still available to get
 				-each player's progress tokens, each player's scientific symbols
 				-discarded progress tokens

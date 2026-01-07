@@ -117,7 +117,36 @@ public:
     uint16_t getBluePoints() const noexcept;
     uint16_t getFinalScore(uint16_t militaryPoints = 0) const noexcept;
 
-    std::uint16_t getBuildingCount(Building::Color color) const noexcept;
+    template<typename... Colors>
+    std::uint16_t getBuildingCount(Colors... colors) const noexcept {
+        if constexpr (sizeof...(colors) == 0) {
+            return static_cast<std::uint16_t>(
+                m_brownBuildings.size() +
+                m_greyBuildings.size() +
+                m_blueBuildings.size() +
+                m_greenBuildings.size() +
+                m_yellowBuildings.size() +
+                m_redBuildings.size() +
+                m_purpleBuildings.size()
+            );
+        } else {
+            std::uint16_t total = 0;
+            auto addForColor = [&](Building::Color color) noexcept {
+                switch (color) {
+                case Building::Color::BROWN: total += static_cast<uint16_t>(m_brownBuildings.size()); break;
+                case Building::Color::GREY: total += static_cast<uint16_t>(m_greyBuildings.size()); break;
+                case Building::Color::BLUE: total += static_cast<uint16_t>(m_blueBuildings.size()); break;
+                case Building::Color::GREEN: total += static_cast<uint16_t>(m_greenBuildings.size()); break;
+                case Building::Color::YELLOW: total += static_cast<uint16_t>(m_yellowBuildings.size()); break;
+                case Building::Color::RED: total += static_cast<uint16_t>(m_redBuildings.size()); break;
+                case Building::Color::PURPLE: total += static_cast<uint16_t>(m_purpleBuildings.size()); break;
+                default: break;
+                }
+            };
+            (addForColor(static_cast<Building::Color>(colors)), ...);
+            return total;
+        }
+    }
 
     std::uint16_t getConstructedWondersCount() const noexcept;
 
