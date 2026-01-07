@@ -718,9 +718,9 @@ int Game::wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWi
 	return -1;
 }
 
-void Game::drawWondersSelection(sf::RenderWindow& window)
+std::vector<guiCard> Game::drawWondersSelection(sf::RenderWindow& window)
 {
-
+	std::vector<guiCard> guiWonders;
 	if (m_wondersDisplay.empty())
 	{
 		std::random_device rd;
@@ -746,16 +746,17 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 			guiCard gCard(m_wondersDisplay[i].value());
 			gCard.setPosition(pos);
 			gCard.setSize({ cardW, cardH });
-			window.draw(gCard);
+			guiWonders.push_back(gCard);
 		}
 		else {
 			guiCard placeholder;
 			placeholder.setText("[Taken]");
 			placeholder.setPosition(pos);
 			placeholder.setSize({ cardW, cardH });
-			window.draw(placeholder);
+			guiWonders.push_back(placeholder);
 		}
 	}
+	return guiWonders;
 }
 
 void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
@@ -802,7 +803,11 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 
 
 						window.clear(sf::Color::White);
-						drawWondersSelection(window);
+						DrawableGroup group;
+						auto wonders = drawWondersSelection(window);
+						for (auto& wonder : wonders)
+							group.addDrawable(&wonder);
+						drawAll(window, group);
 						window.display();
 
 						/*while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
@@ -819,7 +824,11 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 				if (step == 2)
 				{
 					window.clear(sf::Color::White);
-					drawWondersSelection(window);
+					DrawableGroup group;
+					auto wonders = drawWondersSelection(window);
+					for (auto& wonder : wonders)
+						group.addDrawable(&wonder);
+					drawAll(window, group);
 					window.display();
 				}
 			}
@@ -917,7 +926,11 @@ void Game::run()
 	while (window.isOpen())
 	{
 		window.clear(sf::Color::White);
-		drawWondersSelection(window);
+		DrawableGroup group;
+		auto wonders = drawWondersSelection(window);
+		for(auto& wonder: wonders)
+			group.addDrawable(&wonder);
+		drawAll(window,group);
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
@@ -1050,5 +1063,10 @@ void Game::run()
 		}*/
 	}
 }
-
+template<typename... Args>
+void Game::drawAll(sf::RenderWindow& window, Args... args)
+{
+	window.clear(sf::Color::White);
+	(window.draw(args),...);
+}
 std::uint8_t Game::m_constructedWonders = 0;

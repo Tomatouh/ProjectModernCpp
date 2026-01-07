@@ -9,6 +9,7 @@ import cardsLoader;
 import displayCard;
 import effects;
 import guiCard;
+import drawableGroup;
 
 export class Game {
 private:
@@ -57,7 +58,7 @@ private:
 	void selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos);
 	std::pair<int, int> getWonderPosition(int index,const sf::RenderWindow& window);
 	int wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
-	void drawWondersSelection(sf::RenderWindow& window);
+	std::vector<guiCard> drawWondersSelection(sf::RenderWindow& window);
 	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
 public:
 
@@ -88,6 +89,9 @@ public:
 	void showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wonders);
 
 	void handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos);
+
+	template<typename... Args>
+	void drawAll(sf::RenderWindow& window,Args... args);
 
 	void run();
 	
