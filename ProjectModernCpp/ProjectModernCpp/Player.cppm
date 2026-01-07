@@ -125,11 +125,43 @@ public:
 
     bool hasTokenSelectionRight() const noexcept;
     void consumeTokenSelectionRight() noexcept;
+
+    // Getters / setters for progress-token flags
+    bool hasEconomyProgressToken() const noexcept;
+    void setEconomyProgressToken(bool value) noexcept;
+
+    bool hasMasonryProgressToken() const noexcept;
+    void setMasonryProgressToken(bool value) noexcept;
+
+    bool hasStrategyProgressToken() const noexcept;
+    void setStrategyProgressToken(bool value) noexcept;
+
+    bool hasTheologyProgressToken() const noexcept;
+    void setTheologyProgressToken(bool value) noexcept;
+
+    bool hasUrbanismProgressToken() const noexcept;
+    void setUrbanismProgressToken(bool value) noexcept;
+
+    bool hasArchitectureProgressToken() const noexcept;
+    void setArchitectureProgressToken(bool value) noexcept;
+
+    bool hasLawProgressToken() const noexcept;
+    void setLawProgressToken(bool value) noexcept;
+
+    bool hasMathematicsProgressToken() const noexcept;
+    void setMathematicsProgressToken(bool value) noexcept;
+
+    bool hasPhilosophyProgressToken() const noexcept;
+    void setPhilosophyProgressToken(bool value) noexcept;
+
+    bool hasAgricultureProgressToken() const noexcept;
+    void setAgricultureProgressToken(bool value) noexcept;
+
 private:
 
     std::string m_name;
     uint16_t m_coins;
-    uint16_t m_victoryPoints;
+    uint16_t m_victoryPoints=0;
     uint16_t m_shields;
 
     // Resources
@@ -164,6 +196,10 @@ private:
     bool m_hasTheologyProgressToken = 0;
     bool m_hasUrbanismProgressToken = 0;
     bool m_hasArchitectureProgressToken = 0;
+    bool m_hasLawProgressToken = 0;
+    bool m_hasMathematicsProgressToken = 0;
+    bool m_hasPhilosophyProgressToken = 0;
+    bool m_hasAgricultureProgressToken = 0;
     // Wonders
     std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> m_wonders;
     // pointer to the other player

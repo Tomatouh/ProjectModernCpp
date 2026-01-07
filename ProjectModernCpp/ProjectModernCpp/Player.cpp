@@ -754,3 +754,103 @@ void Player::consumeTokenSelectionRight() noexcept
 {
     m_hasTokenSelectionRight = false;
 }
+
+bool Player::hasEconomyProgressToken() const noexcept
+{
+    return m_hasEconomyProgressToken;
+}
+
+void Player::setEconomyProgressToken(bool value) noexcept
+{
+    m_hasEconomyProgressToken = value;
+}
+
+bool Player::hasMasonryProgressToken() const noexcept
+{
+    return m_hasMasonryProgressToken;
+}
+
+void Player::setMasonryProgressToken(bool value) noexcept
+{
+    m_hasMasonryProgressToken = value;
+}
+
+bool Player::hasStrategyProgressToken() const noexcept
+{
+    return m_hasStrategyProgressToken;
+}
+
+void Player::setStrategyProgressToken(bool value) noexcept
+{
+    m_hasStrategyProgressToken = value;
+}
+
+bool Player::hasTheologyProgressToken() const noexcept
+{
+    return m_hasTheologyProgressToken;
+}
+
+void Player::setTheologyProgressToken(bool value) noexcept
+{
+    m_hasTheologyProgressToken = value;
+}
+
+bool Player::hasUrbanismProgressToken() const noexcept
+{
+    return m_hasUrbanismProgressToken;
+}
+
+void Player::setUrbanismProgressToken(bool value) noexcept
+{
+    m_hasUrbanismProgressToken = value;
+}
+
+bool Player::hasArchitectureProgressToken() const noexcept
+{
+    return m_hasArchitectureProgressToken;
+}
+
+void Player::setArchitectureProgressToken(bool value) noexcept
+{
+    m_hasArchitectureProgressToken = value;
+}
+
+bool Player::hasLawProgressToken() const noexcept
+{
+    return m_hasLawProgressToken;
+}
+
+void Player::setLawProgressToken(bool value) noexcept
+{
+    m_hasLawProgressToken = value;
+}
+
+bool Player::hasMathematicsProgressToken() const noexcept
+{
+    return m_hasMathematicsProgressToken;
+}
+
+void Player::setMathematicsProgressToken(bool value) noexcept
+{
+    m_hasMathematicsProgressToken = value;
+}
+
+bool Player::hasPhilosophyProgressToken() const noexcept
+{
+    return m_hasPhilosophyProgressToken;
+}
+
+void Player::setPhilosophyProgressToken(bool value) noexcept
+{
+    m_hasPhilosophyProgressToken = value;
+}
+
+bool Player::hasAgricultureProgressToken() const noexcept
+{
+    return m_hasAgricultureProgressToken;
+}
+
+void Player::setAgricultureProgressToken(bool value) noexcept
+{
+    m_hasAgricultureProgressToken = value;
+}
