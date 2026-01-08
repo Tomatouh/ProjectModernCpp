@@ -584,6 +584,9 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					guiCard gCard = card.value().getGuiCard();
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
+					sf::Texture texture;
+					texture.loadFromFile("..\\..\\Images\\" + std::to_string(card.value().getBuilding()->getId()) + ".jpg");
+					gCard.setTexture(texture);
 					window.draw(gCard);
 				}
 				else
@@ -591,7 +594,30 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					auto pos = getNextCardPosition(m_currentAge);
 
 					guiCard gCard = card.value().getGuiCard();
-					gCard.setText("[Hidden card]");
+					std::string currentAgeNumber;
+					switch (m_currentAge)
+					{
+					case Building::Age::AGEI:
+					{
+						currentAgeNumber = "I";
+						break;
+					}
+					case Building::Age::AGEII:
+					{
+						currentAgeNumber = "II";
+						break;
+					}
+					case Building::Age::AGEIII:
+					{
+						currentAgeNumber = "III";
+						break;
+					}
+					default:
+						break;
+					}
+					sf::Texture texture;
+					texture.loadFromFile("..\\..\\Images\\Miscellaneous\\age " + currentAgeNumber + " deck.png");
+					gCard.setTexture(texture);
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
 					window.draw(gCard);
