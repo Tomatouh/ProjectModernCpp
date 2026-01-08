@@ -842,7 +842,6 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 							else { iteration++; }
 							break;
 						}
-						if (iteration == 4) step++;
 
 
 						window.clear(sf::Color::White);
