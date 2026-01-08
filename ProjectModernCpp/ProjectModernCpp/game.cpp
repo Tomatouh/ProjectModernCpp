@@ -724,8 +724,7 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 void Game::selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	bool anySelected = findSelectedCard(mousePos, window);
-
-	window.clear(sf::Color::White);
+	window.draw(m_backgroundSprite);
 	redrawCurrentAgeCards(window);
 	drawPlayerCards(window);
 	window.display();
@@ -844,7 +843,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 						}
 
 
-						window.clear(sf::Color::White);
+						window.draw(m_backgroundSprite);
 						drawWondersSelection(window);
 						window.display();
 
@@ -861,7 +860,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 				iteration = 1;
 				if (step == 2)
 				{
-					window.clear(sf::Color::White);
+					window.draw(m_backgroundSprite);
 					drawWondersSelection(window);
 					window.display();
 				}
@@ -909,7 +908,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 		}
 
 		if (!alreadyDrawn && m_gamestate == ONGOING) {
-			window.clear(sf::Color::White);
+			window.draw(m_backgroundSprite);
 			drawCurrentAgeCards(window);
 			drawPlayerCards(window);
 			drawCurrentPlayerBox(window);
@@ -944,7 +943,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 			window.close();
 		if (event->is<sf::Event::Resized>()) {
 			window.setView(window.getDefaultView());
-			window.clear(sf::Color::White);
+			window.draw(m_backgroundSprite);
 			m_wonderRects.clear();
 			if (m_gamestate == GAMESTART)
 				drawWondersSelection(window);
@@ -964,6 +963,8 @@ void Game::PollEvents(sf::RenderWindow& window)
 	}
 }
 
+
+
 void Game::run()
 {
 	//loadGame();
@@ -981,7 +982,7 @@ void Game::run()
 
 	while (window.isOpen())
 	{
-		window.clear(sf::Color::White);
+		window.draw(m_backgroundSprite);
 		drawWondersSelection(window);
 		window.display();
 		PollEvents(window);
@@ -1123,3 +1124,17 @@ void Game::drawAll(sf::RenderWindow& window, Args... args)
 }
 
 std::uint8_t Game::m_constructedWonders = 0;
+
+sf::Texture Game::m_background = []() {
+	sf::Texture texture;
+	texture.loadFromFile("..\\..\\Images\\Board\\background_playmat.jpg");
+	return texture;
+	}();
+
+sf::Sprite Game::m_backgroundSprite = []() {
+	sf::Sprite sprite(Game::m_background);
+	int dimX = Game::m_background.getSize().x;
+	int dimY = Game::m_background.getSize().y;
+	sprite.setScale({ (float)(1500.0 / dimX),(float)(900.0 / dimY) });
+	return sprite;
+	}();
