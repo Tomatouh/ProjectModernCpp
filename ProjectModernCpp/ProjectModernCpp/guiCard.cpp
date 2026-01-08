@@ -64,7 +64,9 @@ bool guiCard::getHighlighted() const
 }
 void guiCard::setTexture(const sf::Texture& texture)
 {
-	box.setTexture(&texture);
+	m_texture = std::make_shared<sf::Texture>(texture);
+	if(m_texture)
+		box.setTexture(m_texture.get());
 }
 const sf::Font guiCard::font = []() {
 	sf::Font font("C:\\Windows\\Fonts\\cour.ttf");

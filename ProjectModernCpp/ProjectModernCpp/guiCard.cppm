@@ -10,6 +10,7 @@ private:
 	sf::RectangleShape box;
 	sf::Text text;
 	bool isHighlighted{ false };
+	std::shared_ptr<sf::Texture> m_texture;
 public:
 	
 	guiCard(std::shared_ptr<Card> fromCard);

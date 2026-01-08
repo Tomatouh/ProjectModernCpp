@@ -28,6 +28,7 @@ private:
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
 	std::shared_ptr<std::unordered_map<std::uint16_t, std::shared_ptr<Building>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
+	std::vector<guiCard> m_guiCardDisplay;
 
 	Building::Age m_currentAge;
 	std::vector< std::unique_ptr<Player::ProgressToken>> m_progressTokensDeck;

@@ -18,6 +18,8 @@ std::shared_ptr<Building> displayCard::getBuilding() const
 }
 guiCard displayCard::getGuiCard() const
 {
+	/*sf::Texture texture;
+	texture.loadFromFile("..\\..\\Images\\" + std::to_string(m_building->getId()) + ".jpg");*/
 	guiCard g(std::static_pointer_cast<Card>(m_building));
 	g.setPosition(m_position);
 	g.setHighlighted(m_isSelected);

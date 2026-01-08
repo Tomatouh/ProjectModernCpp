@@ -605,6 +605,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					sf::Texture texture;
 					texture.loadFromFile("..\\..\\Images\\" + std::to_string(card.value().getBuilding()->getId()) + ".jpg");
 					gCard.setTexture(texture);
+					m_guiCardDisplay.push_back(gCard);
 					window.draw(gCard);
 				}
 				else
@@ -638,6 +639,8 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					gCard.setTexture(texture);
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
+					m_guiCardDisplay.push_back(gCard);
+
 					window.draw(gCard);
 				}
 			}
@@ -656,34 +659,65 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 
 void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 {
-	for (auto& row : m_cardDisplay)
-		for (auto& card : row)
-		{
-			if (card.has_value())
-			{
-				if (card.value().isFaceUp())
-				{
-					guiCard gCard = card.value().getGuiCard();
-					gCard.setPosition(card.value().getPosition());
-					gCard.setHighlighted(card.value().isSelected());
-					window.draw(gCard);
-				}
-				else
-				{
-					guiCard gCard = card.value().getGuiCard();
-					gCard.setText("[Hidden card]");
-					gCard.setPosition(card.value().getPosition());
-					gCard.setHighlighted(card.value().isSelected());
-					window.draw(gCard);
-				}
-			}
-			else
-			{
-				guiCard gCard;
-				gCard.setPosition(card.value().getPosition());
-				window.draw(gCard);
-			}
-		}
+	//for (auto& row : m_cardDisplay)
+	//	for (auto& card : row)
+	//	{
+	//		if (card.has_value())
+	//		{
+	//			if (card.value().isFaceUp())
+	//			{
+	//				guiCard gCard = card.value().getGuiCard();
+	//				gCard.setPosition(card.value().getPosition());
+	//				gCard.setHighlighted(card.value().isSelected());
+	//				sf::Texture texture;
+	//				texture.loadFromFile("..\\..\\Images\\" + std::to_string(card.value().getBuilding()->getId()) + ".jpg");
+	//				gCard.setTexture(texture);
+	//				window.draw(gCard);
+	//			}
+	//			else
+	//			{
+	//				guiCard gCard = card.value().getGuiCard();
+	//				//gCard.setText("[Hidden card]");
+	//				gCard.setPosition(card.value().getPosition());
+	//				gCard.setHighlighted(card.value().isSelected());
+	//				std::string currentAgeNumber;
+	//				switch (m_currentAge)
+	//				{
+	//				case Building::Age::AGEI:
+	//				{
+	//					currentAgeNumber = "I";
+	//					break;
+	//				}
+	//				case Building::Age::AGEII:
+	//				{
+	//					currentAgeNumber = "II";
+	//					break;
+	//				}
+	//				case Building::Age::AGEIII:
+	//				{
+	//					currentAgeNumber = "III";
+	//					break;
+	//				}
+	//				default:
+	//					break;
+	//				}
+	//				sf::Texture texture;
+	//				texture.loadFromFile("..\\..\\Images\\Miscellaneous\\age " + currentAgeNumber + " deck.png");
+	//				gCard.setTexture(texture);
+	//				window.draw(gCard);
+	//			}
+	//		}
+	//		else
+	//		{
+	//			guiCard gCard;
+	//			gCard.setPosition(card.value().getPosition());
+	//			window.draw(gCard);
+	//		}
+	//	}
+	for(auto& gCard : m_guiCardDisplay)
+	{
+		window.draw(gCard);
+	}
 }
 
 void drawCardSet(const std::vector<Building>& Buildings,int& xPos, int& yPos, sf::RenderWindow& window)
@@ -692,9 +726,12 @@ void drawCardSet(const std::vector<Building>& Buildings,int& xPos, int& yPos, sf
 	for (const auto& card : Buildings) {
 
 		auto cardPtr = std::make_shared<Building>(card);
+		sf::Texture cardTexture;
+		cardTexture.loadFromFile("..\\..\\Images\\" + std::to_string(cardPtr->getId()) + ".jpg");
 		guiCard gCard(cardPtr);
 		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxWidth / 2.f), static_cast<float>(BoxSizes::boxHeight / 2.f)));
 		gCard.setPosition({ xPos, yPos });
+		gCard.setTexture(cardTexture);
 		window.draw(gCard);
 		yPos += BoxSizes::boxHeight / 2 + spacing;
 	}
@@ -727,13 +764,14 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 
 	for (const auto& wonderPair : player->getWonders()) {
 		auto wonderPtr = wonderPair.first;
+		sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(wonderPtr->getId()) + ".jpg");
+
 		guiCard gCard(wonderPtr);
 		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxWidth / 2.f), static_cast<float>(BoxSizes::boxHeight / 2.f)));
 		gCard.setPosition({ xPos, wonderYPos });
 		if (wonderPair.second.has_value()) {
 			gCard.setHighlighted(true);
 		}
-		sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(wonderPtr->getId()) + ".jpg");
 		gCard.setTexture(texture);
 		window.draw(gCard);
 		wonderYPos += BoxSizes::boxHeight / 2 + spacing;
@@ -831,10 +869,10 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 
 		if (m_wondersDisplay[i].has_value())
 		{
+			sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(m_wondersDisplay[i].value()->getId()) + ".jpg");
 			guiCard gCard(m_wondersDisplay[i].value());
 			gCard.setPosition(pos);
 			gCard.setSize({ cardW, cardH });
-			sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(m_wondersDisplay[i].value()->getId()) + ".jpg");
 			gCard.setTexture(texture);
 			window.draw(gCard);
 		}
@@ -922,24 +960,31 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 
 bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow& window) {
 	bool found = false;
+	int counter = 0;
 	for (int i = 0; i < m_cardDisplay.size(); i++)
-		for (int j = 0; j < m_cardDisplay[i].size(); j++)
+		for (int j = 0; j < m_cardDisplay[i].size(); j++) {
 			if (m_cardDisplay[i][j].has_value()) {
 				if (m_cardDisplay[i][j].value().isFaceUp() == true && m_cardDisplay[i][j].value().containsPoint(mousePos, window))
 				{
 					if (i == m_cardDisplay.size() - 1 || (m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false))
 					{
 						m_cardDisplay[i][j].value().setSelected(true);
+						m_guiCardDisplay[counter].setHighlighted(true);
 						found = true;
 					}
 					else {
 						m_cardDisplay[i][j].value().setSelected(false);
+						m_guiCardDisplay[counter].setHighlighted(false);
 					}
 				}
 				else {
 					m_cardDisplay[i][j].value().setSelected(false);
+					m_guiCardDisplay[counter].setHighlighted(false);
+
 				}
 			}
+			counter++;
+		}
 	if (found)
 		return true;
 	return false;
