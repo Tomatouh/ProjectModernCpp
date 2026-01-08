@@ -679,7 +679,7 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 	const int cardW = static_cast<int>(BoxSizes::boxWidth / 2);
 	const int margin = 20;
 
-	if (xPos >= winW - cardW - margin /*&&*/) xPos -= 420;
+	//if (xPos >= winW - cardW - margin /*&&*/) xPos -= 420;
 
 	for (const auto& wonderPair : player->getWonders()) {
 		auto wonderPtr = wonderPair.first;
@@ -808,7 +808,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 	if (m_gamestate == GAMESTART) {
 		if (step <= 2) {
 			static int iteration = 1;
-			if (iteration < 4) {
+			if (iteration <= 4) {
 				//PollEvents(window);
 					//sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 					int index = wonderIndexAtPosition(mousePos, window);
@@ -843,6 +843,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 							else { iteration++; }
 							break;
 						}
+						if (iteration == 4) step++;
 
 
 						window.clear(sf::Color::White);
@@ -876,6 +877,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 				}
 			}
 		}
+		
 		if (step > 2)
 		m_gamestate = ONGOING;
 	}
