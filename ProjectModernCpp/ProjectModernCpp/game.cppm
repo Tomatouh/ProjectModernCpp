@@ -58,7 +58,7 @@ private:
 	void selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos);
 	std::pair<int, int> getWonderPosition(int index,const sf::RenderWindow& window);
 	int wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
-	std::vector<guiCard> drawWondersSelection(sf::RenderWindow& window);
+	void drawWondersSelection(sf::RenderWindow& window);
 	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
 public:
 
@@ -92,6 +92,9 @@ public:
 
 	template<typename... Args>
 	void drawAll(sf::RenderWindow& window,Args... args);
+
+	void drawCurrentPlayerBox(sf::RenderWindow& window);
+
 
 	void run();
 	

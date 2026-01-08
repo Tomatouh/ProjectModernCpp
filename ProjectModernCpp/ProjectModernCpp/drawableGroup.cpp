@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 module drawableGroup;
 
-void DrawableGroup::addDrawable(sf::Drawable* drawable)
+void DrawableGroup::addDrawable(std::shared_ptr<sf::Drawable> drawable)
 {
 	m_drawables.push_back(drawable);
 }

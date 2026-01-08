@@ -761,7 +761,7 @@ int Game::wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWi
 	return -1;
 }
 
-std::vector<guiCard> Game::drawWondersSelection(sf::RenderWindow& window)
+void Game::drawWondersSelection(sf::RenderWindow& window)
 {
 	std::vector<guiCard> guiWonders;
 	if (m_wondersDisplay.empty())
@@ -789,17 +789,16 @@ std::vector<guiCard> Game::drawWondersSelection(sf::RenderWindow& window)
 			guiCard gCard(m_wondersDisplay[i].value());
 			gCard.setPosition(pos);
 			gCard.setSize({ cardW, cardH });
-			guiWonders.push_back(gCard);
+			window.draw(gCard);
 		}
 		else {
 			guiCard placeholder;
 			placeholder.setText("[Taken]");
 			placeholder.setPosition(pos);
 			placeholder.setSize({ cardW, cardH });
-			guiWonders.push_back(placeholder);
+			window.draw(placeholder);
 		}
 	}
-	return guiWonders;
 }
 
 void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
@@ -847,11 +846,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 
 
 						window.clear(sf::Color::White);
-						DrawableGroup group;
-						auto wonders = drawWondersSelection(window);
-						for (auto& wonder : wonders)
-							group.addDrawable(&wonder);
-						drawAll(window, group);
+						drawWondersSelection(window);
 						window.display();
 
 						/*while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
@@ -868,11 +863,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 				if (step == 2)
 				{
 					window.clear(sf::Color::White);
-					DrawableGroup group;
-					auto wonders = drawWondersSelection(window);
-					for (auto& wonder : wonders)
-						group.addDrawable(&wonder);
-					drawAll(window, group);
+					drawWondersSelection(window);
 					window.display();
 				}
 			}
@@ -923,10 +914,28 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			window.clear(sf::Color::White);
 			drawCurrentAgeCards(window);
 			drawPlayerCards(window);
+			drawCurrentPlayerBox(window);
 			window.display();
 			alreadyDrawn = true;
 		}
 	}
+}
+
+void Game::drawCurrentPlayerBox(sf::RenderWindow& window)
+{
+	DrawableGroup group;
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text coinsText(font, "Coins: " + std::to_string(m_currentPlayer->getCoins()), 20);
+	sf::Text vpText(font, "Victory Points: " + std::to_string(m_currentPlayer->getVictoryPoints()), 20);
+	coinsText.setPosition({ 50.f, 800.f });
+	vpText.setPosition({50.f, 820.f});
+	coinsText.setFillColor(sf::Color::Black);
+	vpText.setFillColor(sf::Color::Black);
+	window.draw(coinsText);
+	window.draw(vpText);
 }
 
 void Game::PollEvents(sf::RenderWindow& window)
@@ -942,8 +951,11 @@ void Game::PollEvents(sf::RenderWindow& window)
 			if (m_gamestate == GAMESTART)
 				drawWondersSelection(window);
 			if (m_gamestate == ONGOING) {
+
 				redrawCurrentAgeCards(window);
 				drawPlayerCards(window);
+				drawCurrentPlayerBox(window);
+
 			}
 			window.display();
 		}
@@ -972,11 +984,7 @@ void Game::run()
 	while (window.isOpen())
 	{
 		window.clear(sf::Color::White);
-		DrawableGroup group;
-		auto wonders = drawWondersSelection(window);
-		for(auto& wonder: wonders)
-			group.addDrawable(&wonder);
-		drawAll(window,group);
+		drawWondersSelection(window);
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
@@ -1115,4 +1123,5 @@ void Game::drawAll(sf::RenderWindow& window, Args... args)
 	window.clear(sf::Color::White);
 	(window.draw(args),...);
 }
+
 std::uint8_t Game::m_constructedWonders = 0;
