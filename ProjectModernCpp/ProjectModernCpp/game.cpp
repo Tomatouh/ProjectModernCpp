@@ -73,7 +73,7 @@ m_currentAge(Building::Age::AGEI)
 		playerBuildings.insert(playerBuildings.end(),
 			this->m_currentPlayer->getPurpleBuildings().begin(),
 			this->m_currentPlayer->getPurpleBuildings().end());
-		f << "b";
+		f << "b ";
 		for (int i = 0; i < this->m_currentPlayer->getBuildingCount(); i++) {
 			f << playerBuildings[i].getId() << " ";
 		}
@@ -89,9 +89,14 @@ m_currentAge(Building::Age::AGEI)
 		f << "c " << this->m_currentPlayer->getCoins() << "\n";
 		f << "vp " << this->m_currentPlayer->getVictoryPoints() << "\n";
 		f << "s " << this->m_currentPlayer->getShields() << "\n";
+		f << "peon " << this->m_board.getPos() << "\n";
 		f << "p " << this->m_currentPlayer->getWood() << " " << this->m_currentPlayer->getStone() << " "
 			<< this->m_currentPlayer->getClay() << " " << this->m_currentPlayer->getGlass() << " "
 			<< this->m_currentPlayer->getPapyrus() << "\n";
+		f << "progress ";
+		f << "\n";
+		
+		f << "playerOTHER" << "\n";
 	}
 
 void Game::setGamestate(GameState& gamestate)
