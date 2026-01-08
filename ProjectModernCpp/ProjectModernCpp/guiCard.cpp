@@ -4,7 +4,7 @@ module guiCard;
 
 
 
-guiCard::guiCard(std::shared_ptr<Card> fromCard):text(font, fromCard->getName(),BoxSizes::fontSize)
+guiCard::guiCard(std::shared_ptr<Card> fromCard) :text(font, "", BoxSizes::fontSize)
 {
 	box.setSize(sf::Vector2f(BoxSizes::boxWidth, BoxSizes::boxHeight));
 	box.setFillColor(sf::Color::White);
@@ -61,6 +61,10 @@ void guiCard::setHighlighted(bool highlight)
 bool guiCard::getHighlighted() const
 {
 	return isHighlighted;
+}
+void guiCard::setTexture(const sf::Texture& texture)
+{
+	box.setTexture(&texture);
 }
 const sf::Font guiCard::font = []() {
 	sf::Font font("C:\\Windows\\Fonts\\cour.ttf");

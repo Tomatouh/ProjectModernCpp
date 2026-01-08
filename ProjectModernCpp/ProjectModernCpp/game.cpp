@@ -597,6 +597,9 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					guiCard gCard = card.value().getGuiCard();
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
+					sf::Texture texture;
+					texture.loadFromFile("..\\..\\Images\\" + std::to_string(card.value().getBuilding()->getId()) + ".jpg");
+					gCard.setTexture(texture);
 					window.draw(gCard);
 				}
 				else
@@ -604,7 +607,30 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					auto pos = getNextCardPosition(m_currentAge);
 
 					guiCard gCard = card.value().getGuiCard();
-					gCard.setText("[Hidden card]");
+					std::string currentAgeNumber;
+					switch (m_currentAge)
+					{
+					case Building::Age::AGEI:
+					{
+						currentAgeNumber = "I";
+						break;
+					}
+					case Building::Age::AGEII:
+					{
+						currentAgeNumber = "II";
+						break;
+					}
+					case Building::Age::AGEIII:
+					{
+						currentAgeNumber = "III";
+						break;
+					}
+					default:
+						break;
+					}
+					sf::Texture texture;
+					texture.loadFromFile("..\\..\\Images\\Miscellaneous\\age " + currentAgeNumber + " deck.png");
+					gCard.setTexture(texture);
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
 					window.draw(gCard);
@@ -692,7 +718,7 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 	const int cardW = static_cast<int>(BoxSizes::boxWidth / 2);
 	const int margin = 20;
 
-	if (xPos >= winW - cardW - margin /*&&*/) xPos -= 420;
+	//if (xPos >= winW - cardW - margin /*&&*/) xPos -= 420;
 
 	for (const auto& wonderPair : player->getWonders()) {
 		auto wonderPtr = wonderPair.first;
@@ -737,8 +763,7 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 void Game::selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	bool anySelected = findSelectedCard(mousePos, window);
-
-	window.clear(sf::Color::White);
+	window.draw(m_backgroundSprite);
 	redrawCurrentAgeCards(window);
 	drawPlayerCards(window);
 	window.display();
@@ -774,7 +799,7 @@ int Game::wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWi
 	return -1;
 }
 
-std::vector<guiCard> Game::drawWondersSelection(sf::RenderWindow& window)
+void Game::drawWondersSelection(sf::RenderWindow& window)
 {
 	std::vector<guiCard> guiWonders;
 	if (m_wondersDisplay.empty())
@@ -802,17 +827,16 @@ std::vector<guiCard> Game::drawWondersSelection(sf::RenderWindow& window)
 			guiCard gCard(m_wondersDisplay[i].value());
 			gCard.setPosition(pos);
 			gCard.setSize({ cardW, cardH });
-			guiWonders.push_back(gCard);
+			window.draw(gCard);
 		}
 		else {
 			guiCard placeholder;
 			placeholder.setText("[Taken]");
 			placeholder.setPosition(pos);
 			placeholder.setSize({ cardW, cardH });
-			guiWonders.push_back(placeholder);
+			window.draw(placeholder);
 		}
 	}
-	return guiWonders;
 }
 
 void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
@@ -821,7 +845,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 	if (m_gamestate == GAMESTART) {
 		if (step <= 2) {
 			static int iteration = 1;
-			if (iteration < 4) {
+			if (iteration <= 4) {
 				//PollEvents(window);
 					//sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 					int index = wonderIndexAtPosition(mousePos, window);
@@ -858,12 +882,8 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 						}
 
 
-						window.clear(sf::Color::White);
-						DrawableGroup group;
-						auto wonders = drawWondersSelection(window);
-						for (auto& wonder : wonders)
-							group.addDrawable(&wonder);
-						drawAll(window, group);
+						window.draw(m_backgroundSprite);
+						drawWondersSelection(window);
 						window.display();
 
 						/*while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
@@ -879,16 +899,13 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 				iteration = 1;
 				if (step == 2)
 				{
-					window.clear(sf::Color::White);
-					DrawableGroup group;
-					auto wonders = drawWondersSelection(window);
-					for (auto& wonder : wonders)
-						group.addDrawable(&wonder);
-					drawAll(window, group);
+					window.draw(m_backgroundSprite);
+					drawWondersSelection(window);
 					window.display();
 				}
 			}
 		}
+		
 		if (step > 2)
 		m_gamestate = ONGOING;
 	}
@@ -931,13 +948,31 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 		}
 
 		if (!alreadyDrawn && m_gamestate == ONGOING) {
-			window.clear(sf::Color::White);
+			window.draw(m_backgroundSprite);
 			drawCurrentAgeCards(window);
 			drawPlayerCards(window);
+			drawCurrentPlayerBox(window);
 			window.display();
 			alreadyDrawn = true;
 		}
 	}
+}
+
+void Game::drawCurrentPlayerBox(sf::RenderWindow& window)
+{
+	DrawableGroup group;
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text coinsText(font, "Coins: " + std::to_string(m_currentPlayer->getCoins()), 20);
+	sf::Text vpText(font, "Victory Points: " + std::to_string(m_currentPlayer->getVictoryPoints()), 20);
+	coinsText.setPosition({ 50.f, 800.f });
+	vpText.setPosition({50.f, 820.f});
+	coinsText.setFillColor(sf::Color::Black);
+	vpText.setFillColor(sf::Color::Black);
+	window.draw(coinsText);
+	window.draw(vpText);
 }
 
 void Game::PollEvents(sf::RenderWindow& window)
@@ -948,13 +983,16 @@ void Game::PollEvents(sf::RenderWindow& window)
 			window.close();
 		if (event->is<sf::Event::Resized>()) {
 			window.setView(window.getDefaultView());
-			window.clear(sf::Color::White);
+			window.draw(m_backgroundSprite);
 			m_wonderRects.clear();
 			if (m_gamestate == GAMESTART)
 				drawWondersSelection(window);
 			if (m_gamestate == ONGOING) {
+
 				redrawCurrentAgeCards(window);
 				drawPlayerCards(window);
+				drawCurrentPlayerBox(window);
+
 			}
 			window.display();
 		}
@@ -964,6 +1002,8 @@ void Game::PollEvents(sf::RenderWindow& window)
 		}
 	}
 }
+
+
 
 void Game::run()
 {
@@ -982,12 +1022,8 @@ void Game::run()
 
 	while (window.isOpen())
 	{
-		window.clear(sf::Color::White);
-		DrawableGroup group;
-		auto wonders = drawWondersSelection(window);
-		for(auto& wonder: wonders)
-			group.addDrawable(&wonder);
-		drawAll(window,group);
+		window.draw(m_backgroundSprite);
+		drawWondersSelection(window);
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
@@ -1126,4 +1162,19 @@ void Game::drawAll(sf::RenderWindow& window, Args... args)
 	window.clear(sf::Color::White);
 	(window.draw(args),...);
 }
+
 std::uint8_t Game::m_constructedWonders = 0;
+
+sf::Texture Game::m_background = []() {
+	sf::Texture texture;
+	texture.loadFromFile("..\\..\\Images\\Board\\background_playmat.jpg");
+	return texture;
+	}();
+
+sf::Sprite Game::m_backgroundSprite = []() {
+	sf::Sprite sprite(Game::m_background);
+	int dimX = Game::m_background.getSize().x;
+	int dimY = Game::m_background.getSize().y;
+	sprite.setScale({ (float)(1500.0 / dimX),(float)(900.0 / dimY) });
+	return sprite;
+	}();

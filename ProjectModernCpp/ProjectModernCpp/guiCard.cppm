@@ -20,6 +20,8 @@ public:
 	
 	void setSize(const sf::Vector2f& newSize);
 
+	void setTexture(const sf::Texture& texture);
+
 	void setHighlighted(bool highlight);
 	bool getHighlighted() const;
 

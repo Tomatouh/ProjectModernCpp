@@ -15,6 +15,8 @@ export class Game {
 private:
 	const static std::uint16_t k_boardSize = 20;
 	const static std::uint16_t k_tokensNumber = 5;
+	static sf::Texture m_background;
+	static sf::Sprite m_backgroundSprite;
 	static std::uint8_t m_constructedWonders;
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
@@ -58,8 +60,9 @@ private:
 	void selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos);
 	std::pair<int, int> getWonderPosition(int index,const sf::RenderWindow& window);
 	int wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
-	std::vector<guiCard> drawWondersSelection(sf::RenderWindow& window);
+	void drawWondersSelection(sf::RenderWindow& window);
 	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
+
 public:
 
 	Game();
@@ -92,6 +95,9 @@ public:
 
 	template<typename... Args>
 	void drawAll(sf::RenderWindow& window,Args... args);
+
+	void drawCurrentPlayerBox(sf::RenderWindow& window);
+
 
 	void run();
 	
