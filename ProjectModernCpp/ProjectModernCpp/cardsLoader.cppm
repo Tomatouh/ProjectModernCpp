@@ -707,7 +707,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIDec
     {
         std::vector<Card::Effect> effects = { Card::Effect::addVictoryPoints };
         Card::Cost cost{ 53, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::CLAY }, 0 };
-        std::string name = "Satue";
+        std::string name = "Statue";
         uint8_t id = 57;
         uint8_t vp = 4;
         uint8_t shields = 0;
@@ -835,7 +835,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
     {
         std::vector<Card::Effect> effects = { Card::Effect::addShields };
         Card::Cost cost{ 0, std::vector<ResourceType>{}, 8 };
-        std::string name = "Siege Workshop";
+        std::string name = "Pretorium";
         uint8_t id = 27;
         uint8_t vp = 0;
         uint8_t shields = 3;
