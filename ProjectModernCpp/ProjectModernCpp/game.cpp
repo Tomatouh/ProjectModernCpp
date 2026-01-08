@@ -728,6 +728,8 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 		if (wonderPair.second.has_value()) {
 			gCard.setHighlighted(true);
 		}
+		sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(wonderPtr->getId()) + ".jpg");
+		gCard.setTexture(texture);
 		window.draw(gCard);
 		wonderYPos += BoxSizes::boxHeight / 2 + spacing;
 	}
@@ -827,6 +829,8 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 			guiCard gCard(m_wondersDisplay[i].value());
 			gCard.setPosition(pos);
 			gCard.setSize({ cardW, cardH });
+			sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(m_wondersDisplay[i].value()->getId()) + ".jpg");
+			gCard.setTexture(texture);
 			window.draw(gCard);
 		}
 		else {
