@@ -12,19 +12,19 @@ import <vector>;
 * TODO: fix the trade function for compatibility with everything
 		save/load function: 
 				-behaviour:if there is a file named "save.txt", begin save load, if not, begin game as normal
-				-individual card vectors from player, 
+				-individual card vectors from player, -DONE
 				-whose turn is it, 
 				-current game state-presume ONGOING, make sure it checks it's ongoing before saving.
-				-victory points for each player, each player's data is saved separately, player 1 first, 
-				-peon position, whether or not certain zones were triggered
+				-victory points for each player, each player's data is saved separately, player 1 first, -DONE
+				-peon position, whether or not certain zones were triggered -not DONE but close 
 				-progress tokens still available to get
 				-each player's progress tokens, each player's scientific symbols
 				-discarded progress tokens
-				-money each player has
-				-production for each player
-				-discard pile vector
+				-money each player has-DONE
+				-production for each player-DONE
+				-discard pile map-DONE
 				-current card layout+randomize the decks for the future ages
-				-age
+				-age-DONE
 				-wonder progress, whether or not it is built, which card back is showing behind it
 				folosim regex pentru a valida save file-ul;
 * ID's : brown cards 1-9(1-3 wood, 4-6 clay, 7-9 stone)

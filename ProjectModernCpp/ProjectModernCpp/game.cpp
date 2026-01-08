@@ -78,7 +78,20 @@ m_currentAge(Building::Age::AGEI)
 			f << playerBuildings[i].getId() << " ";
 		}
 		f << "\n";
-
+		f << "discard ";
+		for (int i = 0; i < this->m_discardedCards->size(); i++){
+			auto it = this->m_discardedCards->begin();
+			std::advance(it, i);
+			f << it->first << " ";
+		}
+		f << "\n";
+		f << "age " << static_cast<int>(this->m_currentAge) << "\n";
+		f << "c " << this->m_currentPlayer->getCoins() << "\n";
+		f << "vp " << this->m_currentPlayer->getVictoryPoints() << "\n";
+		f << "s " << this->m_currentPlayer->getShields() << "\n";
+		f << "p " << this->m_currentPlayer->getWood() << " " << this->m_currentPlayer->getStone() << " "
+			<< this->m_currentPlayer->getClay() << " " << this->m_currentPlayer->getGlass() << " "
+			<< this->m_currentPlayer->getPapyrus() << "\n";
 	}
 
 void Game::setGamestate(GameState& gamestate)
