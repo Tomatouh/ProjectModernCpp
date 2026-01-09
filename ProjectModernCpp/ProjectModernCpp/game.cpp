@@ -659,61 +659,6 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 
 void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 {
-	//for (auto& row : m_cardDisplay)
-	//	for (auto& card : row)
-	//	{
-	//		if (card.has_value())
-	//		{
-	//			if (card.value().isFaceUp())
-	//			{
-	//				guiCard gCard = card.value().getGuiCard();
-	//				gCard.setPosition(card.value().getPosition());
-	//				gCard.setHighlighted(card.value().isSelected());
-	//				sf::Texture texture;
-	//				texture.loadFromFile("..\\..\\Images\\" + std::to_string(card.value().getBuilding()->getId()) + ".jpg");
-	//				gCard.setTexture(texture);
-	//				window.draw(gCard);
-	//			}
-	//			else
-	//			{
-	//				guiCard gCard = card.value().getGuiCard();
-	//				//gCard.setText("[Hidden card]");
-	//				gCard.setPosition(card.value().getPosition());
-	//				gCard.setHighlighted(card.value().isSelected());
-	//				std::string currentAgeNumber;
-	//				switch (m_currentAge)
-	//				{
-	//				case Building::Age::AGEI:
-	//				{
-	//					currentAgeNumber = "I";
-	//					break;
-	//				}
-	//				case Building::Age::AGEII:
-	//				{
-	//					currentAgeNumber = "II";
-	//					break;
-	//				}
-	//				case Building::Age::AGEIII:
-	//				{
-	//					currentAgeNumber = "III";
-	//					break;
-	//				}
-	//				default:
-	//					break;
-	//				}
-	//				sf::Texture texture;
-	//				texture.loadFromFile("..\\..\\Images\\Miscellaneous\\age " + currentAgeNumber + " deck.png");
-	//				gCard.setTexture(texture);
-	//				window.draw(gCard);
-	//			}
-	//		}
-	//		else
-	//		{
-	//			guiCard gCard;
-	//			gCard.setPosition(card.value().getPosition());
-	//			window.draw(gCard);
-	//		}
-	//	}
 	for(auto& gCard : m_guiCardDisplay)
 	{
 		window.draw(gCard);
@@ -753,11 +698,11 @@ int drawPlayerColumn(const std::shared_ptr<Player>& player, int xPos, sf::Render
 
 void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int startYPos, sf::RenderWindow& window)
 {
-	int spacing = 5;
+	float spacing = 23.0f;
 	int wonderYPos = startYPos;
 
 	const int winW = static_cast<int>(window.getSize().x);
-	const int cardW = static_cast<int>(BoxSizes::boxWidth / 2);
+	const int cardW = static_cast<int>(BoxSizes::boxHeight);
 	const int margin = 20;
 
 	//if (xPos >= winW - cardW - margin /*&&*/) xPos -= 420;
@@ -767,14 +712,14 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 		sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(wonderPtr->getId()) + ".jpg");
 
 		guiCard gCard(wonderPtr);
-		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxWidth / 2.f), static_cast<float>(BoxSizes::boxHeight / 2.f)));
+		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxHeight), static_cast<float>(BoxSizes::boxWidth)));
 		gCard.setPosition({ xPos, wonderYPos });
 		if (wonderPair.second.has_value()) {
 			gCard.setHighlighted(true);
 		}
 		gCard.setTexture(texture);
 		window.draw(gCard);
-		wonderYPos += BoxSizes::boxHeight / 2 + spacing;
+		wonderYPos += BoxSizes::boxWidth + spacing;
 	}
 }
 
@@ -783,8 +728,8 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 	constexpr int spacing = 5;
 	const auto winSize = window.getSize();
 	const int winWidth = static_cast<int>(winSize.x);
-	const int leftX = 20;
-	const int rightX = std::max(20, winWidth - static_cast<int>(BoxSizes::boxWidth / 2) - 20);
+	const int leftX = 10;
+	int rightX = std::max(20, winWidth - static_cast<int>(BoxSizes::boxWidth / 2) - 20);
 	const int startY = 20;
 
 	
@@ -797,11 +742,14 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 		leftPlayer = m_otherPlayer;
 		rightPlayer = m_currentPlayer;
 	}
-	int leftBottomY = drawPlayerColumn(leftPlayer, leftX, window);
-	int rightBottomY = drawPlayerColumn(rightPlayer, rightX, window);
+	/*int leftBottomY = drawPlayerColumn(leftPlayer, leftX, window);
+	int rightBottomY = drawPlayerColumn(rightPlayer, rightX, window);*/
+	int bottomY = 485.0f;
+	rightX = winWidth - static_cast<int>(BoxSizes::boxHeight) - 10;
 
-	drawPlayerWonders(leftPlayer, leftX, leftBottomY, window);
-	drawPlayerWonders(rightPlayer, rightX, rightBottomY, window);
+
+	drawPlayerWonders(leftPlayer, leftX, bottomY, window);
+	drawPlayerWonders(rightPlayer, rightX, bottomY, window);
 
 }
 
@@ -817,8 +765,8 @@ void Game::selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 std::pair<int, int> Game::getWonderPosition(int index, const sf::RenderWindow& window)
 {
 	int total = static_cast<int>(m_wondersDisplay.size());
-	const int cardW = BoxSizes::boxWidth * 2;
-	const int cardH = BoxSizes::boxHeight * 2;
+	const int cardW = BoxSizes::boxHeight * 2;
+	const int cardH = BoxSizes::boxWidth * 2;
 	const int padding = 20;
 	const int winW = static_cast<int>(window.getSize().x);
 	int totalWidth = total * cardW + (total - 1) * padding;
@@ -834,8 +782,8 @@ int Game::wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWi
 
 	int total = static_cast<int>(m_wondersDisplay.size());
 	if (total == 0) return -1;
-	const int cardW = BoxSizes::boxWidth * 2;
-	const int cardH = BoxSizes::boxHeight * 2;
+	const int cardW = BoxSizes::boxHeight * 2;
+	const int cardH = BoxSizes::boxWidth * 2;
 	for (int i = 0; i < total; ++i) {
 		auto pos = getWonderPosition(i, window);
 		sf::FloatRect rect(sf::Vector2f(pos.first, pos.second), sf::Vector2f(cardW, cardH));
@@ -861,8 +809,8 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 	}
 
 	int total = static_cast<int>(m_wondersDisplay.size());
-	const float cardW = BoxSizes::boxWidth * 2;
-	const float cardH = BoxSizes::boxHeight * 2;
+	const float cardW = BoxSizes::boxHeight * 2;
+	const float cardH = BoxSizes::boxWidth * 2;
 	for (int i = 0; i < total; ++i)
 	{
 		auto pos = getWonderPosition(i, window);
