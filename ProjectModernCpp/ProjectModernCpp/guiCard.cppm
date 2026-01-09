@@ -29,7 +29,7 @@ public:
 };
 export class BoxSizes {
 public:
-	static constexpr float boxWidth = 110.0f;
-	static constexpr float boxHeight = 120.0f;
+	static constexpr float boxWidth = 80.0f;
+	static constexpr float boxHeight = 125.0f;
 	static constexpr int fontSize = 15;
 };
