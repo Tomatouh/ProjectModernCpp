@@ -90,12 +90,62 @@ m_currentAge(Building::Age::AGEI)
 		f << "vp " << this->m_currentPlayer->getVictoryPoints() << "\n";
 		f << "s " << this->m_currentPlayer->getShields() << "\n";
 		f << "peon " << this->m_board.getPos() << "\n";
+		std::vector<bool>ZT = this->m_board.getZoneTriggers();
+		f << "zTriggers ";
+		for (int i = 0; i < ZT.size(); i++)
+		{
+			f << ZT[i] << " ";
+		}
+		f << "\n";
 		f << "p " << this->m_currentPlayer->getWood() << " " << this->m_currentPlayer->getStone() << " "
 			<< this->m_currentPlayer->getClay() << " " << this->m_currentPlayer->getGlass() << " "
 			<< this->m_currentPlayer->getPapyrus() << "\n";
-		f << "progress ";
+		f << "science ";
+		std::vector<uint16_t> sciPoints= this->m_currentPlayer->getScientificPoints();
+		for (int i = 0; i < sciPoints.size();i++)
+		{
+			f << sciPoints[i] << " ";
+		}
 		f << "\n";
-		
+		f << "progress ";
+		f << this->m_currentPlayer->hasAgricultureProgressToken() << " "
+			<< this->m_currentPlayer->hasArchitectureProgressToken() << " "
+			<< this->m_currentPlayer->hasEconomyProgressToken() << " "
+			<< this->m_currentPlayer->hasLawProgressToken() << " "
+			<< this->m_currentPlayer->hasMasonryProgressToken() << " "
+			<< this->m_currentPlayer->hasMathematicsProgressToken() << " "
+			<< this->m_currentPlayer->hasPhilosophyProgressToken() << " "
+			<< this->m_currentPlayer->hasStrategyProgressToken() << " "
+			<< this->m_currentPlayer->hasTheologyProgressToken() << " "
+			<< this->m_currentPlayer->hasUrbanismProgressToken() << "\n";
+		f << "\n";
+		f << "progressA ";
+		//std::vector< std::unique_ptr<Player::ProgressToken>>
+		for(int i = 0; i < this->m_progressTokensDeck.size(); i++)
+		{
+			f << this->m_progressTokensDeck[i].get()->getId()<<" ";
+		}
+		f << "\n";
+		f << "wonder ";
+		for(int i = 0; i < this->m_currentPlayer->getWonders().size(); i++)
+		{
+			f << this->m_currentPlayer->getWonders()[i].first->getId() << " ";
+			if (this->m_currentPlayer->getWonders()[i].second.has_value())
+				switch (this->m_currentPlayer->getWonders()[i].second.value()->getAge())
+				{case Building::Age::AGEI:
+					f << "1" << " ";
+					break;
+				case Building::Age::AGEII:
+					f << "2" << " ";
+					break;
+				case Building::Age::AGEIII:
+					f << "3" << " ";
+					break;
+				}
+			else
+				f << "0" << " ";
+		}
+		//INSERT CARD LAYOUT SAVE HERE, USE "gui" AS IDENTIFIER
 		f << "playerOTHER" << "\n";
 	}
 
@@ -340,16 +390,23 @@ void Game::initProgressTokens()
 
 std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 {
-	if (m_currentAge == Building::Age::AGEI)
+	if (m_ageIDeck[searchId]) 
 		return m_ageIDeck[searchId];
 
-	if (m_currentAge == Building::Age::AGEII)
+	if (m_ageIIDeck[searchId])
 		return m_ageIIDeck[searchId];
 
-	if (m_currentAge == Building::Age::AGEIII)
+	if (m_ageIIIDeck[searchId])
 		return m_ageIIIDeck[searchId];
 }
-
+std::shared_ptr<Card> Game::getWonderById(std::uint8_t searchId)
+{
+	auto it = std::find_if(m_wondersDeck.begin(), m_wondersDeck.end(),
+		[searchId](const std::shared_ptr<Card>& card) {
+			return card && card->getId() == searchId;
+		});
+	return it != m_wondersDeck.end() ? *it : nullptr;
+}
 bool CheckPlayerResources(const std::shared_ptr<Player>& player, const std::shared_ptr<Building>& building)
 {
 	uint16_t auxWood = 0;

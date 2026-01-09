@@ -19,15 +19,15 @@ import <vector>;
 				-age-DONE
 				-victory points for each player, each player's data is saved separately, player 1 first, -DONE
 				-peon position,-DONE
-				-whether or not certain zones were triggered
+				-whether or not certain zones were triggered-DONE
 				-whose turn is it,-DONE
-				-current game state-presume ONGOING, make sure it checks it's ongoing before saving.
 				-progress tokens still available to get
-				-each player's progress tokens, 
-				-each player's scientific symbols
-				-discarded progress tokens
+				-each player's progress tokens, -DONE
+				-each player's scientific symbols -DONE
+				-current game state-presume ONGOING, make sure it checks it's ongoing before saving.
+				-discarded progress tokens, to be done at LOAD time
 				-current card layout+randomize the decks for the future ages
-				-wonder progress, whether or not it is built, which card back is showing behind it
+				-wonder progress, whether or not it is built, which card back is showing behind it-DONE
 				folosim regex pentru a valida save file-ul;
 * ID's : brown cards 1-9(1-3 wood, 4-6 clay, 7-9 stone)
 *		 gray cards 10-13(10-11 glass, 12-13 papyrus)

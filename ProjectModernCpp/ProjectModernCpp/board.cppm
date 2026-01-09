@@ -1,6 +1,6 @@
 export module board;
 import <cstdint>;
-
+import <vector>;
 export class Board {
 private:
     int const static k_startPos = 0;
@@ -17,7 +17,8 @@ private:
     int const static militaryWinP2 = 4;
 	int const static winPosP2 = -9;
 	int const static winPosP1 = 9;
-    int zone{k_zone_start};
+    int zone{ k_zone_start };
+    std::vector<bool> zoneTriggers = {false,false,false,false,false,false};
 public:
     void incrementPos() noexcept { ++pos; }
     void decrementPos() noexcept { --pos; }
@@ -26,8 +27,8 @@ public:
     explicit Board(int initialZone) noexcept : zone{initialZone} {}
 
     void checkZones();
-
     void move (const int& steps) noexcept(false);
     int getZone() const noexcept { return zone; }
+	std::vector<bool> getZoneTriggers() const noexcept { return zoneTriggers; }
     void setZone(int newZone) noexcept { zone = newZone; }
 };

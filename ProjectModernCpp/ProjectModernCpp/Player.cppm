@@ -84,8 +84,12 @@ public:
         static ProgressToken theologyToken;
         static ProgressToken urbanismToken;
         void applyEffect(std::shared_ptr<Player> player);
-        ProgressToken(std::function<void(std::shared_ptr<Player> player)> effect, bool isOneTime);
+        ProgressToken(std::function<void(std::shared_ptr<Player> player)> effect, bool isOneTime, int id);
+        std::uint16_t getId() const noexcept { return m_id; }
     private:
+
+        std::uint16_t m_id;
+
         std::function<void(std::shared_ptr<Player> player)> m_effect;
         bool m_isOneTime;
     };
@@ -210,7 +214,7 @@ private:
     std::vector<Building> m_purpleBuildings;
 
     // Puncte stiintifice
-    std::vector<uint16_t> m_scientificPoints;
+    std::vector<uint16_t> m_scientificPoints = {0, 0, 0, 0, 0, 0};
     uint16_t m_scientificPointTypeNumber = 0;
 
     // Progress token, might delete

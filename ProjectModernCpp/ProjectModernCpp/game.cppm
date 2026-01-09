@@ -46,6 +46,7 @@ private:
 
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
+	std::shared_ptr<Card> getWonderById(std::uint8_t searchId);
 	std::shared_ptr <Building> selectAcceptableCard();
 	std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> selectAcceptableWonder();
 	std::shared_ptr<Card> selectWonder(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchID);
