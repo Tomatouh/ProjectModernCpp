@@ -570,7 +570,7 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		if (currentRowCard == maxRowCards)
 		{
 			x = x - (maxRowCards + centeringOffset) * BoxSizes::boxHeight / 2;
-			y += BoxSizes::boxHeight + 5;
+			y += BoxSizes::boxHeight*0.75 + 5;
 			currentRowCard = 1;
 			maxRowCards++;
 			centeringOffset++;
