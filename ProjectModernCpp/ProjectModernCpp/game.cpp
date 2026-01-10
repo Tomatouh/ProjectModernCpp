@@ -804,6 +804,7 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 		sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(wonderPtr->getId()) + ".jpg");
 
 		guiCard gCard(wonderPtr);
+
 		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxHeight), static_cast<float>(BoxSizes::boxWidth)));
 		gCard.setPosition({ xPos, wonderYPos });
 		if (wonderPair.second.has_value()) {
@@ -889,43 +890,68 @@ int Game::wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWi
 
 void Game::drawWondersSelection(sf::RenderWindow& window)
 {
-	std::vector<guiCard> guiWonders;
-	if (m_wondersDisplay.empty())
-	{
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		for (int i = 0; i < 4; ++i)
-		{
-			std::uniform_int_distribution<> dist(0, m_wondersDeck.size() - 1);
-			std::uint16_t index = dist(gen);
-			m_wondersDisplay.push_back(std::make_optional(m_wondersDeck[index]));
-			m_wondersDeck.erase(m_wondersDeck.begin() + index);
-		}
-	}
-
-	int total = static_cast<int>(m_wondersDisplay.size());
+	const int total = 4;
 	const float cardW = BoxSizes::boxHeight * 2;
 	const float cardH = BoxSizes::boxWidth * 2;
-	for (int i = 0; i < total; ++i)
+	if (m_gamestate == GAMESTART)
 	{
-		auto pos = getWonderPosition(i, window);
-
-		if (m_wondersDisplay[i].has_value())
+		std::vector<guiCard> guiWonders;
+		if (m_wondersDisplay.empty())
 		{
-			sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(m_wondersDisplay[i].value()->getId()) + ".jpg");
-			guiCard gCard(m_wondersDisplay[i].value());
-			gCard.setPosition(pos);
-			gCard.setSize({ cardW, cardH });
-			gCard.setTexture(texture);
-			window.draw(gCard);
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			for (int i = 0; i < 4; ++i)
+			{
+				std::uniform_int_distribution<> dist(0, m_wondersDeck.size() - 1);
+				std::uint16_t index = dist(gen);
+				m_wondersDisplay.push_back(std::make_optional(m_wondersDeck[index]));
+				m_wondersDeck.erase(m_wondersDeck.begin() + index);
+			}
 		}
-		/*else {
-			guiCard placeholder;
-			placeholder.setText("[Taken]");
-			placeholder.setPosition(pos);
-			placeholder.setSize({ cardW, cardH });
-			window.draw(placeholder);
-		}*/
+
+
+		
+		for (int i = 0; i < total; ++i)
+		{
+			auto pos = getWonderPosition(i, window);
+
+			if (m_wondersDisplay[i].has_value())
+			{
+				sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(m_wondersDisplay[i].value()->getId()) + ".jpg");
+				guiCard gCard(m_wondersDisplay[i].value());
+				gCard.setPosition(pos);
+				gCard.setSize({ cardW, cardH });
+				gCard.setTexture(texture);
+				window.draw(gCard);
+			}
+		}
+	}
+	if(m_gamestate == ONGOING)
+	{
+		m_wondersDisplay.clear();
+		for(auto& wonderPair : m_currentPlayer->getWonders())
+		{
+			if (!wonderPair.second.has_value())
+			{
+				m_wondersDisplay.push_back(std::make_optional(wonderPair.first));
+			}
+		}
+
+		for (int i = 0; i < total; ++i)
+		{
+			auto pos = getWonderPosition(i, window);
+
+			if (m_wondersDisplay[i].has_value())
+			{
+				sf::Texture texture("..\\..\\Images\\Wonders\\" + std::to_string(m_wondersDisplay[i].value()->getId()) + ".jpg");
+				guiCard gCard(m_wondersDisplay[i].value());
+				gCard.setPosition(pos);
+				gCard.setSize({ cardW, cardH });
+				gCard.setTexture(texture);
+				window.draw(gCard);
+			}
+		}
+
 	}
 }
 
@@ -1030,10 +1056,13 @@ int Game::getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mo
 
 }
 
-void Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos)
+int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos)
 {
 	int option = getConstructionOption(window, mousePos);
 	std::uint16_t sellProfit = 2 + m_currentPlayer->getYellowBuildings().size();
+
+	std::shared_ptr<Player> leftPlayer = nullptr, rightPlayer = nullptr;
+
 	switch (option)
 	{
 	case 0:
@@ -1058,8 +1087,56 @@ void Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i
 		break;
 	case 2:
 		// construct wonder stage
-		break;
-	default:
+		if (Game::m_constructedWonders == 7)
+		{
+			std::cout << "Nu se mai pot construi minuni";
+			break;
+		}
+		drawWondersSelection(window);
+		window.display();
+		m_waitingForWonderSelection = true;
+		return option;
+		//while (true)
+		//{
+		//	//PollEvents(window);
+		//	int index = wonderIndexAtPosition(sf::Mouse::getPosition(window), window);
+		//	if (index >= 0 && index < static_cast<int>(m_wondersDisplay.size())
+		//		&& m_wondersDisplay[index].has_value()) {
+		//		auto selectedWonder = m_wondersDisplay[index].value();
+		//		m_selectedBuilding = selectAcceptableCard();
+		//		if (m_currentPlayer->canBuildWonder(*(selectedWonder))) {
+		//			m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
+		//			Game::m_constructedWonders++;
+		//			removeCardFromDeck(m_selectedBuilding->getId());
+		//		}
+		//		else {
+		//			/*system("cls");*/
+		//			std::cout << "You cannot build this wonder now. Retry\n";
+		//			continue;
+		//		}
+		//	}
+		//	break;
+		//}
+		/*drawPlayerWonders(leftPlayer, leftX, bottomY, window, true);
+		drawPlayerWonders(rightPlayer, rightX, bottomY, window, true);*/
+		/*std::cout << "Your wonders:\n";
+		for (auto wonder : m_currentPlayer->getWonders())
+			std::cout << "[" << wonder.first->getId() << "] ";
+		std::cout << "\n";
+		auto selectedWonder = selectAcceptableWonder();
+		m_selectedBuilding = selectAcceptableCard();
+		if (m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
+		{
+			m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
+			Game::m_constructedWonders++;
+			removeCardFromDeck(m_selectedBuilding->getId());
+		}
+		else
+		{
+			system("cls");
+			std::cout << "You cannot build this wonder now. Retry\n";
+			continue;
+		}*/
 		break;
 	}
 	m_selectedBuilding = nullptr;
@@ -1068,6 +1145,7 @@ void Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i
 	drawPlayerCards(window);
 	drawCurrentPlayerBox(window);
 	window.display();
+	return option;
 
 }
 
@@ -1119,13 +1197,15 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	static bool alreadyDrawn = false;
 	static bool constructionOptionDrawn = false;
+	int option = -1;
 	if (m_gamestate == GAMESTART)
 		wondersSetup(window, mousePos);
+
 	if (m_gamestate == ONGOING)
 	{
 		if (constructionOptionDrawn)
 		{
-			chooseConstructionOption(window, sf::Mouse::getPosition(window));
+			option = chooseConstructionOption(window, sf::Mouse::getPosition(window));
 			constructionOptionDrawn = false;
 			//alreadyDrawn = false;
 		}

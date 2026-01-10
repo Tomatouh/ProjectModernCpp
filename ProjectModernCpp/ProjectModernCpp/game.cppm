@@ -44,6 +44,7 @@ private:
 		CIVILIAN
 	};
 	GameState m_gamestate = GAMESTART;
+	bool m_waitingForWonderSelection = false;
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
 	std::shared_ptr<Card> getWonderById(std::uint8_t searchId);
@@ -66,7 +67,7 @@ private:
 	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
 	void drawConstructionChoices(sf::RenderWindow& window);
 	int getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
-	void chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
+	int chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void activateCardEffects(std::shared_ptr<Building> building);
 
 public:
