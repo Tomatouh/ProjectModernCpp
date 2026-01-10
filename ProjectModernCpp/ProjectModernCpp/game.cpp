@@ -619,7 +619,42 @@ To do:
 Make it so that wonders actually have an effect
 Implement correct functionality for each age deck
 */
+void drawClickAreaForPlayerDetails(sf::RenderWindow& window)
+{
+	constexpr float boxWidth = 170.f;
+	constexpr float boxHeight = 50.f;
+	const float leftX = 175.f;
+	const float rightX = static_cast<float>(window.getSize().x) - boxWidth - leftX;
+	const float yPos = static_cast<float>(window.getSize().y) - boxHeight - 10.f;
+	sf::RectangleShape leftBox(sf::Vector2f(boxWidth, boxHeight));
+	leftBox.setPosition({ leftX, yPos });
+	leftBox.setFillColor(sf::Color(200, 200, 200, 100));
+	leftBox.setOutlineColor(sf::Color::Black);
+	leftBox.setOutlineThickness(2.f);
+	sf::RectangleShape rightBox(sf::Vector2f(boxWidth, boxHeight));
+	rightBox.setPosition({ rightX, yPos });
+	rightBox.setFillColor(sf::Color(200, 200, 200, 100));
+	rightBox.setOutlineColor(sf::Color::Black);
+	rightBox.setOutlineThickness(2.f);
+	window.draw(leftBox);
+	window.draw(rightBox);
 
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+
+	sf::Text leftText(font,"Player 1 Details", 16);
+	leftText.setFillColor(sf::Color::Blue);
+	leftText.setPosition({ leftX + 5.f, yPos + 10.f });
+	sf::Text rightText(font, "Player 2 Details", 16);
+	rightText.setFillColor(sf::Color::Red);
+	rightText.setPosition({ rightX + 5.f, yPos + 10.f });
+	window.draw(leftText);
+	window.draw(rightText);
+
+
+}
 
 
 
@@ -738,7 +773,9 @@ void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 		{
 			if (card.has_value())
 			{
-				window.draw(m_guiCardDisplay[card.value().getBuilding()->getId()].value());
+				auto gCard = m_guiCardDisplay[card.value().getBuilding()->getId()].value();
+				gCard.setPosition(card.value().getPosition());
+				window.draw(gCard);
 			}
 		}
 }
@@ -1143,7 +1180,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 	window.draw(m_backgroundSprite);
 	redrawCurrentAgeCards(window);
 	drawPlayerCards(window);
-	drawCurrentPlayerBox(window);
+	drawClickAreaForPlayerDetails(window);
 	window.display();
 	return option;
 
@@ -1191,7 +1228,34 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 	return false;
 }
 
+std::uint8_t wasPlayerDetailBoxClicked(const sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	constexpr float boxWidth = 170.f;
+	constexpr float boxHeight = 50.f;
+	const float leftX = 175.f;
+	const float rightX = static_cast<float>(window.getSize().x) - boxWidth - leftX;
+	const float yPos = static_cast<float>(window.getSize().y) - boxHeight - 10.f;
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	sf::FloatRect leftBoxRect(sf::Vector2f(leftX, yPos), sf::Vector2f(boxWidth, boxHeight));
+	sf::FloatRect rightBoxRect(sf::Vector2f(rightX, yPos), sf::Vector2f(boxWidth, boxHeight));
+	if (leftBoxRect.contains(worldPos))
+		return 1; // Left player box clicked
+	else if (rightBoxRect.contains(worldPos))
+		return 2; // Right player box clicked
+	else
+		return 0; // No box clicked
+}
 
+bool wasExitPlayerBoxClicked(const sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	const float boxX = 840.0f;
+	const float boxY = 160.0f;
+	const float boxWidth = 100.f;
+	const float boxHeight = 40.f;
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	sf::FloatRect exitBoxRect(sf::Vector2f(boxX, boxY), sf::Vector2f(boxWidth, boxHeight));
+	return exitBoxRect.contains(worldPos);
+}
 
 void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
@@ -1203,6 +1267,30 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 
 	if (m_gamestate == ONGOING)
 	{
+		if (!m_isInPlayerBox)
+		{
+		if (wasPlayerDetailBoxClicked(window, mousePos))
+		{
+			window.draw(m_backgroundSprite);
+			std::uint8_t boxClicked = wasPlayerDetailBoxClicked(window, mousePos);
+			if (boxClicked == 1)
+			{
+				if (m_currentPlayer->name().compare("player1")==0)
+					drawPlayerBox(window, m_currentPlayer);
+				else
+					drawPlayerBox(window, m_otherPlayer);
+			}
+			else if (boxClicked == 2)
+			{
+				if (m_currentPlayer->name().compare("player2") == 0)
+					drawPlayerBox(window, m_currentPlayer);
+				else
+					drawPlayerBox(window, m_otherPlayer);
+			}
+			window.display();
+			m_isInPlayerBox = true;
+			return;
+		}
 		if (constructionOptionDrawn)
 		{
 			option = chooseConstructionOption(window, sf::Mouse::getPosition(window));
@@ -1217,7 +1305,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				constructionOptionDrawn = true;
 				//chooseConstructionOption(window, sf::Mouse::getPosition(window));
 			}
-			drawCurrentPlayerBox(window);
+			drawClickAreaForPlayerDetails(window);
 			window.display();
 		}
 
@@ -1225,55 +1313,84 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			window.draw(m_backgroundSprite);
 			drawCurrentAgeCards(window);
 			drawPlayerCards(window);
-			drawCurrentPlayerBox(window);
+			drawClickAreaForPlayerDetails(window);
 			window.display();
 			alreadyDrawn = true;
+		}
+		}
+		else
+		{
+			if(wasExitPlayerBoxClicked(window, mousePos))
+			{
+				m_isInPlayerBox = false;
+				window.draw(m_backgroundSprite);
+				redrawCurrentAgeCards(window);
+				drawPlayerCards(window);
+				drawClickAreaForPlayerDetails(window);
+				window.display();
+			}
 		}
 	}
 }
 
-void Game::drawCurrentPlayerBox(sf::RenderWindow& window)
+void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>& selectedPlayer)
 {
-	DrawableGroup group;
 	const sf::Font font = []() {
 		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
 		return font;
 		}();
-	sf::Text leftCoinsText(font, "", 20);
-	sf::Text leftVpText(font, "", 20);
-	sf::Text rightCoinsText(font, "", 20);
-	sf::Text rightVpText(font, "", 20);
-	leftCoinsText.setFillColor(sf::Color::Black);
-	leftVpText.setFillColor(sf::Color::Black);
-	rightCoinsText.setFillColor(sf::Color::Black);
-	rightVpText.setFillColor(sf::Color::Black);
-
-	leftCoinsText.setStyle(sf::Text::Bold);
-	leftVpText.setStyle(sf::Text::Bold);
-	rightCoinsText.setStyle(sf::Text::Bold);
-	rightVpText.setStyle(sf::Text::Bold);
-	if (m_currentPlayer->name() == "player1") {
-		leftCoinsText.setString("Coins: " + std::to_string(m_currentPlayer->getCoins()));
-		leftVpText.setString("Victory Points: " + std::to_string(m_currentPlayer->getVictoryPoints()));
-		rightCoinsText.setString("Coins: " + std::to_string(m_otherPlayer->getCoins()));
-		rightVpText.setString("Victory Points: " + std::to_string(m_otherPlayer->getVictoryPoints()));			
-	}
-	else{
-		rightCoinsText.setString("Coins: " + std::to_string(m_currentPlayer->getCoins()));
-		rightVpText.setString("Victory Points: " + std::to_string(m_currentPlayer->getVictoryPoints()));
-		leftCoinsText.setString("Coins: " + std::to_string(m_otherPlayer->getCoins()));
-		leftVpText.setString("Victory Points: " + std::to_string(m_otherPlayer->getVictoryPoints()));
-	}
-	leftCoinsText.setPosition({ 200.f, 800.f });
-	leftVpText.setPosition({ 200.f, 820.f });
-	rightCoinsText.setPosition({ static_cast<float>(window.getSize().x) - 400.f, 800.f });
-	rightVpText.setPosition({ static_cast<float>(window.getSize().x) - 400.f, 820.f });
+	sf::RectangleShape backgroundBox;
+	backgroundBox.setSize({ 400.f, 600.f });
+	backgroundBox.setFillColor(sf::Color(80, 52, 9));
+	backgroundBox.setOutlineColor(sf::Color::Black);
+	backgroundBox.setOutlineThickness(3.f);
+	backgroundBox.setPosition({ static_cast<float>(window.getSize().x) / 2 - 200.f, static_cast<float>(window.getSize().y) / 2 - 300.f });
 	
-	window.draw(leftCoinsText);
-	window.draw(leftVpText);
-	window.draw(rightCoinsText);
-	window.draw(rightVpText);
+	sf::Text coinsLabel(font, "Coins: " + std::to_string(selectedPlayer->getCoins()), 20);
+	coinsLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 20.f });
+	coinsLabel.setFillColor(sf::Color::Black);
+
+	sf::Text victoryPointsLabel(font, "Victory Points: " + std::to_string(selectedPlayer->getVictoryPoints()), 20);
+	victoryPointsLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 60.f });
+	victoryPointsLabel.setFillColor(sf::Color::Black);
+
+	sf::Text woodLabel(font, "Wood: " + std::to_string(selectedPlayer->getWood()), 20);
+	woodLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 100.f });
+	woodLabel.setFillColor(sf::Color::Black);
+
+	sf::Text stoneLabel(font, "Stone: " + std::to_string(selectedPlayer->getStone()), 20);
+	stoneLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 140.f });
+	stoneLabel.setFillColor(sf::Color::Black);
+
+	sf::Text clayLabel(font, "Clay: " + std::to_string(selectedPlayer->getClay()), 20);
+	clayLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 180.f });
+	clayLabel.setFillColor(sf::Color::Black);
+
+	sf::Text glassLabel(font, "Glass: " + std::to_string(selectedPlayer->getGlass()), 20);
+	glassLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 220.f });
+	glassLabel.setFillColor(sf::Color::Black);
+
+	sf::Text papyrusLabel(font, "Papyrus: " + std::to_string(selectedPlayer->getPapyrus()), 20);
+	papyrusLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 260.f });
+	papyrusLabel.setFillColor(sf::Color::Black);
+
+	sf::RectangleShape exitBox;
+	exitBox.setSize({ 100.f, 40.f });
+	exitBox.setFillColor(sf::Color(200, 0, 0));
+	exitBox.setPosition({ backgroundBox.getPosition().x + backgroundBox.getSize().x - exitBox.getSize().x - 10.f,
+		backgroundBox.getPosition().y + 10.f });
+
+	window.draw(backgroundBox);
+	window.draw(coinsLabel);
+	window.draw(victoryPointsLabel);
+	window.draw(woodLabel);
+	window.draw(stoneLabel);
+	window.draw(clayLabel);
+	window.draw(glassLabel);
+	window.draw(papyrusLabel);
+	window.draw(exitBox);
 }
+
 
 void Game::PollEvents(sf::RenderWindow& window)
 {
@@ -1291,7 +1408,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 
 				redrawCurrentAgeCards(window);
 				drawPlayerCards(window);
-				drawCurrentPlayerBox(window);
+				drawClickAreaForPlayerDetails(window);
 
 			}
 			window.display();
@@ -1480,3 +1597,5 @@ sf::Sprite Game::m_backgroundSprite = []() {
 	sprite.setScale({ (float)(1500.0 / dimX),(float)(900.0 / dimY) });
 	return sprite;
 	}();
+
+bool Game::m_isInPlayerBox = false;

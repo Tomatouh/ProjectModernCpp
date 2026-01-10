@@ -19,6 +19,7 @@ private:
 	static sf::Texture m_background;
 	static sf::Sprite m_backgroundSprite;
 	static std::uint8_t m_constructedWonders;
+	static bool m_isInPlayerBox;
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
@@ -103,7 +104,7 @@ public:
 	template<typename... Args>
 	void drawAll(sf::RenderWindow& window,Args... args);
 
-	void drawCurrentPlayerBox(sf::RenderWindow& window);
+	void drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>& selectedPlayer);
 
 
 	void run();
