@@ -84,6 +84,12 @@
     <ClCompile Include="drawableGroup.cppm">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="choiceBox.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="choiceBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="card.cpp">

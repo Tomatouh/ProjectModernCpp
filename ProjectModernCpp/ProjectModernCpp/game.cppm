@@ -10,6 +10,7 @@ import displayCard;
 import effects;
 import guiCard;
 import drawableGroup;
+import choiceBox;
 
 export class Game {
 private:
@@ -59,11 +60,12 @@ private:
 	void drawCurrentAgeCards(sf::RenderWindow& window);
 	void redrawCurrentAgeCards(sf::RenderWindow& window);
 	void drawPlayerCards(sf::RenderWindow& window);
-	void selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos);
+	bool selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos);
 	std::pair<int, int> getWonderPosition(int index,const sf::RenderWindow& window);
 	int wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
 	void drawWondersSelection(sf::RenderWindow& window);
 	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
+	void drawConstructionChoices(sf::RenderWindow& window);
 
 public:
 

@@ -146,6 +146,21 @@ m_currentAge(Building::Age::AGEI)
 				f << "0" << " ";
 		}
 		//INSERT CARD LAYOUT SAVE HERE, USE "gui" AS IDENTIFIER
+		f << "gui" << "\n";
+		for (auto& row : m_cardDisplay) {
+			for (auto& card : row)
+			{
+				if (card.has_value())
+				{
+					f << card.value().getBuilding()->getId() << " ";
+				}
+				else
+				{
+					f << "missing" << " ";
+				}
+			}
+			f << "\n";
+		}
 		f << "playerOTHER" << "\n";
 	}
 
@@ -594,17 +609,6 @@ Make it so that wonders actually have an effect
 Implement correct functionality for each age deck
 */
 
-//void Game::handleEvents(const sf::Event& event,sf::RenderWindow& window)
-//{
-//	if (event.is<sf::Event::Closed>())
-//		window.close();
-//	if (event.is<sf::Event::Resized>()) {
-//		window.clear(sf::Color::White);
-//		drawCurrentAgeCards(window);
-//		window.display();
-//	}
-//		
-//}
 
 
 
@@ -810,13 +814,14 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 
 }
 
-void Game::selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos)
+bool Game::selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	bool anySelected = findSelectedCard(mousePos, window);
 	window.draw(m_backgroundSprite);
 	redrawCurrentAgeCards(window);
 	drawPlayerCards(window);
-	window.display();
+	//window.display();
+	return anySelected;
 }
 
 std::pair<int, int> Game::getWonderPosition(int index, const sf::RenderWindow& window)
@@ -963,6 +968,15 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 	}
 }
 
+void Game::drawConstructionChoices(sf::RenderWindow& window)
+{
+	
+	ChoiceBox box;
+	box.setPosition({ static_cast<float>(window.getSize().x) / 2 - 250.f, static_cast<float>(window.getSize().y) - 70.f });
+	window.draw(box);
+	box.drawOptions(window);
+}
+
 bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow& window) {
 	bool found = false;
 	int counter = 0;
@@ -995,6 +1009,8 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow
 	return false;
 }
 
+
+
 void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	static bool alreadyDrawn = false;
@@ -1003,7 +1019,12 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 	if (m_gamestate == ONGOING)
 	{
 		if (alreadyDrawn) {
-			selectCardEffect(window, sf::Mouse::getPosition(window));
+			bool selected = selectCardEffect(window, sf::Mouse::getPosition(window));
+			if (selected)
+			{
+				drawConstructionChoices(window);
+			}
+			window.display();
 		}
 
 		if (!alreadyDrawn && m_gamestate == ONGOING) {
@@ -1082,7 +1103,9 @@ void Game::run()
 	while (window.isOpen())
 	{
 		window.draw(m_backgroundSprite);
-		drawWondersSelection(window);
+		if (m_gamestate == GAMESTART) {
+			drawWondersSelection(window);
+		}
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);

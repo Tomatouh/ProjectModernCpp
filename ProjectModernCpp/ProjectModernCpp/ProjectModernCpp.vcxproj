@@ -169,6 +169,8 @@
     <ClCompile Include="card.cpp" />
     <ClCompile Include="card.cppm" />
     <ClCompile Include="cardsLoader.cppm" />
+    <ClCompile Include="choiceBox.cpp" />
+    <ClCompile Include="choiceBox.cppm" />
     <ClCompile Include="displayCard.cpp" />
     <ClCompile Include="displayCard.cppm" />
     <ClCompile Include="drawableGroup.cpp" />
