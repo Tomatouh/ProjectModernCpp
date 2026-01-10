@@ -1131,59 +1131,84 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		}
 		drawWondersSelection(window);
 		window.display();
-		m_waitingForWonderSelection = true;
-		return option;
-		//while (true)
-		//{
-		//	//PollEvents(window);
-		//	int index = wonderIndexAtPosition(sf::Mouse::getPosition(window), window);
-		//	if (index >= 0 && index < static_cast<int>(m_wondersDisplay.size())
-		//		&& m_wondersDisplay[index].has_value()) {
-		//		auto selectedWonder = m_wondersDisplay[index].value();
-		//		m_selectedBuilding = selectAcceptableCard();
-		//		if (m_currentPlayer->canBuildWonder(*(selectedWonder))) {
-		//			m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
-		//			Game::m_constructedWonders++;
-		//			removeCardFromDeck(m_selectedBuilding->getId());
-		//		}
-		//		else {
-		//			/*system("cls");*/
-		//			std::cout << "You cannot build this wonder now. Retry\n";
-		//			continue;
-		//		}
-		//	}
-		//	break;
-		//}
-		/*drawPlayerWonders(leftPlayer, leftX, bottomY, window, true);
-		drawPlayerWonders(rightPlayer, rightX, bottomY, window, true);*/
-		/*std::cout << "Your wonders:\n";
-		for (auto wonder : m_currentPlayer->getWonders())
-			std::cout << "[" << wonder.first->getId() << "] ";
-		std::cout << "\n";
-		auto selectedWonder = selectAcceptableWonder();
-		m_selectedBuilding = selectAcceptableCard();
-		if (m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
+		while (const std::optional event = window.waitEvent())
 		{
-			m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
-			Game::m_constructedWonders++;
-			removeCardFromDeck(m_selectedBuilding->getId());
+			if (event->is<sf::Event::MouseButtonPressed>())
+			{
+				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+				int index = wonderIndexAtPosition(mousePos, window);
+				if (index >= 0 && index < static_cast<int>(m_wondersDisplay.size())
+					&& m_wondersDisplay[index].has_value()) {
+					auto selectedWonder = m_wondersDisplay[index].value();
+					if (m_currentPlayer->canBuildWonder(*(selectedWonder))) {
+						m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
+						Game::m_constructedWonders++;
+						removeCardFromDeck(m_selectedBuilding->getId());
+						break;
+					}
+					else {
+						std::cout << "You cannot build this wonder now. Retry\n";
+						break;
+					}
+				}
+			}
+			if(event->is<sf::Event::Closed>())
+			{
+				window.close();
+				break;
+			}
+			//return option;
+			//while (true)
+			//{
+			//	//PollEvents(window);
+			//	int index = wonderIndexAtPosition(sf::Mouse::getPosition(window), window);
+			//	if (index >= 0 && index < static_cast<int>(m_wondersDisplay.size())
+			//		&& m_wondersDisplay[index].has_value()) {
+			//		auto selectedWonder = m_wondersDisplay[index].value();
+			//		m_selectedBuilding = selectAcceptableCard();
+			//		if (m_currentPlayer->canBuildWonder(*(selectedWonder))) {
+			//			m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
+			//			Game::m_constructedWonders++;
+			//			removeCardFromDeck(m_selectedBuilding->getId());
+			//		}
+			//		else {
+			//			/*system("cls");*/
+			//			std::cout << "You cannot build this wonder now. Retry\n";
+			//			continue;
+			//		}
+			//	}
+			//	break;
+			//}
+			/*drawPlayerWonders(leftPlayer, leftX, bottomY, window, true);
+			drawPlayerWonders(rightPlayer, rightX, bottomY, window, true);*/
+			/*std::cout << "Your wonders:\n";
+			for (auto wonder : m_currentPlayer->getWonders())
+				std::cout << "[" << wonder.first->getId() << "] ";
+			std::cout << "\n";
+			auto selectedWonder = selectAcceptableWonder();
+			m_selectedBuilding = selectAcceptableCard();
+			if (m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
+			{
+				m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
+				Game::m_constructedWonders++;
+				removeCardFromDeck(m_selectedBuilding->getId());
+			}
+			else
+			{
+				system("cls");
+				std::cout << "You cannot build this wonder now. Retry\n";
+				continue;
+			}*/
 		}
-		else
-		{
-			system("cls");
-			std::cout << "You cannot build this wonder now. Retry\n";
-			continue;
-		}*/
-		break;
-	}
-	m_selectedBuilding = nullptr;
-	window.draw(m_backgroundSprite);
-	redrawCurrentAgeCards(window);
-	drawPlayerCards(window);
-	drawClickAreaForPlayerDetails(window);
-	window.display();
-	return option;
+		m_selectedBuilding = nullptr;
+		window.draw(m_backgroundSprite);
+		redrawCurrentAgeCards(window);
+		drawPlayerCards(window);
+		drawClickAreaForPlayerDetails(window);
+		window.display();
+		return option;
 
+	}
 }
 
 void Game::activateCardEffects(std::shared_ptr<Building> building)
@@ -1574,12 +1599,6 @@ void Game::run()
 			system("cls");
 		}*/
 	}
-}
-template<typename... Args>
-void Game::drawAll(sf::RenderWindow& window, Args... args)
-{
-	window.clear(sf::Color::White);
-	(window.draw(args), ...);
 }
 
 std::uint8_t Game::m_constructedWonders = 0;
