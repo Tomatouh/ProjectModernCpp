@@ -344,7 +344,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIDeck
         uint8_t shields = 0;
         uint8_t coins = 0;
         auto age = Building::Age::AGEI;
-        auto color = Building::Color::YELLOW;
+        auto color = Building::Color::BLUE;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
@@ -361,7 +361,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIDeck
         uint8_t shields = 0;
         uint8_t coins = 0;
         auto age = Building::Age::AGEI;
-        auto color = Building::Color::YELLOW;
+        auto color = Building::Color::BLUE;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 
@@ -378,7 +378,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIDeck
         uint8_t shields = 0;
         uint8_t coins = 0;
         auto age = Building::Age::AGEI;
-        auto color = Building::Color::YELLOW;
+        auto color = Building::Color::BLUE;
         std::vector<ResourceType> resources = {};
         std::optional<Building::ScientificSymbol> sym = std::nullopt;
 

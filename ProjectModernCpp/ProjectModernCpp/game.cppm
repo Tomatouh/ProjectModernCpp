@@ -67,6 +67,7 @@ private:
 	void drawConstructionChoices(sf::RenderWindow& window);
 	int getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
+	void activateCardEffects(std::shared_ptr<Building> building);
 
 public:
 

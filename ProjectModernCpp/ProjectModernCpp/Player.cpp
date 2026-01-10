@@ -162,7 +162,7 @@ void Player::addBuilding(const Building& building) {
         break;
     }
 
-    std::vector<ResourceType> bResources = building.getResources();
+   /* std::vector<ResourceType> bResources = building.getResources();
     for (auto resource : bResources)
     {
         switch (resource)
@@ -175,7 +175,7 @@ void Player::addBuilding(const Building& building) {
         }
         m_productions[resource]++;
     }
-    addVictoryPoints(building.getVictoryPoints());
+    addVictoryPoints(building.getVictoryPoints());*/
 }
 
 void Player::discardBuilding(Building::Color color, std::uint16_t id)
