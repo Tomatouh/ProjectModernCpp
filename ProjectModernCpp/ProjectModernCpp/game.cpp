@@ -521,15 +521,18 @@ std::shared_ptr<Card> Game::selectWonder(std::vector<std::optional<std::shared_p
 void Game::removeCardFromDeck(std::uint8_t id)
 {
 	for (int i = 0; i < m_cardDisplay.size(); i++)
-		for (int j = 0; j < m_cardDisplay[i].size(); j++)
+		for (int j = 0; j < m_cardDisplay[i].size(); j++) {
 			if (m_cardDisplay[i][j].has_value())
 			{
 				if (m_cardDisplay[i][j].value().getBuilding()->getId() == id)
 				{
 					m_cardDisplay[i][j] = std::nullopt;
+					m_guiCardDisplay.erase(id);
 					break;
 				}
 			}
+		
+		}
 }
 
 void Game::removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId)
@@ -568,13 +571,20 @@ void Game::showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wo
 
 void Game::turnCards()
 {
+	
 	for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
 	{
 		for (int j = 0; j < m_cardDisplay[i].size(); j++)
 		{
 			if (m_cardDisplay[i][j].has_value())
-				if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false)
+				if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false) {
 					m_cardDisplay[i][j].value().setFaceUp(true);
+					std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
+					sf::Texture texture;
+					texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
+					m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
+				}
+			
 		}
 	}
 }
@@ -659,14 +669,15 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 				//card.value().setPosition(pos);
 				if (card.value().isFaceUp())
 				{
+					std::uint16_t id = card.value().getBuilding()->getId();
 					auto pos = getNextCardPosition(m_currentAge);
 					guiCard gCard = card.value().getGuiCard();
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
 					sf::Texture texture;
-					texture.loadFromFile("..\\..\\Images\\" + std::to_string(card.value().getBuilding()->getId()) + ".jpg");
+					texture.loadFromFile("..\\..\\Images\\" + std::to_string(id) + ".jpg");
 					gCard.setTexture(texture);
-					m_guiCardDisplay.push_back(gCard);
+					m_guiCardDisplay.insert({ id, gCard });
 					window.draw(gCard);
 				}
 				else
@@ -700,7 +711,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					gCard.setTexture(texture);
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
-					m_guiCardDisplay.push_back(gCard);
+					m_guiCardDisplay.insert({ card.value().getBuilding()->getId(), gCard });
 
 					window.draw(gCard);
 				}
@@ -720,10 +731,15 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 
 void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 {
-	for(auto& gCard : m_guiCardDisplay)
-	{
-		window.draw(gCard);
-	}
+
+	for(auto& row : m_cardDisplay)
+		for(auto& card : row)
+		{
+			if(card.has_value())
+			{
+				window.draw(m_guiCardDisplay[card.value().getBuilding()->getId()].value());
+			}
+		}
 }
 
 void drawCardSet(const std::vector<Building>& Buildings,int& xPos, int& yPos, sf::RenderWindow& window)
@@ -803,6 +819,8 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 		leftPlayer = m_otherPlayer;
 		rightPlayer = m_currentPlayer;
 	}
+	drawPlayerColumn(leftPlayer, leftX, window);
+	drawPlayerColumn(rightPlayer, rightX, window);
 	/*int leftBottomY = drawPlayerColumn(leftPlayer, leftX, window);
 	int rightBottomY = drawPlayerColumn(rightPlayer, rightX, window);*/
 	int bottomY = 485.0f;
@@ -970,16 +988,74 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 
 void Game::drawConstructionChoices(sf::RenderWindow& window)
 {
-	
 	ChoiceBox box;
 	box.setPosition({ static_cast<float>(window.getSize().x) / 2 - 250.f, static_cast<float>(window.getSize().y) - 70.f });
 	window.draw(box);
 	box.drawOptions(window);
 }
 
-bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow& window) {
+int Game::getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+
+	int numberOfOptions = 3;
+	const float xPosStart = static_cast<float>(window.getSize().x) / 2 - 245.f;
+	const float yPos = static_cast<float>(window.getSize().y) - 65.f;
+
+	for (int i = 0; i < numberOfOptions; ++i) {
+		sf::FloatRect optionRect(
+			sf::Vector2f(xPosStart + i * (ChoiceBoxSizes::boxWidth / 3), yPos),
+			sf::Vector2f(static_cast<float>(ChoiceBoxSizes::optionBoxWidth), static_cast<float>(ChoiceBoxSizes::optionBoxHeight))
+		);
+		if (optionRect.contains(worldPos)) {
+			return i;
+		}
+	}
+	return -1;
+
+}
+
+void Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	int option = getConstructionOption(window, mousePos);
+	
+		switch (option)
+		{
+		case 0:
+			if (CheckPlayerResources(m_currentPlayer, m_selectedBuilding) && CheckPlayerCoins(m_currentPlayer, m_selectedBuilding)) {
+				m_currentPlayer->addBuilding(*m_selectedBuilding);
+				removeCardFromDeck(m_selectedBuilding->getId());
+				turnCards();
+				std::swap(m_currentPlayer, m_otherPlayer);
+
+			}
+			else
+			{
+				std::cout << "You don't have enough resources/coins to build"<<m_selectedBuilding->getName()<< "Retry\n";
+			}
+			break;
+		case 1:
+			// discard card
+			//discardCard(m_currentPlayer, m_selectedBuilding);
+			break;
+		case 2:
+			// construct wonder stage
+			break;
+		default:
+			break;
+		}
+		m_selectedBuilding = nullptr;
+		window.draw(m_backgroundSprite);
+		redrawCurrentAgeCards(window);
+		drawPlayerCards(window);
+		drawCurrentPlayerBox(window);
+		window.display();
+	
+}
+
+bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& window) {
 	bool found = false;
-	int counter = 0;
+	//int counter = 0;
 	for (int i = 0; i < m_cardDisplay.size(); i++)
 		for (int j = 0; j < m_cardDisplay[i].size(); j++) {
 			if (m_cardDisplay[i][j].has_value()) {
@@ -987,22 +1063,24 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow
 				{
 					if (i == m_cardDisplay.size() - 1 || (m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false))
 					{
+						m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
 						m_cardDisplay[i][j].value().setSelected(true);
-						m_guiCardDisplay[counter].setHighlighted(true);
+						m_guiCardDisplay[m_selectedBuilding->getId()].value().setHighlighted(true);
+						//window.draw(m_guiCardDisplay[m_selectedBuilding->getId()].value());
 						found = true;
 					}
 					else {
 						m_cardDisplay[i][j].value().setSelected(false);
-						m_guiCardDisplay[counter].setHighlighted(false);
+						m_guiCardDisplay[m_cardDisplay[i][j].value().getBuilding()->getId()].value().setHighlighted(false);
 					}
 				}
 				else {
 					m_cardDisplay[i][j].value().setSelected(false);
-					m_guiCardDisplay[counter].setHighlighted(false);
+					m_guiCardDisplay[m_cardDisplay[i][j].value().getBuilding()->getId()].value().setHighlighted(false);
 
 				}
 			}
-			counter++;
+			//counter++;
 		}
 	if (found)
 		return true;
@@ -1014,19 +1092,28 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow
 void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	static bool alreadyDrawn = false;
+	static bool constructionOptionDrawn = false;
 	if (m_gamestate == GAMESTART)
 		wondersSetup(window, mousePos);
 	if (m_gamestate == ONGOING)
 	{
+		if (constructionOptionDrawn)
+		{
+			chooseConstructionOption(window, sf::Mouse::getPosition(window));
+			constructionOptionDrawn = false;
+			//alreadyDrawn = false;
+		}
 		if (alreadyDrawn) {
 			bool selected = selectCardEffect(window, sf::Mouse::getPosition(window));
-			if (selected)
+			if (selected && !constructionOptionDrawn)
 			{
 				drawConstructionChoices(window);
+				constructionOptionDrawn = true;
+				//chooseConstructionOption(window, sf::Mouse::getPosition(window));
 			}
 			window.display();
 		}
-
+		
 		if (!alreadyDrawn && m_gamestate == ONGOING) {
 			window.draw(m_backgroundSprite);
 			drawCurrentAgeCards(window);

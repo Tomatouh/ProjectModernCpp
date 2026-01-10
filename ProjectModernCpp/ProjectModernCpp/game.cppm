@@ -29,7 +29,7 @@ private:
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
 	std::shared_ptr<std::unordered_map<std::uint16_t, std::shared_ptr<Building>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
-	std::vector<guiCard> m_guiCardDisplay;
+	std::unordered_map<std::uint16_t, std::optional<guiCard>> m_guiCardDisplay;
 
 	Building::Age m_currentAge;
 	std::vector< std::unique_ptr<Player::ProgressToken>> m_progressTokensDeck;
@@ -45,7 +45,6 @@ private:
 	};
 	GameState m_gamestate = GAMESTART;
 
-
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
 	std::shared_ptr<Card> getWonderById(std::uint8_t searchId);
 	std::shared_ptr <Building> selectAcceptableCard();
@@ -54,7 +53,7 @@ private:
 	void removeCardFromDeck(std::uint8_t id);
 	void turnCards();
 	void removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId);
-	bool findSelectedCard(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
+	bool findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& window);
 	//void handleEvents(const sf::Event& event, sf::RenderWindow& window);
 	void PollEvents(sf::RenderWindow& window);
 	void drawCurrentAgeCards(sf::RenderWindow& window);
@@ -66,6 +65,8 @@ private:
 	void drawWondersSelection(sf::RenderWindow& window);
 	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
 	void drawConstructionChoices(sf::RenderWindow& window);
+	int getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
+	void chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 
 public:
 

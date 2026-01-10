@@ -10,7 +10,7 @@ ChoiceBox::ChoiceBox() :text(font, "", ChoiceBoxSizes::fontSize)
 
 	for(auto & optionBox : optionBoxes)
 	{
-		optionBox.setSize(sf::Vector2f(ChoiceBoxSizes::boxWidth/3 - 10.f, ChoiceBoxSizes::boxHeight - 10.f));
+		optionBox.setSize(sf::Vector2f(ChoiceBoxSizes::optionBoxWidth, ChoiceBoxSizes::optionBoxHeight));
 		//optionBox.setFillColor(sf::Color(150, 75, 0));
 		optionBox.setOutlineColor(sf::Color::Black);
 		optionBox.setOutlineThickness(2.f);
@@ -37,8 +37,6 @@ void ChoiceBox::drawOptions(sf::RenderWindow& window)
 {
 	float startX = box.getPosition().x + 5.f;
 	float startY = box.getPosition().y + 5.f;
-	const float optionWidth = ChoiceBoxSizes::boxWidth / 3.f - 10.f;
-	const float optionHeight = ChoiceBoxSizes::boxHeight - 10.f;
 
 	for (size_t i = 0; i < optionBoxes.size(); ++i)
 	{
@@ -49,8 +47,8 @@ void ChoiceBox::drawOptions(sf::RenderWindow& window)
 
 		text.setString(label);
 		const sf::FloatRect tb = text.getLocalBounds();
-		const float textX = optionPosition.x + (optionWidth - tb.size.x) / 2.f - tb.position.x;
-		const float textY = optionPosition.y + (optionHeight - tb.size.y) / 2.f - tb.position.y;
+		const float textX = optionPosition.x + (ChoiceBoxSizes::optionBoxWidth - tb.size.x) / 2.f - tb.position.x;
+		const float textY = optionPosition.y + (ChoiceBoxSizes::optionBoxHeight - tb.size.y) / 2.f - tb.position.y;
 		text.setPosition(sf::Vector2f(textX, textY));
 		window.draw(text);
 	}

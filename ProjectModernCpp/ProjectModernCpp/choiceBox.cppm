@@ -22,6 +22,8 @@ export class ChoiceBoxSizes {
 	public:
 	static constexpr float boxWidth = 500.0f;
 	static constexpr float boxHeight = 50.0f;
+	static constexpr float optionBoxWidth = boxWidth / 3.0f - 10.0f;
+	static constexpr float optionBoxHeight = boxHeight - 10.0f;
 	static constexpr int fontSize = 20;
 };
 
