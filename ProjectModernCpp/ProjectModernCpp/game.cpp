@@ -927,7 +927,7 @@ int Game::wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWi
 
 void Game::drawWondersSelection(sf::RenderWindow& window)
 {
-	const int total = 4;
+	int total = 4;
 	const float cardW = BoxSizes::boxHeight * 2;
 	const float cardH = BoxSizes::boxWidth * 2;
 	if (m_gamestate == GAMESTART)
@@ -966,11 +966,13 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 	if(m_gamestate == ONGOING)
 	{
 		m_wondersDisplay.clear();
+		total = 0;
 		for(auto& wonderPair : m_currentPlayer->getWonders())
 		{
 			if (!wonderPair.second.has_value())
 			{
 				m_wondersDisplay.push_back(std::make_optional(wonderPair.first));
+				total++;
 			}
 		}
 
@@ -1040,14 +1042,14 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 					if (iteration > 4)
 					{
 						m_wondersDisplay.clear();
-						step++;
-						iteration = 1;
-						if (step == 2)
-						{
-							window.draw(m_backgroundSprite);
-							drawWondersSelection(window);
-							window.display();
-						}
+				step++;
+				iteration = 1;
+				if (step == 2)
+				{
+					window.draw(m_backgroundSprite);
+					drawWondersSelection(window);
+					window.display();
+				}
 					}
 					/*while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
 						PollEvents(window);
@@ -1143,6 +1145,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
 						Game::m_constructedWonders++;
 						removeCardFromDeck(m_selectedBuilding->getId());
+						std::swap(m_currentPlayer, m_otherPlayer);
 						break;
 					}
 					else {
@@ -1405,6 +1408,9 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	exitBox.setFillColor(sf::Color(200, 0, 0));
 	exitBox.setPosition({ backgroundBox.getPosition().x + backgroundBox.getSize().x - exitBox.getSize().x - 10.f,
 		backgroundBox.getPosition().y + 10.f });
+	sf::Text exitLabel(font, "X", 30);
+	exitLabel.setPosition({ exitBox.getPosition().x + 30.f, exitBox.getPosition().y + 5.f });
+	exitLabel.setFillColor(sf::Color::White);
 
 	window.draw(backgroundBox);
 	window.draw(coinsLabel);
@@ -1415,6 +1421,7 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	window.draw(glassLabel);
 	window.draw(papyrusLabel);
 	window.draw(exitBox);
+	window.draw(exitLabel);
 }
 
 
