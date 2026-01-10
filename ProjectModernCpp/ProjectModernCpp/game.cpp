@@ -1007,14 +1007,13 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 					m_currentPlayer->addWonder(m_wondersDisplay[index].value());
 					m_wondersDisplay[index] = std::nullopt;
 
-
 					switch (step) {
 					case 1:
 						if (m_currentPlayer.get()->name() == "player1") {
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 						}
-						else if (m_currentPlayer.get()->name() == "player2" && iteration == 3) {
+						else if (m_currentPlayer.get()->name() == "player2" && iteration==3) {
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 						}
@@ -1025,7 +1024,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 						}
-						else if (m_currentPlayer.get()->name() == "player1" && iteration == 3) {
+						else if (m_currentPlayer.get()->name() == "player1" && iteration==3) {
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 
@@ -1038,23 +1037,22 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 					window.draw(m_backgroundSprite);
 					drawWondersSelection(window);
 					window.display();
-
+					if (iteration > 4)
+					{
+						m_wondersDisplay.clear();
+						step++;
+						iteration = 1;
+						if (step == 2)
+						{
+							window.draw(m_backgroundSprite);
+							drawWondersSelection(window);
+							window.display();
+						}
+					}
 					/*while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
 						PollEvents(window);
 						sf::sleep(sf::milliseconds(10));
 					}*/
-				}
-			}
-			else
-			{
-				m_wondersDisplay.clear();
-				step++;
-				iteration = 1;
-				if (step == 2)
-				{
-					window.draw(m_backgroundSprite);
-					drawWondersSelection(window);
-					window.display();
 				}
 			}
 		}
@@ -1129,6 +1127,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			std::cout << "Nu se mai pot construi minuni";
 			break;
 		}
+		window.draw(m_backgroundSprite);
 		drawWondersSelection(window);
 		window.display();
 		while (const std::optional event = window.waitEvent())
@@ -1151,6 +1150,8 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						break;
 					}
 				}
+				else
+					break;
 			}
 			if(event->is<sf::Event::Closed>())
 			{
