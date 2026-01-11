@@ -1375,7 +1375,6 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				//chooseConstructionOption(window, sf::Mouse::getPosition(window));
 			}
 			drawClickAreaForPlayerDetails(window);
-			window.display();
 		}
 
 		if (!alreadyDrawn && m_gamestate == ONGOING) {
@@ -1383,9 +1382,10 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			drawCurrentAgeCards(window);
 			drawPlayerCards(window);
 			drawClickAreaForPlayerDetails(window);
-			window.display();
 			alreadyDrawn = true;
 		}
+		drawMilitaryBoard(window);
+		window.display();
 		}
 		else
 		{
@@ -1464,6 +1464,15 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	window.draw(exitLabel);
 }
 
+void Game::drawMilitaryBoard(sf::RenderWindow& window)
+{
+	sf::Texture militaryTexture;
+	militaryTexture.loadFromFile("..\\..\\Images\\Board\\board.png");
+	sf::Sprite militarySprite(militaryTexture);
+	militarySprite.setScale({ 0.15f, 0.15f });
+	militarySprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f-225, 680.f});
+	window.draw(militarySprite);
+}
 
 void Game::PollEvents(sf::RenderWindow& window)
 {
@@ -1482,7 +1491,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 				redrawCurrentAgeCards(window);
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
-
+				drawMilitaryBoard(window);
 			}
 			window.display();
 		}
