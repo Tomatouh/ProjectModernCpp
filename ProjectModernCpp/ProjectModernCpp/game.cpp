@@ -1472,6 +1472,18 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	militarySprite.setScale({ 0.15f, 0.15f });
 	militarySprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f-225, 680.f});
 	window.draw(militarySprite);
+
+
+	sf::Texture tokenTexture;
+	int i = 0;
+	for (float x= static_cast<float>(window.getSize().x) / 2.f - 115;i<m_progressTokensDeck.size();x=x+45,i++)
+	{
+		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(m_progressTokensDeck[i]->getId()) + ".png");
+		sf::Sprite tokenSprite(tokenTexture);
+		tokenSprite.setScale({ 0.15f, 0.15f });
+		tokenSprite.setPosition({ x, 690.f });
+		window.draw(tokenSprite);
+	}
 }
 
 void Game::PollEvents(sf::RenderWindow& window)
