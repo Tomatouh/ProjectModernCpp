@@ -848,6 +848,46 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 			gCard.setHighlighted(true);
 		}
 		gCard.setTexture(texture);
+		if (wonderPair.second.has_value())
+		{
+			auto ageCard = wonderPair.second.value()->getAge();
+			sf::Texture ageTexture;
+			std::string ageNumber;
+			switch (ageCard)
+			{
+			case Building::Age::AGEI:
+			{
+				ageNumber = "I";
+				break;
+			}
+			case Building::Age::AGEII:
+			{
+				ageNumber = "II";
+				break;
+			}
+			case Building::Age::AGEIII:
+			{
+				ageNumber = "III";
+				break;
+			}
+			}
+			ageTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\age " + ageNumber + " deck.png");
+			sf::Sprite ageSprite(ageTexture);
+			ageSprite.setScale({ 0.1f, 0.1f });
+			if (player->name() == "player1")
+			{
+				sf::Angle angle = sf::degrees(90.f);
+				ageSprite.rotate(angle);
+				ageSprite.setPosition({ xPos + 150.f, wonderYPos + 14.f });
+			}
+			else
+			{
+				sf::Angle angle = sf::degrees(270.f);
+				ageSprite.rotate(angle);
+				ageSprite.setPosition({ xPos - 25.f, wonderYPos + 70.f });
+			}
+			window.draw(ageSprite);
+		}
 		window.draw(gCard);
 		wonderYPos += BoxSizes::boxWidth + spacing;
 	}
