@@ -1484,6 +1484,14 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		tokenSprite.setPosition({ x, 690.f });
 		window.draw(tokenSprite);
 	}
+
+	sf::Texture peonTexture;
+	peonTexture.loadFromFile("..\\..\\Images\\Board\\peon.png");
+	sf::Sprite peonSprite(peonTexture);
+	peonSprite.setScale({ 0.6f, 0.6f });
+	float pos = (m_board.getPos() + 1)*-8;
+	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + pos, 730.f });
+	window.draw(peonSprite);
 }
 
 void Game::PollEvents(sf::RenderWindow& window)
