@@ -663,16 +663,16 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 
 	if (age == Building::Age::AGEI)
 	{
-		static int x = 620;
+		static int x = 647;
 		static int y = 20;
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
-		if (x == 620 && y == 20)
+		if (x == 647 && y == 20)
 		{
 			currentRowCard = 1;
 			x += BoxSizes::boxHeight;
-			return { 620,20 };
+			return { 647,20 };
 		}
 		if (currentRowCard == maxRowCards)
 		{
@@ -1492,6 +1492,48 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	float pos = (m_board.getPos() + 1)*-8;
 	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + pos, 730.f });
 	window.draw(peonSprite);
+
+	if(!m_board.getZoneTriggers()[3])
+		{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 61.f, 800.f });
+		window.draw(warSprite);
+	}
+	if (!m_board.getZoneTriggers()[2])
+	{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 112.f, 800.f });
+		window.draw(warSprite);
+	}
+	if (!m_board.getZoneTriggers()[4])
+	{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 121.f, 800.f });
+		window.draw(warSprite);
+	}
+	if (!m_board.getZoneTriggers()[1])
+	{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 172.f, 800.f });
+		window.draw(warSprite);
+	}
+
 }
 
 void Game::PollEvents(sf::RenderWindow& window)
