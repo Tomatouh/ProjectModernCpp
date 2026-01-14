@@ -663,16 +663,16 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 
 	if (age == Building::Age::AGEI)
 	{
-		static int x = 620;
+		static int x = 647;
 		static int y = 20;
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
-		if (x == 620 && y == 20)
+		if (x == 647 && y == 20)
 		{
 			currentRowCard = 1;
 			x += BoxSizes::boxHeight;
-			return { 620,20 };
+			return { 647,20 };
 		}
 		if (currentRowCard == maxRowCards)
 		{
@@ -848,6 +848,46 @@ void drawPlayerWonders(const std::shared_ptr<Player>& player, int xPos, int star
 			gCard.setHighlighted(true);
 		}
 		gCard.setTexture(texture);
+		if (wonderPair.second.has_value())
+		{
+			auto ageCard = wonderPair.second.value()->getAge();
+			sf::Texture ageTexture;
+			std::string ageNumber;
+			switch (ageCard)
+			{
+			case Building::Age::AGEI:
+			{
+				ageNumber = "I";
+				break;
+			}
+			case Building::Age::AGEII:
+			{
+				ageNumber = "II";
+				break;
+			}
+			case Building::Age::AGEIII:
+			{
+				ageNumber = "III";
+				break;
+			}
+			}
+			ageTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\age " + ageNumber + " deck.png");
+			sf::Sprite ageSprite(ageTexture);
+			ageSprite.setScale({ 0.1f, 0.1f });
+			if (player->name() == "player1")
+			{
+				sf::Angle angle = sf::degrees(90.f);
+				ageSprite.rotate(angle);
+				ageSprite.setPosition({ xPos + 150.f, wonderYPos + 14.f });
+			}
+			else
+			{
+				sf::Angle angle = sf::degrees(270.f);
+				ageSprite.rotate(angle);
+				ageSprite.setPosition({ xPos - 25.f, wonderYPos + 70.f });
+			}
+			window.draw(ageSprite);
+		}
 		window.draw(gCard);
 		wonderYPos += BoxSizes::boxWidth + spacing;
 	}
@@ -1335,7 +1375,6 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				//chooseConstructionOption(window, sf::Mouse::getPosition(window));
 			}
 			drawClickAreaForPlayerDetails(window);
-			window.display();
 		}
 
 		if (!alreadyDrawn && m_gamestate == ONGOING) {
@@ -1343,9 +1382,10 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			drawCurrentAgeCards(window);
 			drawPlayerCards(window);
 			drawClickAreaForPlayerDetails(window);
-			window.display();
 			alreadyDrawn = true;
 		}
+		drawMilitaryBoard(window);
+		window.display();
 		}
 		else
 		{
@@ -1424,6 +1464,77 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	window.draw(exitLabel);
 }
 
+void Game::drawMilitaryBoard(sf::RenderWindow& window)
+{
+	sf::Texture militaryTexture;
+	militaryTexture.loadFromFile("..\\..\\Images\\Board\\board.png");
+	sf::Sprite militarySprite(militaryTexture);
+	militarySprite.setScale({ 0.15f, 0.15f });
+	militarySprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f-225, 680.f});
+	window.draw(militarySprite);
+
+
+	sf::Texture tokenTexture;
+	int i = 0;
+	for (float x= static_cast<float>(window.getSize().x) / 2.f - 115;i<m_progressTokensDeck.size();x=x+45,i++)
+	{
+		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(m_progressTokensDeck[i]->getId()) + ".png");
+		sf::Sprite tokenSprite(tokenTexture);
+		tokenSprite.setScale({ 0.15f, 0.15f });
+		tokenSprite.setPosition({ x, 690.f });
+		window.draw(tokenSprite);
+	}
+
+	sf::Texture peonTexture;
+	peonTexture.loadFromFile("..\\..\\Images\\Board\\peon.png");
+	sf::Sprite peonSprite(peonTexture);
+	peonSprite.setScale({ 0.6f, 0.6f });
+	float pos = (m_board.getPos() + 1)*-8;
+	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + pos, 730.f });
+	window.draw(peonSprite);
+
+	if(!m_board.getZoneTriggers()[3])
+		{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 61.f, 800.f });
+		window.draw(warSprite);
+	}
+	if (!m_board.getZoneTriggers()[2])
+	{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 112.f, 800.f });
+		window.draw(warSprite);
+	}
+	if (!m_board.getZoneTriggers()[4])
+	{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 121.f, 800.f });
+		window.draw(warSprite);
+	}
+	if (!m_board.getZoneTriggers()[1])
+	{
+		sf::Texture war1Texture;
+		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
+		sf::Sprite warSprite(war1Texture);
+		warSprite.setScale({ 0.05f, 0.05f });
+		warSprite.rotate(sf::degrees(270.f));
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 172.f, 800.f });
+		window.draw(warSprite);
+	}
+
+}
 
 void Game::PollEvents(sf::RenderWindow& window)
 {
@@ -1442,7 +1553,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 				redrawCurrentAgeCards(window);
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
-
+				drawMilitaryBoard(window);
 			}
 			window.display();
 		}
