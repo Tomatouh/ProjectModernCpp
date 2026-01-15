@@ -1784,7 +1784,7 @@ void Game::run()
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	//std::uint16_t iteration = 0;
 
-	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders");
+	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Close);
 	window.setFramerateLimit(60);
 	int step = 1;
 
