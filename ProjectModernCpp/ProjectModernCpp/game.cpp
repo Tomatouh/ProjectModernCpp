@@ -95,27 +95,8 @@ void Game::saveGame()
 		f << "\n";
 	}
 	f << "playerCURRENT" << "\n";
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getBrownBuildings().begin(),
-		this->m_currentPlayer->getBrownBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getGreyBuildings().begin(),
-		this->m_currentPlayer->getGreyBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getRedBuildings().begin(),
-		this->m_currentPlayer->getRedBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getYellowBuildings().begin(),
-		this->m_currentPlayer->getYellowBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getBlueBuildings().begin(),
-		this->m_currentPlayer->getBlueBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getGreenBuildings().begin(),
-		this->m_currentPlayer->getGreenBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getPurpleBuildings().begin(),
-		this->m_currentPlayer->getPurpleBuildings().end());
+
+	playerBuildings = this->m_currentPlayer->getAllBuildings();	
 	f << "b ";
 	for (int i = 0; i < this->m_currentPlayer->getBuildingCount(); i++) {
 		f << playerBuildings[i].getId() << " ";
@@ -169,27 +150,8 @@ void Game::saveGame()
 	}
 
 	f << "playerOTHER" << "\n";
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getBrownBuildings().begin(),
-		this->m_otherPlayer->getBrownBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getGreyBuildings().begin(),
-		this->m_otherPlayer->getGreyBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getRedBuildings().begin(),
-		this->m_otherPlayer->getRedBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getYellowBuildings().begin(),
-		this->m_otherPlayer->getYellowBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getBlueBuildings().begin(),
-		this->m_otherPlayer->getBlueBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getGreenBuildings().begin(),
-		this->m_otherPlayer->getGreenBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getPurpleBuildings().begin(),
-		this->m_otherPlayer->getPurpleBuildings().end());
+	playerBuildings.clear();
+	playerBuildings = this->m_otherPlayer->getAllBuildings();
 	f << "b ";
 	for (int i = 0; i < this->m_otherPlayer->getBuildingCount(); i++) {
 		f << playerBuildings[i].getId() << " ";
@@ -1336,7 +1298,7 @@ int Game::getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mo
 
 	int numberOfOptions = 3;
 	const float xPosStart = static_cast<float>(window.getSize().x) / 2 - 245.f;
-	const float yPos = static_cast<float>(window.getSize().y) - 45.f;
+	const float yPos = static_cast<float>(window.getSize().y) - 50.f;
 
 	for (int i = 0; i < numberOfOptions; ++i) {
 		sf::FloatRect optionRect(
@@ -1365,7 +1327,6 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			m_currentPlayer->addBuilding(*m_selectedBuilding);
 			removeCardFromDeck(m_selectedBuilding->getId());
 			activateCardEffects(m_selectedBuilding);
-			m_board.move(m_selectedBuilding->getShields()*(m_currentPlayer->name()=="player1"?-1:1));
 			turnCards();
 			std::swap(m_currentPlayer, m_otherPlayer);
 
@@ -1468,7 +1429,6 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		redrawCurrentAgeCards(window);
 		drawPlayerCards(window);
 		drawClickAreaForPlayerDetails(window);
-		drawMilitaryBoard(window);
 		window.display();
 		return option;
 
@@ -1631,7 +1591,7 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 		}();
 	sf::RectangleShape backgroundBox;
 	backgroundBox.setSize({ 400.f, 600.f });
-	backgroundBox.setFillColor(sf::Color(80, 52, 9));
+	backgroundBox.setFillColor(sf::Color::White);
 	backgroundBox.setOutlineColor(sf::Color::Black);
 	backgroundBox.setOutlineThickness(3.f);
 	backgroundBox.setPosition({ static_cast<float>(window.getSize().x) / 2 - 200.f, static_cast<float>(window.getSize().y) / 2 - 300.f });
@@ -1710,11 +1670,11 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	peonTexture.loadFromFile("..\\..\\Images\\Board\\peon.png");
 	sf::Sprite peonSprite(peonTexture);
 	peonSprite.setScale({ 0.6f, 0.6f });
-	float pos = (m_board.getPos()) * (21) + 8;
-	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - pos, 770.f });
+	float pos = (m_board.getPos() + 1)*-8;
+	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + pos, 770.f });
 	window.draw(peonSprite);
 
-	if(!m_board.getZoneTriggers()[1])
+	if(!m_board.getZoneTriggers()[3])
 		{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
@@ -1724,7 +1684,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 61.f, 840.f });
 		window.draw(warSprite);
 	}
-	if (!m_board.getZoneTriggers()[4])
+	if (!m_board.getZoneTriggers()[2])
 	{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
@@ -1734,7 +1694,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 112.f, 840.f });
 		window.draw(warSprite);
 	}
-	if (!m_board.getZoneTriggers()[0])
+	if (!m_board.getZoneTriggers()[4])
 	{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
@@ -1744,7 +1704,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 121.f, 840.f });
 		window.draw(warSprite);
 	}
-	if (!m_board.getZoneTriggers()[5])
+	if (!m_board.getZoneTriggers()[1])
 	{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
