@@ -635,127 +635,93 @@ void Game::turnCards()
 	if (m_currentAge == Building::Age::AGEII)
 	{
 		for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
+		{
 			for (int j = 0; j < m_cardDisplay[i].size(); j++)
-				if(m_cardDisplay[i][j].has_value())
-				{
-					if (j == 0)
-					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
-
-					if(j > 0 && j < m_cardDisplay[i].size()-1)
-					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
-
-					if (j == m_cardDisplay[i].size() - 1)
-					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
-				}
-	}
-	if (m_currentAge == Building::Age::AGEIII)
-	{
-		for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
-			for (int j = 0; j < m_cardDisplay[i].size(); j++)
+			{
 				if (m_cardDisplay[i][j].has_value())
 				{
-					if (i < 2)// ageI strategy
+					auto& card = m_cardDisplay[i][j].value();
+
+					if (!card.isFaceUp())
 					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
-					if (i == 2)
-					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i+1][j / 2].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
-					if (i == 3)
-					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i+1][j * 2].has_value() == false && m_cardDisplay[i+1][j * 2 +1 ].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
-					if (i > 3)// ageII strategy
-					{
-						if (j == 0)
-						{
-							if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false)
-							{
-								m_cardDisplay[i][j].value().setFaceUp(true);
-								std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-								sf::Texture texture;
-								texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-								m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-							}
+						bool isCovered = false;
+
+						if (j > 0 && m_cardDisplay[i + 1][j - 1].has_value()) {
+							isCovered = true;
 						}
 
-						if (j > 0 && j < m_cardDisplay[i].size()-1)
-						{
-							if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
-							{
-								m_cardDisplay[i][j].value().setFaceUp(true);
-								std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-								sf::Texture texture;
-								texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-								m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-							}
+						if (j < m_cardDisplay[i + 1].size() && m_cardDisplay[i + 1][j].has_value()) {
+							isCovered = true;
 						}
 
-						if (j == m_cardDisplay[i].size() - 1)
+						if (!isCovered)
 						{
-							if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
-							{
-								m_cardDisplay[i][j].value().setFaceUp(true);
-								std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-								sf::Texture texture;
-								texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-								m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-							}
+							card.setFaceUp(true);
+							std::uint16_t faceUpCardIndex = card.getBuilding()->getId();
+
+							sf::Texture texture;
+							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
+							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
 						}
 					}
 				}
+			}
+		}
+	}if (m_currentAge == Building::Age::AGEIII)
+	{
+		for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
+		{
+			for (int j = 0; j < m_cardDisplay[i].size(); j++)
+			{
+				if (m_cardDisplay[i][j].has_value())
+				{
+					auto& card = m_cardDisplay[i][j].value();
+					if (card.isFaceUp()) continue; 
+
+					bool isCovered = false;
+
+					if (i == 3)
+					{
+						int startIndex = (j == 0) ? 0 : 2;
+						if (m_cardDisplay[i + 1][startIndex].has_value() ||
+							m_cardDisplay[i + 1][startIndex + 1].has_value())
+						{
+							isCovered = true;
+						}
+					}
+					else if (m_cardDisplay[i + 1].size() > m_cardDisplay[i].size())
+					{
+						if (m_cardDisplay[i + 1][j].has_value() ||
+							m_cardDisplay[i + 1][j + 1].has_value())
+						{
+							isCovered = true;
+						}
+					}
+					else
+					{
+						int targetJ = j / 2;
+						if (m_cardDisplay[i + 1][targetJ].has_value())
+						{
+							isCovered = true;
+						}
+					}
+
+					if (!isCovered)
+					{
+						card.setFaceUp(true);
+						std::uint16_t id = card.getBuilding()->getId();
+
+						static std::map<uint16_t, sf::Texture> textureCache;
+						if (textureCache.find(id) == textureCache.end()) {
+							textureCache[id].loadFromFile("..\\..\\Images\\" + std::to_string(id) + ".jpg");
+						}
+						m_guiCardDisplay[id].value().setTexture(textureCache[id]);
+					}
+				}
+			}
+		}
 	}
 }
-
 std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> Game::selectAcceptableWonder()
 {
 	int id;
@@ -1600,7 +1566,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 							found = true;
 						}
 						else {
-							if((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size()-1 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false))
+							if((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false))
 							{
 								m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
 								m_cardDisplay[i][j].value().setSelected(true);
@@ -1622,7 +1588,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 						   (i < 2 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false) ||
 						   (i==2 && m_cardDisplay[i+1][j / 2].has_value() == false) ||
 						   (i==3 && m_cardDisplay[i+1][j * 2].has_value() == false && m_cardDisplay[i+1][j * 2 + 1].has_value() == false) ||
-						   (i>3 && ((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size()-1 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
+						   (i>3 && ((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
 							   )))
 						{
 							m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
@@ -1966,9 +1932,6 @@ void Game::run()
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
-		m_currentAge = Building::Age::AGEII;
-		m_cardDisplay.clear();
-		initAgeIIBoard();
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
