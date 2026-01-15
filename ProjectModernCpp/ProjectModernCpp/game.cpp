@@ -1298,7 +1298,7 @@ int Game::getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mo
 
 	int numberOfOptions = 3;
 	const float xPosStart = static_cast<float>(window.getSize().x) / 2 - 245.f;
-	const float yPos = static_cast<float>(window.getSize().y) - 65.f;
+	const float yPos = static_cast<float>(window.getSize().y) - 50.f;
 
 	for (int i = 0; i < numberOfOptions; ++i) {
 		sf::FloatRect optionRect(
@@ -1591,7 +1591,7 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 		}();
 	sf::RectangleShape backgroundBox;
 	backgroundBox.setSize({ 400.f, 600.f });
-	backgroundBox.setFillColor(sf::Color(80, 52, 9));
+	backgroundBox.setFillColor(sf::Color::White);
 	backgroundBox.setOutlineColor(sf::Color::Black);
 	backgroundBox.setOutlineThickness(3.f);
 	backgroundBox.setPosition({ static_cast<float>(window.getSize().x) / 2 - 200.f, static_cast<float>(window.getSize().y) / 2 - 300.f });
