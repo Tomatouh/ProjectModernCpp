@@ -1336,7 +1336,7 @@ int Game::getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mo
 
 	int numberOfOptions = 3;
 	const float xPosStart = static_cast<float>(window.getSize().x) / 2 - 245.f;
-	const float yPos = static_cast<float>(window.getSize().y) - 65.f;
+	const float yPos = static_cast<float>(window.getSize().y) - 45.f;
 
 	for (int i = 0; i < numberOfOptions; ++i) {
 		sf::FloatRect optionRect(
@@ -1365,6 +1365,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			m_currentPlayer->addBuilding(*m_selectedBuilding);
 			removeCardFromDeck(m_selectedBuilding->getId());
 			activateCardEffects(m_selectedBuilding);
+			m_board.move(m_selectedBuilding->getShields()*(m_currentPlayer->name()=="player1"?-1:1));
 			turnCards();
 			std::swap(m_currentPlayer, m_otherPlayer);
 
@@ -1467,6 +1468,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		redrawCurrentAgeCards(window);
 		drawPlayerCards(window);
 		drawClickAreaForPlayerDetails(window);
+		drawMilitaryBoard(window);
 		window.display();
 		return option;
 
@@ -1708,11 +1710,11 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	peonTexture.loadFromFile("..\\..\\Images\\Board\\peon.png");
 	sf::Sprite peonSprite(peonTexture);
 	peonSprite.setScale({ 0.6f, 0.6f });
-	float pos = (m_board.getPos() + 1)*-8;
-	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + pos, 770.f });
+	float pos = (m_board.getPos()) * (21) + 8;
+	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - pos, 770.f });
 	window.draw(peonSprite);
 
-	if(!m_board.getZoneTriggers()[3])
+	if(!m_board.getZoneTriggers()[1])
 		{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
@@ -1722,7 +1724,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 61.f, 840.f });
 		window.draw(warSprite);
 	}
-	if (!m_board.getZoneTriggers()[2])
+	if (!m_board.getZoneTriggers()[4])
 	{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
@@ -1732,7 +1734,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 112.f, 840.f });
 		window.draw(warSprite);
 	}
-	if (!m_board.getZoneTriggers()[4])
+	if (!m_board.getZoneTriggers()[0])
 	{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
@@ -1742,7 +1744,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 121.f, 840.f });
 		window.draw(warSprite);
 	}
-	if (!m_board.getZoneTriggers()[1])
+	if (!m_board.getZoneTriggers()[5])
 	{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 5.png");
