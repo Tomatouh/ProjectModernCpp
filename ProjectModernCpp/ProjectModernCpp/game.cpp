@@ -747,15 +747,15 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 	if (age == Building::Age::AGEI)
 	{
 		static int x = 647;
-		static int y = 20;
+		static int y = 10;
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
-		if (x == 647 && y == 20)
+		if (x == 647 && y == 10)
 		{
 			currentRowCard = 1;
 			x += BoxSizes::boxHeight;
-			return { 647,20 };
+			return { 647,10 };
 		}
 		if (currentRowCard == maxRowCards)
 		{
@@ -777,16 +777,16 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 	if (age == Building::Age::AGEII)
 	{
 		static int x = 400;
-		static int y = 20;
+		static int y = 10;
 		static std::uint8_t maxRowCards = 6;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 3;
 		static bool firstCall = true;
-		if (x == 400 && y == 20)
+		if (x == 400 && y == 10)
 		{
 			currentRowCard = 1;
 			x = x + BoxSizes::boxHeight;
-			return { 400,20 };
+			return { 400,10 };
 		}
 		if (currentRowCard == maxRowCards)
 		{
@@ -809,7 +809,7 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 	if (age == Building::Age::AGEIII)
 	{
 		static int x = 647;
-		static int y = 20;
+		static int y = 10;
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
@@ -820,11 +820,11 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		static bool firstCall = true;
 		if (!firstSectionDone)
 		{
-			if (x == 647 && y == 20)
+			if (x == 647 && y == 10)
 			{
 				currentRowCard = 1;
 				x += BoxSizes::boxHeight;
-				return { 647,20 };
+				return { 647,10 };
 			}
 			if (currentRowCard == maxRowCards)
 			{
@@ -843,7 +843,7 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 			}
 			else
 			{
-				if (y != 20)
+				if (y != 10)
 					x += BoxSizes::boxHeight;
 				currentRowCard++;
 				return { x,y };
@@ -1325,7 +1325,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 void Game::drawConstructionChoices(sf::RenderWindow& window)
 {
 	ChoiceBox box;
-	box.setPosition({ static_cast<float>(window.getSize().x) / 2 - 250.f, static_cast<float>(window.getSize().y) - 70.f });
+	box.setPosition({ static_cast<float>(window.getSize().x) / 2 - 250.f, static_cast<float>(window.getSize().y) - 50.f });
 	window.draw(box);
 	box.drawOptions(window);
 }
@@ -1614,6 +1614,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				redrawCurrentAgeCards(window);
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
+				drawMilitaryBoard(window);
 				window.display();
 			}
 		}
@@ -1688,7 +1689,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	militaryTexture.loadFromFile("..\\..\\Images\\Board\\board.png");
 	sf::Sprite militarySprite(militaryTexture);
 	militarySprite.setScale({ 0.15f, 0.15f });
-	militarySprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f-225, 680.f});
+	militarySprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f-225, 720.f});
 	window.draw(militarySprite);
 
 
@@ -1699,7 +1700,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(m_progressTokensDeck[i]->getId()) + ".png");
 		sf::Sprite tokenSprite(tokenTexture);
 		tokenSprite.setScale({ 0.15f, 0.15f });
-		tokenSprite.setPosition({ x, 690.f });
+		tokenSprite.setPosition({ x, 730.f });
 		window.draw(tokenSprite);
 	}
 
@@ -1708,7 +1709,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	sf::Sprite peonSprite(peonTexture);
 	peonSprite.setScale({ 0.6f, 0.6f });
 	float pos = (m_board.getPos() + 1)*-8;
-	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + pos, 730.f });
+	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + pos, 770.f });
 	window.draw(peonSprite);
 
 	if(!m_board.getZoneTriggers()[3])
@@ -1718,7 +1719,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		sf::Sprite warSprite(war1Texture);
 		warSprite.setScale({ 0.05f, 0.05f });
 		warSprite.rotate(sf::degrees(270.f));
-		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 61.f, 800.f });
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 61.f, 840.f });
 		window.draw(warSprite);
 	}
 	if (!m_board.getZoneTriggers()[2])
@@ -1728,7 +1729,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		sf::Sprite warSprite(war1Texture);
 		warSprite.setScale({ 0.05f, 0.05f });
 		warSprite.rotate(sf::degrees(270.f));
-		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 112.f, 800.f });
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 112.f, 840.f });
 		window.draw(warSprite);
 	}
 	if (!m_board.getZoneTriggers()[4])
@@ -1738,7 +1739,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		sf::Sprite warSprite(war1Texture);
 		warSprite.setScale({ 0.05f, 0.05f });
 		warSprite.rotate(sf::degrees(270.f));
-		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 121.f, 800.f });
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f + 121.f, 840.f });
 		window.draw(warSprite);
 	}
 	if (!m_board.getZoneTriggers()[1])
@@ -1748,7 +1749,7 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		sf::Sprite warSprite(war1Texture);
 		warSprite.setScale({ 0.05f, 0.05f });
 		warSprite.rotate(sf::degrees(270.f));
-		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 172.f, 800.f });
+		warSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 172.f, 840.f });
 		window.draw(warSprite);
 	}
 
