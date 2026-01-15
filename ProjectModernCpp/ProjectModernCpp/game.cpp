@@ -768,7 +768,7 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		}
 		else
 		{
-			if (y != 20)
+			if (y != 10)
 				x += BoxSizes::boxHeight;
 			currentRowCard++;
 			return { x,y };
@@ -1832,9 +1832,6 @@ void Game::run()
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
-		m_currentAge = Building::Age::AGEIII;
-		m_cardDisplay.clear();
-		initAgeIIIBoard();
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
