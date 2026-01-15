@@ -631,49 +631,47 @@ void Game::turnCards()
 						m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
 					}
 
-	}
-	if (m_currentAge == Building::Age::AGEII)
+	}if (m_currentAge == Building::Age::AGEII)
 	{
+		// Iterate from the second-to-last row up to the top
 		for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
+		{
 			for (int j = 0; j < m_cardDisplay[i].size(); j++)
-				if(m_cardDisplay[i][j].has_value())
+			{
+				if (m_cardDisplay[i][j].has_value())
 				{
-					if (j == 0)
-					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
+					auto& card = m_cardDisplay[i][j].value();
 
-					if(j > 0 && j < m_cardDisplay[i].size())
+					// Only proceed if the card is currently face down
+					if (!card.isFaceUp())
 					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
-						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
-					}
+						bool isCovered = false;
 
-					if (j == m_cardDisplay[i].size() - 1)
-					{
-						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
+						// 1. Check dependency on the left below: (i+1, j-1)
+						if (j > 0 && m_cardDisplay[i + 1][j - 1].has_value()) {
+							isCovered = true;
+						}
+
+						// 2. Check dependency on the right below: (i+1, j)
+						if (j < m_cardDisplay[i + 1].size() && m_cardDisplay[i + 1][j].has_value()) {
+							isCovered = true;
+						}
+
+						// If no cards are covering it, flip it
+						if (!isCovered)
 						{
-							m_cardDisplay[i][j].value().setFaceUp(true);
-							std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
+							card.setFaceUp(true);
+							std::uint16_t faceUpCardIndex = card.getBuilding()->getId();
+
+							// Note: See the warning below regarding SFML textures
 							sf::Texture texture;
 							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
 							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
 						}
 					}
 				}
+			}
+		}
 	}
 	if (m_currentAge == Building::Age::AGEIII)
 	{
