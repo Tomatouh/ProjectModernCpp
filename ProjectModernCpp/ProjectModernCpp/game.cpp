@@ -1327,7 +1327,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			m_currentPlayer->addBuilding(*m_selectedBuilding);
 			removeCardFromDeck(m_selectedBuilding->getId());
 			activateCardEffects(m_selectedBuilding);
-			m_board.move(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
+			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
 			turnCards();
 			std::swap(m_currentPlayer, m_otherPlayer);
 
