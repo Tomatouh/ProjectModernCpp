@@ -1591,7 +1591,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 					}
 					if (m_currentAge == Building::Age::AGEII)
 					{
-						if(i== m_cardDisplay.size() - 1 || (j==0 && m_cardDisplay[i + 1][j].has_value() == false) || (j==m_cardDisplay[i].size()-1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false ))
+						if(i == m_cardDisplay.size() - 1)
 						{
 							m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
 							m_cardDisplay[i][j].value().setSelected(true);
@@ -1600,8 +1600,20 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 							found = true;
 						}
 						else {
-							m_cardDisplay[i][j].value().setSelected(false);
-							m_guiCardDisplay[m_cardDisplay[i][j].value().getBuilding()->getId()].value().setHighlighted(false);
+							if((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false))
+							{
+								m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
+								m_cardDisplay[i][j].value().setSelected(true);
+								m_guiCardDisplay[m_selectedBuilding->getId()].value().setHighlighted(true);
+								//window.draw(m_guiCardDisplay[m_selectedBuilding->getId()].value());
+								found = true;
+							}
+							else
+							{
+								m_cardDisplay[i][j].value().setSelected(false);
+								m_guiCardDisplay[m_cardDisplay[i][j].value().getBuilding()->getId()].value().setHighlighted(false);
+							}
+							
 						}
 					}
 					if(m_currentAge == Building::Age::AGEIII)
@@ -1928,8 +1940,8 @@ void Game::PollEvents(sf::RenderWindow& window)
 
 			drawCurrentAgeCards(window);
 		}
-		}
 	}
+}
 
 
 
