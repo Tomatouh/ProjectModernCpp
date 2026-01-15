@@ -650,7 +650,7 @@ void Game::turnCards()
 						}
 					}
 
-					if(j > 0 && j < m_cardDisplay[i].size())
+					if(j > 0 && j < m_cardDisplay[i].size()-1)
 					{
 						if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
 						{
@@ -728,7 +728,7 @@ void Game::turnCards()
 							}
 						}
 
-						if (j > 0 && j < m_cardDisplay[i].size())
+						if (j > 0 && j < m_cardDisplay[i].size()-1)
 						{
 							if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
 							{
@@ -1600,7 +1600,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 							found = true;
 						}
 						else {
-							if((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false))
+							if((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size()-1 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false))
 							{
 								m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
 								m_cardDisplay[i][j].value().setSelected(true);
@@ -1622,7 +1622,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 						   (i < 2 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false) ||
 						   (i==2 && m_cardDisplay[i+1][j / 2].has_value() == false) ||
 						   (i==3 && m_cardDisplay[i+1][j * 2].has_value() == false && m_cardDisplay[i+1][j * 2 + 1].has_value() == false) ||
-						   (i>3 && ((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
+						   (i>3 && ((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size()-1 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
 							   )))
 						{
 							m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
@@ -1966,6 +1966,9 @@ void Game::run()
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
+		m_currentAge = Building::Age::AGEII;
+		m_cardDisplay.clear();
+		initAgeIIBoard();
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
