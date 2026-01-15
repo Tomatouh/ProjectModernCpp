@@ -95,27 +95,8 @@ void Game::saveGame()
 		f << "\n";
 	}
 	f << "playerCURRENT" << "\n";
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getBrownBuildings().begin(),
-		this->m_currentPlayer->getBrownBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getGreyBuildings().begin(),
-		this->m_currentPlayer->getGreyBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getRedBuildings().begin(),
-		this->m_currentPlayer->getRedBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getYellowBuildings().begin(),
-		this->m_currentPlayer->getYellowBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getBlueBuildings().begin(),
-		this->m_currentPlayer->getBlueBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getGreenBuildings().begin(),
-		this->m_currentPlayer->getGreenBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_currentPlayer->getPurpleBuildings().begin(),
-		this->m_currentPlayer->getPurpleBuildings().end());
+
+	playerBuildings = this->m_currentPlayer->getAllBuildings();	
 	f << "b ";
 	for (int i = 0; i < this->m_currentPlayer->getBuildingCount(); i++) {
 		f << playerBuildings[i].getId() << " ";
@@ -169,27 +150,8 @@ void Game::saveGame()
 	}
 
 	f << "playerOTHER" << "\n";
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getBrownBuildings().begin(),
-		this->m_otherPlayer->getBrownBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getGreyBuildings().begin(),
-		this->m_otherPlayer->getGreyBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getRedBuildings().begin(),
-		this->m_otherPlayer->getRedBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getYellowBuildings().begin(),
-		this->m_otherPlayer->getYellowBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getBlueBuildings().begin(),
-		this->m_otherPlayer->getBlueBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getGreenBuildings().begin(),
-		this->m_otherPlayer->getGreenBuildings().end());
-	playerBuildings.insert(playerBuildings.end(),
-		this->m_otherPlayer->getPurpleBuildings().begin(),
-		this->m_otherPlayer->getPurpleBuildings().end());
+	playerBuildings.clear();
+	playerBuildings = this->m_otherPlayer->getAllBuildings();
 	f << "b ";
 	for (int i = 0; i < this->m_otherPlayer->getBuildingCount(); i++) {
 		f << playerBuildings[i].getId() << " ";

@@ -212,7 +212,18 @@ void Player::addWonder(const std::shared_ptr<Card>& wonder)
     std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> card{ wonder, std::nullopt };
     m_wonders.push_back(card);
 }
-
+const std::vector<Building>& Player::getAllBuildings() const noexcept
+{
+    std::vector<Building> allBuildings;
+	allBuildings.insert(allBuildings.end(), m_brownBuildings.begin(), m_brownBuildings.end());
+	allBuildings.insert(allBuildings.end(), m_greyBuildings.begin(), m_greyBuildings.end());
+	allBuildings.insert(allBuildings.end(), m_blueBuildings.begin(), m_blueBuildings.end());
+	allBuildings.insert(allBuildings.end(), m_greenBuildings.begin(), m_greenBuildings.end());
+	allBuildings.insert(allBuildings.end(), m_yellowBuildings.begin(), m_yellowBuildings.end());
+	allBuildings.insert(allBuildings.end(), m_redBuildings.begin(), m_redBuildings.end());
+	allBuildings.insert(allBuildings.end(), m_purpleBuildings.begin(), m_purpleBuildings.end());
+    return allBuildings;
+}
 const std::vector<Building>& Player::getBrownBuildings() const noexcept { return m_brownBuildings; }
 const std::vector<Building>& Player::getGreyBuildings() const noexcept { return m_greyBuildings; }
 const std::vector<Building>& Player::getBlueBuildings() const noexcept { return m_blueBuildings; }
