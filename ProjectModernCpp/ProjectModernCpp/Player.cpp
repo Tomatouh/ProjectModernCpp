@@ -713,10 +713,6 @@ uint16_t Player::getBluePoints() const noexcept {
     return bluePoints;
 }
 
-uint16_t Player::getFinalScore(uint16_t militaryPoints) const noexcept {
-    //militaryPoints = cate puncte de victorie ofera pozitia pionului pentru Player
-    return m_victoryPoints + getCoinsPoints() + militaryPoints;
-}
 
 std::uint16_t Player::getConstructedWondersCount() const noexcept
 {
