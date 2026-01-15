@@ -450,7 +450,7 @@ bool Player::hasDiscountFor(ResourceType type) const
     case ResourceType::WOOD: requiredId = 42; break;
     case ResourceType::CLAY: requiredId = 41; break;
     case ResourceType::STONE: requiredId = 40; break;
-    case ResourceType::GLASS: requiredId = 43; break;
+    case ResourceType::GLASS: requiredId = 43; break
     case ResourceType::PAPYRUS: requiredId = 43; break;
     }
 

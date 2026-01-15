@@ -28,7 +28,7 @@ public:
 
     void checkZones();
     void move (const int& steps) noexcept(false);
-    int getZone() const noexcept { return zone; }
+    int getZone() const noexcept { checkZones();  return zone; }
 	std::vector<bool> getZoneTriggers() const noexcept { return zoneTriggers; }
     void setZone(int newZone) noexcept { zone = newZone; }
 };
