@@ -52,6 +52,49 @@ void Game::saveGame()
 {
 	std::ofstream f("save.txt", std::ios::out);
 	std::vector<Building> playerBuildings;
+
+	f << "common";
+	f << "age " << static_cast<int>(this->m_currentAge) << "\n";
+
+	f << "peon " << this->m_board.getPos() << "\n";
+	std::vector<bool>ZT = this->m_board.getZoneTriggers();
+	f << "zTriggers ";
+	for (int i = 0; i < ZT.size(); i++)
+	{
+		f << ZT[i] << " ";
+	}
+	f << "\n";
+
+	f << "progressBoard ";
+	//std::vector< std::unique_ptr<Player::ProgressToken>>
+	for (int i = 0; i < this->m_progressTokensDeck.size(); i++)
+	{
+		f << this->m_progressTokensDeck[i].get()->getId() << " ";
+	}
+	f << "\n";
+	f << "discard ";
+	for (int i = 0; i < this->m_discardedCards->size(); i++) {
+		auto it = this->m_discardedCards->begin();
+		std::advance(it, i);
+		f << it->first << " ";
+	}
+	f << "\n";
+	f << "gui" << "\n";
+	for (auto& row : m_cardDisplay) {
+		for (auto& card : row)
+		{
+			if (card.has_value())
+			{
+				f << card.value().getBuilding()->getId() << " ";
+			}
+			else
+			{
+				f << "missing" << " ";
+			}
+		}
+		f << "\n";
+	}
+	f << "playerCURRENT" << "\n";
 	playerBuildings.insert(playerBuildings.end(),
 		this->m_currentPlayer->getBrownBuildings().begin(),
 		this->m_currentPlayer->getBrownBuildings().end());
@@ -78,25 +121,10 @@ void Game::saveGame()
 		f << playerBuildings[i].getId() << " ";
 	}
 	f << "\n";
-	f << "discard ";
-	for (int i = 0; i < this->m_discardedCards->size(); i++) {
-		auto it = this->m_discardedCards->begin();
-		std::advance(it, i);
-		f << it->first << " ";
-	}
-	f << "\n";
-	f << "age " << static_cast<int>(this->m_currentAge) << "\n";
 	f << "c " << this->m_currentPlayer->getCoins() << "\n";
 	f << "vp " << this->m_currentPlayer->getVictoryPoints() << "\n";
 	f << "s " << this->m_currentPlayer->getShields() << "\n";
-	f << "peon " << this->m_board.getPos() << "\n";
-	std::vector<bool>ZT = this->m_board.getZoneTriggers();
-	f << "zTriggers ";
-	for (int i = 0; i < ZT.size(); i++)
-	{
-		f << ZT[i] << " ";
-	}
-	f << "\n";
+
 	f << "p " << this->m_currentPlayer->getWood() << " " << this->m_currentPlayer->getStone() << " "
 		<< this->m_currentPlayer->getClay() << " " << this->m_currentPlayer->getGlass() << " "
 		<< this->m_currentPlayer->getPapyrus() << "\n";
@@ -119,13 +147,6 @@ void Game::saveGame()
 		<< this->m_currentPlayer->hasTheologyProgressToken() << " "
 		<< this->m_currentPlayer->hasUrbanismProgressToken() << "\n";
 	f << "\n";
-	f << "progressA ";
-	//std::vector< std::unique_ptr<Player::ProgressToken>>
-	for (int i = 0; i < this->m_progressTokensDeck.size(); i++)
-	{
-		f << this->m_progressTokensDeck[i].get()->getId() << " ";
-	}
-	f << "\n";
 	f << "wonder ";
 	for (int i = 0; i < this->m_currentPlayer->getWonders().size(); i++)
 	{
@@ -147,22 +168,85 @@ void Game::saveGame()
 			f << "0" << " ";
 	}
 	//INSERT CARD LAYOUT SAVE HERE, USE "gui" AS IDENTIFIER
-	f << "gui" << "\n";
-	for (auto& row : m_cardDisplay) {
-		for (auto& card : row)
-		{
-			if (card.has_value())
-			{
-				f << card.value().getBuilding()->getId() << " ";
-			}
-			else
-			{
-				f << "missing" << " ";
-			}
-		}
-		f << "\n";
-	}
+
 	f << "playerOTHER" << "\n";
+	playerBuildings.insert(playerBuildings.end(),
+		this->m_otherPlayer->getBrownBuildings().begin(),
+		this->m_otherPlayer->getBrownBuildings().end());
+	playerBuildings.insert(playerBuildings.end(),
+		this->m_otherPlayer->getGreyBuildings().begin(),
+		this->m_otherPlayer->getGreyBuildings().end());
+	playerBuildings.insert(playerBuildings.end(),
+		this->m_otherPlayer->getRedBuildings().begin(),
+		this->m_otherPlayer->getRedBuildings().end());
+	playerBuildings.insert(playerBuildings.end(),
+		this->m_otherPlayer->getYellowBuildings().begin(),
+		this->m_otherPlayer->getYellowBuildings().end());
+	playerBuildings.insert(playerBuildings.end(),
+		this->m_otherPlayer->getBlueBuildings().begin(),
+		this->m_otherPlayer->getBlueBuildings().end());
+	playerBuildings.insert(playerBuildings.end(),
+		this->m_otherPlayer->getGreenBuildings().begin(),
+		this->m_otherPlayer->getGreenBuildings().end());
+	playerBuildings.insert(playerBuildings.end(),
+		this->m_otherPlayer->getPurpleBuildings().begin(),
+		this->m_otherPlayer->getPurpleBuildings().end());
+	f << "b ";
+	for (int i = 0; i < this->m_otherPlayer->getBuildingCount(); i++) {
+		f << playerBuildings[i].getId() << " ";
+	}
+	f << "\n";
+
+	f << "c " << this->m_otherPlayer->getCoins() << "\n";
+	f << "vp " << this->m_otherPlayer->getVictoryPoints() << "\n";
+	f << "s " << this->m_otherPlayer->getShields() << "\n";
+
+	f << "p " << this->m_otherPlayer->getWood() << " " << this->m_otherPlayer->getStone() << " "
+		<< this->m_otherPlayer->getClay() << " " << this->m_otherPlayer->getGlass() << " "
+		<< this->m_otherPlayer->getPapyrus() << "\n";
+	f << "science ";
+	std::vector<uint16_t> sciPoints = this->m_otherPlayer->getScientificPoints();
+	for (int i = 0; i < sciPoints.size(); i++)
+	{
+		f << sciPoints[i] << " ";
+	}
+	f << "\n";
+	f << "progress ";
+	f << this->m_otherPlayer->hasAgricultureProgressToken() << " "
+		<< this->m_otherPlayer->hasArchitectureProgressToken() << " "
+		<< this->m_otherPlayer->hasEconomyProgressToken() << " "
+		<< this->m_otherPlayer->hasLawProgressToken() << " "
+		<< this->m_otherPlayer->hasMasonryProgressToken() << " "
+		<< this->m_otherPlayer->hasMathematicsProgressToken() << " "
+		<< this->m_otherPlayer->hasPhilosophyProgressToken() << " "
+		<< this->m_otherPlayer->hasStrategyProgressToken() << " "
+		<< this->m_otherPlayer->hasTheologyProgressToken() << " "
+		<< this->m_otherPlayer->hasUrbanismProgressToken() << "\n";
+	f << "\n";
+	f << "wonder ";
+	for (int i = 0; i < this->m_otherPlayer->getWonders().size(); i++)
+	{
+		f << this->m_otherPlayer->getWonders()[i].first->getId() << " ";
+		if (this->m_otherPlayer->getWonders()[i].second.has_value())
+			switch (this->m_otherPlayer->getWonders()[i].second.value()->getAge())
+			{
+			case Building::Age::AGEI:
+				f << "1" << " ";
+				break;
+			case Building::Age::AGEII:
+				f << "2" << " ";
+				break;
+			case Building::Age::AGEIII:
+				f << "3" << " ";
+				break;
+			}
+		else
+			f << "0" << " ";
+	}
+	f << "\n";
+
+
+
 }
 
 void Game::setGamestate(GameState& gamestate)
