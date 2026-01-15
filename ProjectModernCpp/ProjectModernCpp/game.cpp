@@ -296,7 +296,7 @@ void Game::initAgeIIBoard()
 	for (int i = 5; i > 0; --i)
 	{
 		std::vector<std::optional<displayCard>> row;
-		for (int j = 0; j < i + 2; ++j)
+		for (int j = 0; j < i + 1; ++j)
 		{
 			std::uniform_int_distribution<> dist(0, copyDeck.size() - 1);
 			displayCard card;
@@ -774,7 +774,40 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 			return { x,y };
 		}
 	}
+	if (age == Building::Age::AGEII)
+	{
+		static int x = 400;
+		static int y = 20;
+		static std::uint8_t maxRowCards = 6;
+		static std::uint8_t currentRowCard = 0;
+		static std::uint8_t centeringOffset = 3;
+		static bool firstCall = true;
+		if (x == 400 && y == 20)
+		{
+			currentRowCard = 1;
+			x = x + BoxSizes::boxHeight;
+			return { 400,20 };
+		}
+		if (currentRowCard == maxRowCards)
+		{
+			x = x - (maxRowCards + centeringOffset) * BoxSizes::boxHeight / 2;
+			y += BoxSizes::boxHeight * 0.75 + 5;
+			currentRowCard = 1;
+			maxRowCards--;
+			centeringOffset--;
+			return { x,y };
+		}
+		else
+		{
+			if (!firstCall)
+				x += BoxSizes::boxHeight;
+			firstCall = false;
+			currentRowCard++;
+			return { x,y };
+		}
+	}
 }
+
 void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 {
 	int contor = 0;
@@ -1644,8 +1677,34 @@ void Game::PollEvents(sf::RenderWindow& window)
 		{
 			handleClick(window, sf::Mouse::getPosition(window));
 		}
+
+		bool ok = 0;
+		for (auto row : m_cardDisplay)
+			for (auto card : row)
+				if (card.has_value())
+				{
+					ok = 1;
+					break;
+				}
+		if (!ok)
+		{
+			if (m_currentAge == Building::Age::AGEI)
+			{
+				m_currentAge = Building::Age::AGEII;
+				m_cardDisplay.clear();
+				initAgeIIBoard();
+			}
+			else
+			{
+				m_currentAge = Building::Age::AGEIII;
+				m_cardDisplay.clear();
+				initAgeIIIBoard();
+			}
+
+			drawCurrentAgeCards(window);
+		}
+		}
 	}
-}
 
 
 
@@ -1670,6 +1729,9 @@ void Game::run()
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
+		m_currentAge = Building::Age::AGEII;
+		m_cardDisplay.clear();
+		initAgeIIBoard();
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
