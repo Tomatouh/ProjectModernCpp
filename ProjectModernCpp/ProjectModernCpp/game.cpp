@@ -53,7 +53,7 @@ void Game::saveGame()
 	std::ofstream f("save.txt", std::ios::out);
 	std::vector<Building> playerBuildings;
 
-	f << "common";
+	f << "common ";
 	f << "age " << static_cast<int>(this->m_currentAge) << "\n";
 
 	f << "peon " << this->m_board.getPos() << "\n";
@@ -129,10 +129,10 @@ void Game::saveGame()
 		<< this->m_currentPlayer->getClay() << " " << this->m_currentPlayer->getGlass() << " "
 		<< this->m_currentPlayer->getPapyrus() << "\n";
 	f << "science ";
-	std::vector<uint16_t> sciPoints = this->m_currentPlayer->getScientificPoints();
-	for (int i = 0; i < sciPoints.size(); i++)
+	std::vector<uint16_t> sci_Points = this->m_currentPlayer->getScientificPoints();
+	for (int i = 0; i < sci_Points.size(); i++)
 	{
-		f << sciPoints[i] << " ";
+		f << sci_Points[i] << " ";
 	}
 	f << "\n";
 	f << "progress ";
@@ -167,7 +167,6 @@ void Game::saveGame()
 		else
 			f << "0" << " ";
 	}
-	//INSERT CARD LAYOUT SAVE HERE, USE "gui" AS IDENTIFIER
 
 	f << "playerOTHER" << "\n";
 	playerBuildings.insert(playerBuildings.end(),
