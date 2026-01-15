@@ -9,23 +9,10 @@ import <vector>;
 //import <memory>;
 
 /*
-* TODO: fix the trade function for compatibility with everything
-		save/load function: 
+* TODO: Fix board zone triggering in player.cpp
+		load function: 
 				-behaviour:if there is a file named "save.txt", begin save load, if not, begin game as normal
-				-individual card vectors from player, -DONE
-				-money each player has-DONE
-				-production for each player-DONE
-				-discard pile map-DONE
-				-age-DONE
-				-victory points for each player, each player's data is saved separately, player 1 first, -DONE
-				-peon position,-DONE
-				-whether or not certain zones were triggered-DONE
-				-whose turn is it,-DONE
-				-progress tokens still available to get
-				-each player's progress tokens, -DONE
-				-each player's scientific symbols -DONE
-				-current card layout+randomize the decks for the future ages - DONE
-				-wonder progress, whether or not it is built, which card back is showing behind it-DONE
+
 				-current game state-presume ONGOING, make sure it checks it's ongoing before saving.
 				-discarded progress tokens, to be done at LOAD time
 				folosim regex pentru a valida save file-ul;

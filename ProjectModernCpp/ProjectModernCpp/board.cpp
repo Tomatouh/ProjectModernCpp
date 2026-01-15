@@ -38,7 +38,7 @@ void Board::checkZones()
 }
 
 
-void Board::move(const  int & steps) noexcept(false)
+void Board::movePeon(const  int & steps) noexcept(false)
 {
 	if (steps <0) {
 		for (int i = 0; i > steps; i--) {

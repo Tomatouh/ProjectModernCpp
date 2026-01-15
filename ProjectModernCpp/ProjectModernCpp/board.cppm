@@ -27,8 +27,8 @@ public:
     explicit Board(int initialZone) noexcept : zone{initialZone} {}
 
     void checkZones();
-    void move (const int& steps) noexcept(false);
-    int getZone() const noexcept { return zone; }
+    void movePeon (const int& steps) noexcept(false);
+    int getZone() const noexcept {  return zone; }
 	std::vector<bool> getZoneTriggers() const noexcept { return zoneTriggers; }
     void setZone(int newZone) noexcept { zone = newZone; }
 };

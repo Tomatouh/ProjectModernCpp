@@ -1373,7 +1373,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			m_currentPlayer->addBuilding(*m_selectedBuilding);
 			removeCardFromDeck(m_selectedBuilding->getId());
 			activateCardEffects(m_selectedBuilding);
-			m_board.move(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
+			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
 			turnCards();
 			std::swap(m_currentPlayer, m_otherPlayer);
 
@@ -1850,7 +1850,7 @@ void Game::run()
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	//std::uint16_t iteration = 0;
 
-	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders");
+	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Close);
 	window.setFramerateLimit(60);
 	int step = 1;
 

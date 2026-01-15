@@ -450,7 +450,7 @@ bool Player::hasDiscountFor(ResourceType type) const
     case ResourceType::WOOD: requiredId = 42; break;
     case ResourceType::CLAY: requiredId = 41; break;
     case ResourceType::STONE: requiredId = 40; break;
-    case ResourceType::GLASS: requiredId = 43; break;
+    case ResourceType::GLASS: requiredId = 43; break
     case ResourceType::PAPYRUS: requiredId = 43; break;
     }
 
@@ -713,10 +713,6 @@ uint16_t Player::getBluePoints() const noexcept {
     return bluePoints;
 }
 
-uint16_t Player::getFinalScore(uint16_t militaryPoints) const noexcept {
-    //militaryPoints = cate puncte de victorie ofera pozitia pionului pentru Player
-    return m_victoryPoints + getCoinsPoints() + militaryPoints;
-}
 
 std::uint16_t Player::getConstructedWondersCount() const noexcept
 {
