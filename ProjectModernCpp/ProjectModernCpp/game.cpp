@@ -1954,9 +1954,6 @@ void Game::run()
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
-		m_currentAge = Building::Age::AGEIII;
-		m_cardDisplay.clear();
-		initAgeIIIBoard();
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
