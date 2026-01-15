@@ -306,7 +306,7 @@ void Game::initAgeIIBoard()
 			card.setBuilding(it->second);
 			std::uint16_t keyToErase = it->first;
 			copyDeck.erase(keyToErase);
-			if (!(i % 2))
+			if (i % 2)
 				card.setFaceUp(true);
 			else
 				card.setFaceUp(false);
@@ -803,6 +803,108 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 				x += BoxSizes::boxHeight;
 			firstCall = false;
 			currentRowCard++;
+			return { x,y };
+		}
+	}
+	if (age == Building::Age::AGEIII)
+	{
+		static int x = 647;
+		static int y = 20;
+		static std::uint8_t maxRowCards = 2;
+		static std::uint8_t currentRowCard = 0;
+		static std::uint8_t centeringOffset = 1;
+		static bool firstSectionDone = false;
+		static bool secondSectionDone = false;
+		static bool thirdSectionDone = false;
+
+		static bool firstCall = true;
+		if (!firstSectionDone)
+		{
+			if (x == 647 && y == 20)
+			{
+				currentRowCard = 1;
+				x += BoxSizes::boxHeight;
+				return { 647,20 };
+			}
+			if (currentRowCard == maxRowCards)
+			{
+					x = x - (maxRowCards + centeringOffset) * BoxSizes::boxHeight / 2;
+					y += BoxSizes::boxHeight * 0.75 + 5;
+					currentRowCard = 1;
+					maxRowCards++;
+					centeringOffset++;
+					if (maxRowCards == 5)
+					{
+						firstSectionDone = true;
+						currentRowCard = 0;
+					}
+					else
+						return { x,y };
+			}
+			else
+			{
+				if (y != 20)
+					x += BoxSizes::boxHeight;
+				currentRowCard++;
+				return { x,y };
+			}
+		}
+		if (!secondSectionDone)
+		{
+			if(currentRowCard == 0)
+				x = 647 - BoxSizes::boxHeight/2;
+			else
+				x += BoxSizes::boxHeight*2;
+			currentRowCard++;
+			if(currentRowCard == 2)
+			{
+				secondSectionDone = true;
+				currentRowCard = 0;
+				maxRowCards = 4;
+				centeringOffset = 1;
+				auto auxX = x;
+				auto auxY = y;
+				y += BoxSizes::boxHeight * 0.75 + 5;
+				x = 647 - BoxSizes::boxHeight ;
+				return { auxX,auxY };
+
+			}
+			return { x,y };
+		}
+		if(!thirdSectionDone)
+		{
+			if (currentRowCard==0)
+			{
+				currentRowCard = 1;
+				x = x + BoxSizes::boxHeight;
+				return { x - BoxSizes::boxHeight,y };
+			}
+			if (currentRowCard == maxRowCards)
+			{
+				x = x - (maxRowCards + centeringOffset) * BoxSizes::boxHeight / 2;
+				y += BoxSizes::boxHeight * 0.75 + 5;
+				currentRowCard = 1;
+				maxRowCards--;
+				centeringOffset--;
+				return { x,y };
+			}
+			else
+			{
+				if (!firstCall)
+					x += BoxSizes::boxHeight;
+				firstCall = false;
+				currentRowCard++;
+				return { x,y };
+			}if (currentRowCard == 0)
+				x = 647 - BoxSizes::boxHeight;
+			else
+				x += BoxSizes::boxHeight;
+			currentRowCard++;
+			if (currentRowCard == 4)
+			{
+				thirdSectionDone = true;
+				currentRowCard = 0;
+			}
 			return { x,y };
 		}
 	}
@@ -1729,9 +1831,9 @@ void Game::run()
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
-		m_currentAge = Building::Age::AGEII;
+		m_currentAge = Building::Age::AGEIII;
 		m_cardDisplay.clear();
-		initAgeIIBoard();
+		initAgeIIIBoard();
 		window.display();
 		PollEvents(window);
 		//wondersSetup(window);
