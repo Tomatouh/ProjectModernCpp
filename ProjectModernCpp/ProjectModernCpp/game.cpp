@@ -1965,16 +1965,16 @@ void Game::PollEvents(sf::RenderWindow& window)
 		if (event->is<sf::Event::MouseButtonPressed>())
 		{
 			handleClick(window, sf::Mouse::getPosition(window));
+
 		}
 
 		bool ok = 0;
-		for (auto row : m_cardDisplay)
-			for (auto card : row)
-				if (card.has_value())
-				{
-					ok = 1;
-					break;
-				}
+		for (auto card : m_cardDisplay[0])
+			if (card.has_value())
+			{
+				ok = 1;
+				break;
+			}
 		if (!ok)
 		{
 			if (m_currentAge == Building::Age::AGEI)
@@ -1989,8 +1989,8 @@ void Game::PollEvents(sf::RenderWindow& window)
 				m_cardDisplay.clear();
 				initAgeIIIBoard();
 			}
-
 			drawCurrentAgeCards(window);
+			window.display();
 		}
 	}
 }
@@ -2008,7 +2008,7 @@ void Game::run()
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	//std::uint16_t iteration = 0;
 
-	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Close);
+	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(60);
 	int step = 1;
 
