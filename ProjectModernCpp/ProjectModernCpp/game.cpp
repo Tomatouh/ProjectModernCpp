@@ -1416,6 +1416,12 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			activateCardEffects(m_selectedBuilding);
 			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
 			turnCards();
+			if (m_currentPlayer->hasTokenSelectionRight())
+			{
+				window.draw(m_backgroundSprite);
+				drawTokenSelection(window);
+				window.display();
+			}
 			std::swap(m_currentPlayer, m_otherPlayer);
 
 		}
@@ -1941,13 +1947,28 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 
 }
 
+void Game::drawTokenSelection(sf::RenderWindow& window)
+{
+	int x = static_cast<float>(window.getSize().x) / 2.f - (m_progressTokensDeck.size() * 148.f) / 2.f;
+	for(auto& token : m_progressTokensDeck)
+	{
+		sf::Texture tokenTexture;
+		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(token->getId()) + ".png");
+		sf::Sprite tokenSprite(tokenTexture);
+		tokenSprite.setScale({ 0.4f, 0.4f });
+		tokenSprite.setPosition({ static_cast<float>(x), static_cast<float>(window.getSize().y) / 2.f - 75.f });
+		x += 154;
+		window.draw(tokenSprite);
+	}
+}
+
 void Game::PollEvents(sf::RenderWindow& window)
 {
 	while (const std::optional event = window.waitEvent())
 	{
 		if (event->is<sf::Event::Closed>())
 			window.close();
-		if (event->is<sf::Event::Resized>()) {
+		/*if (event->is<sf::Event::Resized>()) {
 			window.setView(window.getDefaultView());
 			window.draw(m_backgroundSprite);
 			m_wonderRects.clear();
@@ -1961,7 +1982,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 				drawMilitaryBoard(window);
 			}
 			window.display();
-		}
+		}*/
 		if (event->is<sf::Event::MouseButtonPressed>())
 		{
 			handleClick(window, sf::Mouse::getPosition(window));
