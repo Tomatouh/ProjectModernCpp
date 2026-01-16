@@ -1828,7 +1828,7 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	triangleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 500.f });
 
 	sf::Texture scaleTexture;
-	scaleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\triangle.png");
+	scaleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\scale.png");
 	sf::Sprite scaleSprite(triangleTexture);
 	scaleSprite.setScale({ 0.3f, 0.3f });
 	scaleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 550.f });
@@ -2070,8 +2070,6 @@ void Game::run()
 			drawWondersSelection(window);
 		}
 		window.display();
-		m_currentPlayer->addScientificPoint(Building::ScientificSymbol::GLOBE);
-		m_currentPlayer->addScientificPoint(Building::ScientificSymbol::GLOBE);
 		PollEvents(window);
 		//wondersSetup(window);
 
