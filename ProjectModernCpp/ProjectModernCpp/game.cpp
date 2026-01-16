@@ -1827,11 +1827,17 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	triangleSprite.setScale({ 0.3f, 0.3f });
 	triangleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 500.f });
 
+	sf::Texture scaleTexture;
+	scaleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\triangle.png");
+	sf::Sprite scaleSprite(triangleTexture);
+	scaleSprite.setScale({ 0.3f, 0.3f });
+	scaleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 550.f });
+
 	sf::Texture wheelTexture;
 	wheelTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\wheel.png");
 	sf::Sprite wheelSprite(wheelTexture);
 	wheelSprite.setScale({ 0.3f, 0.3f });
-	wheelSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 550.f });
+	wheelSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 600.f });
 
 	sf::Text globeLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[0]), 20);
 	globeLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 307.f });
@@ -1853,8 +1859,12 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	triangleLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 507.f });
 	triangleLabel.setFillColor(sf::Color::Black);
 
+	sf::Text scaleLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[1]), 20);
+	scaleLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 557.f });
+	scaleLabel.setFillColor(sf::Color::Black);
+
 	sf::Text wheelLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[6]), 20);
-	wheelLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 557.f });
+	wheelLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 607.f });
 	wheelLabel.setFillColor(sf::Color::Black);
 
 	sf::RectangleShape exitBox;
@@ -1882,11 +1892,13 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	window.draw(sundialSprite);
 	window.draw(triangleSprite);
 	window.draw(wheelSprite);
+	window.draw(scaleSprite);
 	window.draw(globeLabel);
 	window.draw(featherLabel);
 	window.draw(mortarLabel);
 	window.draw(sundialLabel);
 	window.draw(triangleLabel);
+	window.draw(scaleLabel);
 	window.draw(wheelLabel);
 	window.draw(exitBox);
 	window.draw(exitLabel);
@@ -2058,6 +2070,8 @@ void Game::run()
 			drawWondersSelection(window);
 		}
 		window.display();
+		m_currentPlayer->addScientificPoint(Building::ScientificSymbol::GLOBE);
+		m_currentPlayer->addScientificPoint(Building::ScientificSymbol::GLOBE);
 		PollEvents(window);
 		//wondersSetup(window);
 
