@@ -1379,6 +1379,26 @@ void Game::drawConstructionChoices(sf::RenderWindow& window)
 	box.drawOptions(window);
 }
 
+bool Game::selectToken(sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	const float xPosStart = static_cast<float>(window.getSize().x) / 2.f - (m_progressTokensDeck.size() * 148.f) / 2.f;
+	const float yPos = static_cast<float>(window.getSize().y) / 2.f - 75.f;
+	const float tokenBoxWidth = 100.f;
+	const float tokenBoxHeight = 80.f;
+	for (int i = 0; i < m_progressTokensDeck.size(); ++i) {
+		sf::FloatRect tokenRect(
+			sf::Vector2f(xPosStart + i * 154, yPos),
+			sf::Vector2f(tokenBoxWidth, tokenBoxHeight)
+		);
+		if (tokenRect.contains(worldPos)) {
+			m_currentPlayer->addProgressToken(*(m_progressTokensDeck[i]));
+			m_progressTokensDeck.erase(m_progressTokensDeck.begin() + i);
+			return true;
+		}
+	}
+	return false;
+}
 int Game::getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos)
 {
 	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
@@ -1424,6 +1444,15 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 				window.draw(m_backgroundSprite);
 				drawTokenSelection(window);
 				window.display();
+				while(const std::optional event = window.waitEvent())
+				{
+					if(event->is<sf::Event::MouseButtonPressed>())
+					{
+						sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+						if (selectToken(window, mousePos))
+							break;
+					}
+				}
 			}
 			std::swap(m_currentPlayer, m_otherPlayer);
 
@@ -1761,7 +1790,7 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	triangleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 500.f });
 
 	sf::Texture scaleTexture;
-	scaleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\triangle.png");
+	scaleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\scale.png");
 	sf::Sprite scaleSprite(triangleTexture);
 	scaleSprite.setScale({ 0.3f, 0.3f });
 	scaleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 550.f });
@@ -1911,14 +1940,15 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 
 void Game::drawTokenSelection(sf::RenderWindow& window)
 {
-	int x = static_cast<float>(window.getSize().x) / 2.f - (m_progressTokensDeck.size() * 148.f) / 2.f;
+	float x = static_cast<float>(window.getSize().x) / 2.f - (m_progressTokensDeck.size() * 148.f) / 2.f;
+	float y = static_cast<float>(window.getSize().y) / 2.f - 75.f;
 	for(auto& token : m_progressTokensDeck)
 	{
 		sf::Texture tokenTexture;
 		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(token->getId()) + ".png");
 		sf::Sprite tokenSprite(tokenTexture);
 		tokenSprite.setScale({ 0.4f, 0.4f });
-		tokenSprite.setPosition({ static_cast<float>(x), static_cast<float>(window.getSize().y) / 2.f - 75.f });
+		tokenSprite.setPosition({ x, y });
 		x += 154;
 		window.draw(tokenSprite);
 	}

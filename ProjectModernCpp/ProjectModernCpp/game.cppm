@@ -72,6 +72,7 @@ private:
 	void activateCardEffects(std::shared_ptr<Building> building);
 	void drawMilitaryBoard(sf::RenderWindow& window);
 	void drawTokenSelection(sf::RenderWindow& window);
+	bool selectToken(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 public:
 
 	Game();
