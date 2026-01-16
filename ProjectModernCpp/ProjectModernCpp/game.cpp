@@ -1699,6 +1699,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			drawClickAreaForPlayerDetails(window);
 			alreadyDrawn = true;
 		}
+		drawPlayerTurn(window);
 		drawMilitaryBoard(window);
 		window.display();
 		}
@@ -1791,9 +1792,9 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 
 	sf::Texture scaleTexture;
 	scaleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\scale.png");
-	sf::Sprite scaleSprite(triangleTexture);
+	sf::Sprite scaleSprite(scaleTexture);
 	scaleSprite.setScale({ 0.3f, 0.3f });
-	scaleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 550.f });
+	scaleSprite.setPosition({ backgroundBox.getPosition().x + 17.f, backgroundBox.getPosition().y + 545.f });
 
 	sf::Texture wheelTexture;
 	wheelTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\wheel.png");
@@ -1802,31 +1803,31 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	wheelSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 600.f });
 
 	sf::Text globeLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[0]), 20);
-	globeLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 307.f });
+	globeLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 307.f });
 	globeLabel.setFillColor(sf::Color::Black);
 
 	sf::Text featherLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[5]), 20);
-	featherLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 357.f });
+	featherLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 357.f });
 	featherLabel.setFillColor(sf::Color::Black);
 
 	sf::Text mortarLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[3]), 20);
-	mortarLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 407.f });
+	mortarLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 407.f });
 	mortarLabel.setFillColor(sf::Color::Black);
 
 	sf::Text sundialLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[2]), 20);
-	sundialLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 457.f });
+	sundialLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 457.f });
 	sundialLabel.setFillColor(sf::Color::Black);
 
 	sf::Text triangleLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[4]), 20);
-	triangleLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 507.f });
+	triangleLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 507.f });
 	triangleLabel.setFillColor(sf::Color::Black);
 
 	sf::Text scaleLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[1]), 20);
-	scaleLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 557.f });
+	scaleLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 557.f });
 	scaleLabel.setFillColor(sf::Color::Black);
 
 	sf::Text wheelLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[6]), 20);
-	wheelLabel.setPosition({ backgroundBox.getPosition().x + 60.f, backgroundBox.getPosition().y + 607.f });
+	wheelLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 607.f });
 	wheelLabel.setFillColor(sf::Color::Black);
 
 	sf::RectangleShape exitBox;
@@ -1936,6 +1937,19 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 		window.draw(warSprite);
 	}
 
+}
+
+void Game::drawPlayerTurn(sf::RenderWindow& window)
+{
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text turnText(font,"",24);
+	turnText.setFillColor(m_currentPlayer->name()=="player1"?sf::Color::Blue:sf::Color::Red);
+	turnText.setPosition({ static_cast<float>(window.getSize().x) - 325.f, 200.f });
+	turnText.setString("Current turn: " + m_currentPlayer->name());
+	window.draw(turnText);
 }
 
 void Game::drawTokenSelection(sf::RenderWindow& window)

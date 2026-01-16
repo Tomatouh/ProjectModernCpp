@@ -73,6 +73,8 @@ private:
 	void drawMilitaryBoard(sf::RenderWindow& window);
 	void drawTokenSelection(sf::RenderWindow& window);
 	bool selectToken(sf::RenderWindow& window, const sf::Vector2i& mousePos);
+	void drawPlayerTurn(sf::RenderWindow& window);
+
 public:
 
 	Game();
