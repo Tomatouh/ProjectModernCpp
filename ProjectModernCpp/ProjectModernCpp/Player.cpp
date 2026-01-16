@@ -107,18 +107,21 @@ uint16_t Player::getCoins() const noexcept {
     return m_coins;
 }
 
-
 void Player::addBuilding(const Building& building) {
 
-    std::uint16_t totalCost = getConstructionCost(building);
+    // Check if this is a free chain build
+    bool isFreeChainBuild = (building.getCost().getLink() != 0 && hasChainId(building.getCost().getLink()));
 
+    std::uint16_t totalCost = getConstructionCost(building);
     std::uint16_t cardBaseCost = building.getCost().getCostCoins();
 
+    // Calculate trade cost separately to pay opponent
     std::uint16_t tradeSpent = 0;
     if (totalCost > cardBaseCost) {
         tradeSpent = totalCost - cardBaseCost;
     }
 
+    // Pay opponent for trades if they have Economy token
     if (tradeSpent > 0) {
         if (auto opponent = m_otherPlayer.lock()) {
             if (opponent->m_hasEconomyProgressToken) {
@@ -127,14 +130,17 @@ void Player::addBuilding(const Building& building) {
         }
     }
 
-    if (totalCost == 0 && building.getCost().getLink() != 0 && hasChainId(building.getCost().getLink()) && m_hasUrbanismProgressToken) {
+    // Handle Urbanism token bonus (free chain gives 4 coins)
+    if (isFreeChainBuild && m_hasUrbanismProgressToken) {
         addCoin(4);
     }
 
+    // Pay the total cost in coins
     if (totalCost > 0) {
         payCoin(totalCost);
     }
 
+    // Add the building to the appropriate collection
     switch (building.getColor()) {
     case Building::Color::BROWN:
         m_brownBuildings.push_back(building);
@@ -161,21 +167,6 @@ void Player::addBuilding(const Building& building) {
         m_purpleBuildings.push_back(building);
         break;
     }
-
-   /* std::vector<ResourceType> bResources = building.getResources();
-    for (auto resource : bResources)
-    {
-        switch (resource)
-        {
-        case ResourceType::WOOD:    m_wood++; break;
-        case ResourceType::STONE:   m_stone++; break;
-        case ResourceType::CLAY:    m_clay++; break;
-        case ResourceType::GLASS:   m_glass++; break;
-        case ResourceType::PAPYRUS: m_papyrus++; break;
-        }
-        m_productions[resource]++;
-    }
-    addVictoryPoints(building.getVictoryPoints());*/
 }
 
 void Player::discardBuilding(Building::Color color, std::uint16_t id)
@@ -657,9 +648,99 @@ void Player::buildWonder(std::uint16_t wonderId, std::shared_ptr<Building> ageCa
 {
     for (auto& wonderPair : m_wonders) {
         if (wonderPair.first->getId() == wonderId) {
+            // Calculate the actual cost
+            std::uint16_t totalCost = wonderPair.first->getCost().getCostCoins();
+            std::vector<ResourceType> resourcesNeeded = wonderPair.first->getCost().getCostResources();
+
+            // Apply Architecture token discount if available
+            if (m_hasArchitectureProgressToken) {
+                applyTokenDiscount(resourcesNeeded, 2);
+            }
+
+            // Check what resources we have and what we need to buy
+            std::uint16_t availableWood = m_wood;
+            std::uint16_t availableStone = m_stone;
+            std::uint16_t availableClay = m_clay;
+            std::uint16_t availableGlass = m_glass;
+            std::uint16_t availablePapyrus = m_papyrus;
+
+            std::uint16_t tradeSpent = 0;
+
+            for (const auto& resource : resourcesNeeded) {
+                bool playerHasResource = false;
+
+                switch (resource) {
+                case ResourceType::WOOD:
+                    if (availableWood > 0) {
+                        availableWood--;
+                        playerHasResource = true;
+                    }
+                    break;
+                case ResourceType::STONE:
+                    if (availableStone > 0) {
+                        availableStone--;
+                        playerHasResource = true;
+                    }
+                    break;
+                case ResourceType::CLAY:
+                    if (availableClay > 0) {
+                        availableClay--;
+                        playerHasResource = true;
+                    }
+                    break;
+                case ResourceType::GLASS:
+                    if (availableGlass > 0) {
+                        availableGlass--;
+                        playerHasResource = true;
+                    }
+                    break;
+                case ResourceType::PAPYRUS:
+                    if (availablePapyrus > 0) {
+                        availablePapyrus--;
+                        playerHasResource = true;
+                    }
+                    break;
+                }
+
+                // If we don't have it, we need to trade for it
+                if (!playerHasResource) {
+                    if (auto opponent = m_otherPlayer.lock()) {
+                        std::uint16_t tradeCost = getTradeCost(resource, *opponent);
+                        totalCost += tradeCost;
+                        tradeSpent += tradeCost;
+                    }
+                    else {
+                        totalCost += 2;
+                        tradeSpent += 2;
+                    }
+                }
+            }
+
+            // Pay opponent for trades if they have Economy token
+            if (tradeSpent > 0) {
+                if (auto opponent = m_otherPlayer.lock()) {
+                    if (opponent->m_hasEconomyProgressToken) {
+                        opponent->addCoin(tradeSpent);
+                    }
+                }
+            }
+
+            // Deduct the total coins (base cost + trading)
+            if (totalCost > 0) {
+                payCoin(totalCost);
+            }
+
+            // Mark the wonder as constructed with the age card used
             wonderPair.second = ageCardUsed;
+
+            // Add the wonder's benefits
             addVictoryPoints(wonderPair.first->getVictoryPoints());
             addShields(wonderPair.first->getShields());
+
+            // Note: Resources are production capacity, not consumables
+            // We only paid coins for what we needed to trade
+            // The age card used is discarded (tracked in wonderPair.second)
+
             return;
         }
     }

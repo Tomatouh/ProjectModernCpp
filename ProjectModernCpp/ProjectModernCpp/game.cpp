@@ -1410,8 +1410,11 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 	switch (option)
 	{
 	case 0:
-		if (CheckPlayerResources(m_currentPlayer, m_selectedBuilding) && CheckPlayerCoins(m_currentPlayer, m_selectedBuilding)) {
+		// Use Player::canBuild to check for resources, coins, trading logic, and chains
+		if (m_currentPlayer->canBuild(*m_selectedBuilding)) {
+			// Player::addBuilding handles payment (including trading costs to opponent) and adding the building to vectors
 			m_currentPlayer->addBuilding(*m_selectedBuilding);
+
 			removeCardFromDeck(m_selectedBuilding->getId());
 			activateCardEffects(m_selectedBuilding);
 			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
@@ -1427,7 +1430,8 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		}
 		else
 		{
-			std::cout << "You don't have enough resources/coins to build" << m_selectedBuilding->getName() << "Retry\n";
+			// Assuming getName() exists on Building/Card, otherwise use getId()
+			std::cout << "You don't have enough resources/coins to build: " << m_selectedBuilding->getId() << ", retry\n";
 		}
 		break;
 	case 1:
@@ -1470,53 +1474,11 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 				else
 					break;
 			}
-			if(event->is<sf::Event::Closed>())
+			if (event->is<sf::Event::Closed>())
 			{
 				window.close();
 				break;
 			}
-			//return option;
-			//while (true)
-			//{
-			//	//PollEvents(window);
-			//	int index = wonderIndexAtPosition(sf::Mouse::getPosition(window), window);
-			//	if (index >= 0 && index < static_cast<int>(m_wondersDisplay.size())
-			//		&& m_wondersDisplay[index].has_value()) {
-			//		auto selectedWonder = m_wondersDisplay[index].value();
-			//		m_selectedBuilding = selectAcceptableCard();
-			//		if (m_currentPlayer->canBuildWonder(*(selectedWonder))) {
-			//			m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
-			//			Game::m_constructedWonders++;
-			//			removeCardFromDeck(m_selectedBuilding->getId());
-			//		}
-			//		else {
-			//			/*system("cls");*/
-			//			std::cout << "You cannot build this wonder now. Retry\n";
-			//			continue;
-			//		}
-			//	}
-			//	break;
-			//}
-			/*drawPlayerWonders(leftPlayer, leftX, bottomY, window, true);
-			drawPlayerWonders(rightPlayer, rightX, bottomY, window, true);*/
-			/*std::cout << "Your wonders:\n";
-			for (auto wonder : m_currentPlayer->getWonders())
-				std::cout << "[" << wonder.first->getId() << "] ";
-			std::cout << "\n";
-			auto selectedWonder = selectAcceptableWonder();
-			m_selectedBuilding = selectAcceptableCard();
-			if (m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
-			{
-				m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
-				Game::m_constructedWonders++;
-				removeCardFromDeck(m_selectedBuilding->getId());
-			}
-			else
-			{
-				system("cls");
-				std::cout << "You cannot build this wonder now. Retry\n";
-				continue;
-			}*/
 		}
 		m_selectedBuilding = nullptr;
 		window.draw(m_backgroundSprite);
