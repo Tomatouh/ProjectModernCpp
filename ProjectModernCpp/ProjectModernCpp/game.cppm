@@ -90,6 +90,7 @@ private:
 	void discardOpponentCard(sf::RenderWindow& window, Building::Color color);
 
 	void drawSelectedCard(sf::RenderWindow& window);
+	void drawPlayerCardsBox(sf::RenderWindow& window);
 	//void calculateFinalScores();
 	void checkMilitaryVictory();
 	void drawMilitaryVictoryScreen(sf::RenderWindow& window);

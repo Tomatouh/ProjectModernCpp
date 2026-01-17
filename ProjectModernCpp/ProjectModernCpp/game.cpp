@@ -1580,6 +1580,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		m_selectedBuilding = nullptr;
 		if (m_gamestate == MILITARY)
 			return option;
+		turnCards();
 		window.draw(m_backgroundSprite);
 		redrawCurrentAgeCards(window);
 		drawPlayerCards(window);
@@ -2576,6 +2577,40 @@ void Game::drawSelectedCard(sf::RenderWindow& window)
 //		std::cout << "It's a tie!\n";
 //}
 
+void Game::drawPlayerCardsBox(sf::RenderWindow& window)
+{
+	sf::RectangleShape backgroundBox;
+	backgroundBox.setSize({ 1300.f, 850.f });
+	backgroundBox.setFillColor(sf::Color::White);
+	backgroundBox.setOutlineColor(sf::Color::Black);
+	backgroundBox.setOutlineThickness(3.f);
+	backgroundBox.setPosition({ static_cast<float>(window.getSize().x) / 2.f - backgroundBox.getSize().x / 2.f,
+		10.f });
+
+	sf::RectangleShape exitBox;
+	exitBox.setSize({ 300.f, 40.f });
+	exitBox.setFillColor(sf::Color::White);
+	exitBox.setOutlineColor(sf::Color::Black);
+	exitBox.setOutlineThickness(3.f);
+	exitBox.setPosition({ static_cast<float>(window.getSize().x) / 2.f  - exitBox.getSize().x/2,
+		backgroundBox.getPosition().y + backgroundBox.getSize().y - 50.f});
+
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text returnText(font, "Return to details page", 20);
+	returnText.setPosition({ static_cast<float>(window.getSize().x) / 2.f - exitBox.getSize().x / 2 + 20.f, exitBox.getPosition().y + 5.f });
+	returnText.setFillColor(sf::Color::Black);
+
+
+
+
+	window.draw(backgroundBox);
+	window.draw(exitBox);
+	window.draw(returnText);
+}
+
 void Game::checkMilitaryVictory()
 {
 	if (m_board.getPos() >= 9)
@@ -2749,6 +2784,7 @@ void Game::run()
 			drawWondersSelection(window);
 		}
 		window.display();
+
 		PollEvents(window);
 	}
 }
