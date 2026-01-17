@@ -1538,6 +1538,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						else {
 							m_waitingToDiscardBrown = false;
 						}
+
 						if (m_waitingToDiscardGrey && m_otherPlayer->getGreyBuildings().size() > 0) {
 							discardOpponentCard(window, Building::Color::GREY);
 							m_waitingToDiscardGrey = false;
@@ -1545,6 +1546,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						else {
 							m_waitingToDiscardGrey = false;
 						}
+
 						if (m_waitingForDiscardedChoice && m_discardedCards->size() > 0) {
 							constructDiscardedCard(window);
 							m_waitingForDiscardedChoice = false;
@@ -1552,7 +1554,9 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						else {
 							m_waitingForDiscardedChoice = false;
 						}
-						if (m_currentPlayer->hasSecondTurn())
+
+
+						if (m_currentPlayer->hasSecondTurn() || m_currentPlayer->hasTheologyProgressToken())
 							m_currentPlayer->setSecondTurn(false);
 						else
 							std::swap(m_currentPlayer, m_otherPlayer);
