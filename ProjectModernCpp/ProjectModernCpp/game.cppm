@@ -15,7 +15,7 @@ import choiceBox;
 export class Game {
 private:
 	const static std::uint16_t k_boardSize = 20;
-	const static std::uint16_t k_tokensNumber = 5;
+	//const static std::uint16_t k_tokensNumber = 5;
 	static sf::Texture m_background;
 	static sf::Sprite m_backgroundSprite;
 	static std::uint8_t m_constructedWonders;
@@ -36,7 +36,7 @@ private:
 
 	Building::Age m_currentAge;
 	std::vector< std::unique_ptr<Player::ProgressToken>> m_progressTokensDeck;
-	std::array<std::optional<Player::ProgressToken>, k_tokensNumber> m_progressTokens;
+	std::vector<std::unique_ptr<Player::ProgressToken>> m_remainingProgressTokens;
 	std::unordered_map<Card::Effect, std::function<void(Game& game)>> m_cardEffects;
 	std::shared_ptr<Building> m_selectedBuilding;
 	enum GameState {
@@ -51,6 +51,8 @@ private:
 	bool m_waitingForDiscardedChoice = false;
 	bool m_waitingToDiscardBrown = false;
 	bool m_waitingToDiscardGrey = false;
+	bool m_waitingForTokenSelection = false;
+	std::vector<std::unique_ptr<Player::ProgressToken>> m_current3TokenChoices;
 
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
@@ -99,6 +101,10 @@ private:
 	void drawScientificVictoryScreen(sf::RenderWindow& window);
 
 	void awardPendingZoneVictoryPoints();
+
+	void draw3ProgressTokens(sf::RenderWindow& window);
+	bool selectFrom3ProgressTokens(sf::RenderWindow& window, const sf::Vector2i& mousePos);
+	void takeProgressToken(sf::RenderWindow& window);
 
 public:
 

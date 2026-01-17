@@ -332,7 +332,7 @@ void Game::initCardEffects()
 		{Card::Effect::constructCard, [](Game& game) {game.m_waitingForDiscardedChoice = true; }},
 		{Card::Effect::discardBrown, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
 		{Card::Effect::discardGrey, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
-		{Card::Effect::drawProgress, [](Game& game) {drawProgress(game.m_currentPlayer, game.m_progressTokensDeck); }},
+		{Card::Effect::drawProgress, [](Game& game) { game.m_waitingForTokenSelection = true; }},
 		{Card::Effect::loseThreeCoins, [](Game& game) {game.m_otherPlayer->addCoin(-3); }},
 		{Card::Effect::magistratesGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
@@ -441,11 +441,11 @@ void Game::initProgressTokens()
 	loadProgressTokens();
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	for (int i = 0; i < m_progressTokens.size(); ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
 		std::uint16_t index = dist(gen);
-		m_progressTokens[i] = std::make_optional<Player::ProgressToken>(*m_progressTokensDeck[index]);
+		m_remainingProgressTokens.emplace_back(std::move(m_progressTokensDeck[index]));
 		m_progressTokensDeck.erase(m_progressTokensDeck.begin() + index);
 	}
 
@@ -1531,6 +1531,11 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 							PollEvents(window);
 						}
 
+						if (m_waitingForTokenSelection)
+						{
+							takeProgressToken(window);
+							m_waitingForTokenSelection = false;
+						}
 						if (m_waitingToDiscardBrown && m_otherPlayer->getBrownBuildings().size() > 0) {
 							discardOpponentCard(window, Building::Color::BROWN);
 							m_waitingToDiscardGrey = false;
@@ -2205,17 +2210,17 @@ void Game::checkAndApplyZoneRewards()
 	struct ZoneReward {
 		int vpGain;
 		int opponentCoinLoss;
-		int minPos; 
-		int maxPos;  
+		int minPos;
+		int maxPos;
 	};
 
 	std::array<ZoneReward, 6> rewards = { {
-		{10, 5, -9, -6},   
-		{5, 2, -6, -3},   
-		{2, 0, -3, -1},   
-		{2, 0, 1, 3},     
-		{5, 2, 3, 6},   
-		{10, 5, 6, 9}    
+		{10, 5, -9, -6},
+		{5, 2, -6, -3},
+		{2, 0, -3, -1},
+		{2, 0, 1, 3},
+		{5, 2, 3, 6},
+		{10, 5, 6, 9}
 	} };
 
 	for (int i = 0; i < 6; i++) {
@@ -2256,7 +2261,7 @@ void Game::checkAndApplyZoneRewards()
 
 			std::cout << rewardPlayer->name() << " entered zone ";
 
-			int visualZoneNumber = 6 - i; 
+			int visualZoneNumber = 6 - i;
 
 			std::cout << visualZoneNumber << " (will gain " << rewards[i].vpGain << " VP at game end)";
 			if (rewards[i].opponentCoinLoss > 0) {
@@ -2283,12 +2288,12 @@ void Game::awardPendingZoneVictoryPoints()
 	};
 
 	std::array<ZoneReward, 6> rewards = { {
-		{10, 5, -9, -6}, 
-		{5, 2, -6, -3},   
-		{2, 0, -3, -1},   
-		{2, 0, 1, 3},     
-		{5, 2, 3, 6},     
-		{10, 5, 6, 9}     
+		{10, 5, -9, -6},
+		{5, 2, -6, -3},
+		{2, 0, -3, -1},
+		{2, 0, 1, 3},
+		{5, 2, 3, 6},
+		{10, 5, 6, 9}
 	} };
 
 	std::cout << "\n=== Awarding Military Zone Victory Points ===\n";
@@ -2324,6 +2329,71 @@ void Game::awardPendingZoneVictoryPoints()
 	}
 
 	std::cout << "==========================================\n\n";
+}
+
+void Game::draw3ProgressTokens(sf::RenderWindow& window)
+{
+	
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	for (int i = 0; i < 3; ++i)
+	{
+		std::uniform_int_distribution<> dist(0, m_remainingProgressTokens.size() - 1);
+		int randomIndex = dist(gen);
+		m_current3TokenChoices.emplace_back(std::move(m_remainingProgressTokens[randomIndex]));
+		m_remainingProgressTokens.erase(m_remainingProgressTokens.begin() + randomIndex);
+	}
+	float x = static_cast<float>(window.getSize().x) / 2.f - (m_current3TokenChoices.size() * 148.f) / 2.f;
+	float y = static_cast<float>(window.getSize().y) / 2.f - 75.f;
+	for (int i = 0; i < m_current3TokenChoices.size(); ++i)
+	{
+		sf::Texture tokenTexture;
+		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(m_current3TokenChoices[i]->getId()) + ".png");
+		sf::Sprite tokenSprite(tokenTexture);
+		tokenSprite.setScale({ 0.4f, 0.4f });
+		tokenSprite.setPosition({ x, y });
+		x += 154;
+		window.draw(tokenSprite);
+	}
+}
+
+bool Game::selectFrom3ProgressTokens(sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	const float xPosStart = static_cast<float>(window.getSize().x) / 2.f - (m_current3TokenChoices.size() * 148.f) / 2.f;
+	const float yPos = static_cast<float>(window.getSize().y) / 2.f - 75.f;
+	const float tokenBoxWidth = 100.f;
+	const float tokenBoxHeight = 80.f;
+	for (int i = 0; i < m_current3TokenChoices.size(); ++i) {
+		sf::FloatRect tokenRect(
+			sf::Vector2f(xPosStart + i * 154, yPos),
+			sf::Vector2f(tokenBoxWidth, tokenBoxHeight)
+		);
+		if (tokenRect.contains(worldPos)) {
+			m_currentPlayer->addProgressToken(*(m_current3TokenChoices[i]));
+			m_current3TokenChoices[i]->applyEffect(m_currentPlayer);
+			m_current3TokenChoices.erase(m_current3TokenChoices.begin() + i);
+			return true;
+		}
+	}
+	return false;
+}
+
+void Game::takeProgressToken(sf::RenderWindow& window)
+{
+	window.draw(m_backgroundSprite);
+	draw3ProgressTokens(window);
+	window.display();
+	while (const std::optional event = window.waitEvent())
+	{
+		if (event->is<sf::Event::MouseButtonPressed>())
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+			if (selectFrom3ProgressTokens(window, mousePos))
+				break;
+		}
+	}
 }
 
 void Game::drawOpponentGreyOrBrownBuildings(sf::RenderWindow& window, Building::Color color)
@@ -2459,7 +2529,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 {
 	while (const std::optional event = window.waitEvent())
 	{
-		
+
 		if (event->is<sf::Event::Closed>())
 			window.close();
 
@@ -2475,7 +2545,7 @@ void Game::PollEvents(sf::RenderWindow& window)
 			drawScientificVictoryScreen(window);
 			continue;
 		}
-		if(GameState::CIVILIAN == m_gamestate)
+		if (GameState::CIVILIAN == m_gamestate)
 		{
 			window.clear();
 			drawCivilianVictoryScreen(window);
@@ -2704,7 +2774,7 @@ void Game::drawCivilianVictoryScreen(sf::RenderWindow& window)
 
 	sf::Text p1Text(font, "Player 1: " + std::to_string(player1Score), 35);
 	p1Text.setFillColor(sf::Color::Black);
-	
+
 	sf::Text p2Text(font, "Player 2: " + std::to_string(player2Score), 35);
 	p2Text.setFillColor(sf::Color::Black);
 
@@ -2750,7 +2820,7 @@ void Game::drawScientificVictoryScreen(sf::RenderWindow& window)
 	sf::Text victoryText(font, "", 50);
 	victoryText.setFillColor(sf::Color::Black);
 	victoryText.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 200.f, static_cast<float>(window.getSize().y) / 2.f });
-	
+
 	victoryText.setString(m_currentPlayer->name() + " wins by scientific supremacy!");
 	sf::FloatRect textRect = victoryText.getLocalBounds();
 	victoryText.setOrigin(sf::Vector2f{ textRect.position.x + textRect.size.x / 2.0f,
@@ -2778,7 +2848,7 @@ void Game::run()
 
 	while (window.isOpen())
 	{
-		
+
 		window.draw(m_backgroundSprite);
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
