@@ -28,7 +28,7 @@ private:
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIDeck;
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIDeck;
 	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
-	std::shared_ptr<std::unordered_map<std::uint16_t, std::shared_ptr<Building>>> m_discardedCards;
+	std::shared_ptr<std::vector<std::shared_ptr<Building>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
 	std::unordered_map<std::uint16_t, std::optional<guiCard>> m_guiCardDisplay;
 
@@ -45,14 +45,17 @@ private:
 		CIVILIAN
 	};
 	GameState m_gamestate = GAMESTART;
-	bool m_waitingForWonderSelection = false;
+	//bool m_waitingForWonderSelection = false;
+	bool m_waitingForDiscardedChoice = false;
+	
+
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
 	std::shared_ptr<Card> getWonderById(std::uint8_t searchId);
 	std::shared_ptr <Building> selectAcceptableCard();
 	std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> selectAcceptableWonder();
 	std::shared_ptr<Card> selectWonder(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchID);
-	void removeCardFromDeck(std::uint8_t id);
+	void removeCardFromDeck(std::uint8_t id, bool discarded);
 	void turnCards();
 	void removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId);
 	bool findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& window);
@@ -74,6 +77,10 @@ private:
 	void drawTokenSelection(sf::RenderWindow& window);
 	bool selectToken(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void drawPlayerTurn(sf::RenderWindow& window);
+	void drawDiscardedCards(sf::RenderWindow& window);
+	bool selectDiscardedCard(sf::RenderWindow& window, const sf::Vector2i& mousePos);
+	void constructDiscardedCard(sf::RenderWindow& window);
+
 
 public:
 

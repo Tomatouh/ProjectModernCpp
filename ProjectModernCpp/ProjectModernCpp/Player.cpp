@@ -169,6 +169,36 @@ void Player::addBuilding(const Building& building) {
     }
 }
 
+void Player::addBuildingDirectly(const Building& building)
+{
+    switch (building.getColor()) {
+    case Building::Color::BROWN:
+        m_brownBuildings.push_back(building);
+        break;
+    case Building::Color::GREY:
+        m_greyBuildings.push_back(building);
+        break;
+    case Building::Color::BLUE:
+        m_blueBuildings.push_back(building);
+        break;
+    case Building::Color::GREEN:
+        m_greenBuildings.push_back(building);
+        break;
+    case Building::Color::YELLOW:
+        m_yellowBuildings.push_back(building);
+        break;
+    case Building::Color::RED:
+        m_redBuildings.push_back(building);
+        if (m_hasStrategyProgressToken) {
+            addShields(1);
+        }
+        break;
+    case Building::Color::PURPLE:
+        m_purpleBuildings.push_back(building);
+        break;
+    }
+}
+
 void Player::discardBuilding(Building::Color color, std::uint16_t id)
 {
     Building found;
@@ -183,7 +213,7 @@ void Player::discardBuilding(Building::Color color, std::uint16_t id)
         }
         found = std::move(*it);
         m_greyBuildings.erase(it);
-        m_discardPile->insert({ id, std::make_shared<Building>(found) });
+        m_discardPile->emplace_back(std::make_shared<Building>(found));
         break;
     case Building::Color::BROWN:
         it = std::find_if(m_brownBuildings.begin(), m_brownBuildings.end(), [id](const Building& b) { return b.getId() == id; });
@@ -193,7 +223,7 @@ void Player::discardBuilding(Building::Color color, std::uint16_t id)
         }
         found = std::move(*it);
         m_brownBuildings.erase(it);
-        m_discardPile->insert({ id, std::make_shared<Building>(found) });
+        m_discardPile->emplace_back(std::make_shared<Building>(found));
         break;
     }
 }
@@ -496,20 +526,20 @@ void Player::setOtherPlayer(const std::shared_ptr<Player>& otherPlayer)
     m_otherPlayer = otherPlayer;
 }
 
-const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>> Player::getDiscardPile() const
+const std::shared_ptr<std::vector<std::shared_ptr<Building>>> Player::getDiscardPile() const
 {
     return m_discardPile;
 }
 
-void Player::setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>>& discardPile)
+void Player::setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Building>>>& discardPile)
 {
     m_discardPile = discardPile;
 }
 
-void Player::removeCardFromDiscardPile(uint16_t cardId)
-{
-    m_discardPile->erase(cardId);
-}
+//void Player::removeCardFromDiscardPile(uint16_t cardId)
+//{
+//    m_discardPile->erase(cardId);
+//}
 
 std::unordered_map<ResourceType, bool> Player::getTradeDiscounts() const noexcept
 {
