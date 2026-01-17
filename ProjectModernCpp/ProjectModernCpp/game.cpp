@@ -1494,7 +1494,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
 						Game::m_constructedWonders++;
 						removeCardFromDeck(m_selectedBuilding->getId());
-						activateCardEffects(selectedWonder);	
+						activateWonderEffects(selectedWonder);	
 
 						if (m_currentPlayer->hasSecondTurn())
 							m_currentPlayer->setSecondTurn(false);
@@ -1538,7 +1538,7 @@ void Game::activateCardEffects(std::shared_ptr<Building> building)
 	}
 }
 
-void Game::activateCardEffects(std::shared_ptr<Card> card)
+void Game::activateWonderEffects(std::shared_ptr<Card> card)
 {
 	for (auto& effect : card->getEffects())
 	{

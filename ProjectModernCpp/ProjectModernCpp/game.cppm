@@ -70,7 +70,7 @@ private:
 	void drawConstructionChoices(sf::RenderWindow& window);
 	int getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	int chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
-	void activateWonderEffects(std::shared_ptr<Building> building);
+	void activateCardEffects(std::shared_ptr<Building> building);
 	void activateWonderEffects(std::shared_ptr<Card> card);
 	void drawMilitaryBoard(sf::RenderWindow& window);
 	void drawTokenSelection(sf::RenderWindow& window);
