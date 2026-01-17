@@ -199,9 +199,9 @@ void Player::addBuildingDirectly(const Building& building)
     }
 }
 
-void Player::discardBuilding(Building::Color color, std::uint16_t id)
+void Player::discardBuilding(Building::Color color, std::uint16_t i)
 {
-    Building found;
+    /*Building found;
     std::vector<Building>::iterator it;
     switch (color)
     {
@@ -225,6 +225,17 @@ void Player::discardBuilding(Building::Color color, std::uint16_t id)
         m_brownBuildings.erase(it);
         m_discardPile->emplace_back(std::make_shared<Building>(found));
         break;
+    }*/
+    if(color == Building::Color::BROWN && i < m_brownBuildings.size())
+    {
+        m_discardPile->emplace_back(std::make_shared<Building>(m_brownBuildings[i]));
+		removeResources(m_brownBuildings[i].getResources());
+        m_brownBuildings.erase(m_brownBuildings.begin() + i);
+	}
+    else if (color == Building::Color::GREY && i < m_greyBuildings.size()) {
+        m_discardPile->emplace_back(std::make_shared<Building>(m_greyBuildings[i]));
+        removeResources(m_greyBuildings[i].getResources());
+        m_greyBuildings.erase(m_greyBuildings.begin() + i);
     }
 }
 

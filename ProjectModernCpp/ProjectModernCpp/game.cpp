@@ -329,9 +329,9 @@ void Game::initCardEffects()
 		{Card::Effect::buildersGuild, [](Game& game) {if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * maxConstructedWonders(game.m_currentPlayer)); }},
 		{Card::Effect::addManufacturedGoodProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); }},
 		{Card::Effect::addRawResourceProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); } },
-		{Card::Effect::constructCard, [](Game& game) {/*constructCard(game.m_currentPlayer);*/ game.m_waitingForDiscardedChoice = true; }},
-		{Card::Effect::discardBrown, [](Game& game) {discardBrown(game.m_currentPlayer); }},
-		{Card::Effect::discardGrey, [](Game& game) {discardGrey(game.m_currentPlayer); }},
+		{Card::Effect::constructCard, [](Game& game) {game.m_waitingForDiscardedChoice = true; }},
+		{Card::Effect::discardBrown, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
+		{Card::Effect::discardGrey, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
 		{Card::Effect::drawProgress, [](Game& game) {drawProgress(game.m_currentPlayer, game.m_progressTokensDeck); }},
 		{Card::Effect::loseThreeCoins, [](Game& game) {game.m_otherPlayer->addCoin(-3); }},
 		{Card::Effect::magistratesGuild, [](Game& game) {
@@ -390,7 +390,9 @@ void Game::initCardEffects()
 		{Card::Effect::oneCoinGlass, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::GLASS); }},
 		{Card::Effect::oneCoinPapyrus, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::PAPYRUS); }},
 		{Card::Effect::oneCoinStone, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::STONE); }},
-		{Card::Effect::oneCoinWood, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::WOOD); }}
+		{Card::Effect::oneCoinWood, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::WOOD); }},
+		{Card::Effect::playSecondTurn,[](Game& game) {game.m_currentPlayer->setSecondTurn(true); }}
+
 	};
 }
 
@@ -1442,8 +1444,9 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			removeCardFromDeck(m_selectedBuilding->getId(), false);
 			activateCardEffects(m_selectedBuilding);
 			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
-
+			checkAndApplyZoneRewards();
 			turnCards();
+
 
 			if (m_currentPlayer->hasTokenSelectionRight())
 			{
@@ -1498,12 +1501,36 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
 						Game::m_constructedWonders++;
 						removeCardFromDeck(m_selectedBuilding->getId(), false);
-						activateCardEffects(m_selectedBuilding);
-						if (m_waitingForDiscardedChoice) {
+						activateWonderEffects(selectedWonder);
+
+					
+
+						if (m_waitingToDiscardBrown && m_otherPlayer->getBrownBuildings().size() > 0) {
+							discardOpponentCard(window, Building::Color::BROWN);
+							m_waitingToDiscardGrey = false;
+						}
+						else {
+							m_waitingToDiscardBrown = false;
+						}
+						if (m_waitingToDiscardGrey && m_otherPlayer->getGreyBuildings().size() > 0) {
+							discardOpponentCard(window, Building::Color::GREY);
+							m_waitingToDiscardGrey = false;
+						}
+						else {
+							m_waitingToDiscardGrey = false;
+						}
+						if (m_waitingForDiscardedChoice && m_discardedCards->size() > 0) {
 							constructDiscardedCard(window);
 							m_waitingForDiscardedChoice = false;
 						}
-						std::swap(m_currentPlayer, m_otherPlayer);
+						else {
+							m_waitingForDiscardedChoice = false;
+						}
+						if (m_currentPlayer->hasSecondTurn())
+							m_currentPlayer->setSecondTurn(false);
+						else
+							std::swap(m_currentPlayer, m_otherPlayer);
+
 						break;
 					}
 					else {
@@ -1526,6 +1553,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		drawPlayerCards(window);
 		drawClickAreaForPlayerDetails(window);
 		drawMilitaryBoard(window);
+		drawSelectedCard(window);
 		window.display();
 		return option;
 
@@ -1628,6 +1656,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 		}
 	if (found)
 		return true;
+	m_selectedBuilding = nullptr;
 	return false;
 }
 
@@ -1720,6 +1749,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			}
 			drawPlayerTurn(window);
 			drawMilitaryBoard(window);
+			drawSelectedCard(window);
 			window.display();
 		}
 		else
@@ -1732,6 +1762,8 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
 				drawMilitaryBoard(window);
+				drawPlayerTurn(window);
+				drawSelectedCard(window);
 				window.display();
 			}
 		}
@@ -2119,6 +2151,119 @@ void Game::checkAndApplyZoneRewards()
 	}
 }
 
+void Game::drawOpponentGreyOrBrownBuildings(sf::RenderWindow& window, Building::Color color)
+{
+	const float cardWidth = static_cast<float>(BoxSizes::boxWidth);
+	const float cardHeight = static_cast<float>(BoxSizes::boxHeight);
+	const float spacing = 10.f;
+	float totalWidth;
+	if (color == Building::Color::BROWN) {
+		totalWidth = m_otherPlayer->getBrownBuildings().size() * cardWidth + (m_otherPlayer->getBrownBuildings().size() - 1) * spacing;
+	}
+	else {
+		totalWidth = m_otherPlayer->getGreyBuildings().size() * cardWidth + (m_otherPlayer->getGreyBuildings().size() - 1) * spacing;
+	}
+	float x = static_cast<float>(window.getSize().x) / 2.f - totalWidth / 2.f;
+	float y = static_cast<float>(window.getSize().y) / 2.f - cardHeight / 2.f;
+
+	float currentX = x;
+	if (color == Building::Color::BROWN)
+		for (const auto& card : m_otherPlayer->getBrownBuildings())
+		{
+			sf::Texture cardTexture;
+			cardTexture.loadFromFile("..\\..\\Images\\" + std::to_string(card.getId()) + ".jpg");
+			sf::Sprite cardSprite(cardTexture);
+			cardSprite.setScale(sf::Vector2f{ cardWidth / cardTexture.getSize().x, cardHeight / cardTexture.getSize().y });
+			cardSprite.setPosition({ currentX, y });
+			window.draw(cardSprite);
+			currentX += cardWidth + spacing;
+		}
+	else
+		for (const auto& card : m_otherPlayer->getGreyBuildings())
+		{
+			sf::Texture cardTexture;
+			cardTexture.loadFromFile("..\\..\\Images\\" + std::to_string(card.getId()) + ".jpg");
+			sf::Sprite cardSprite(cardTexture);
+			cardSprite.setScale(sf::Vector2f{ cardWidth / cardTexture.getSize().x, cardHeight / cardTexture.getSize().y });
+			cardSprite.setPosition({ currentX, y });
+			window.draw(cardSprite);
+
+			currentX += cardWidth + spacing;
+		}
+}
+
+bool Game::selectGreyOrBrownCard(sf::RenderWindow& window, const sf::Vector2i& mousePos, Building::Color color)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+
+	const float cardWidth = static_cast<float>(BoxSizes::boxWidth);
+	const float cardHeight = static_cast<float>(BoxSizes::boxHeight);
+	const float spacing = 10.f;
+	float totalWidth;
+	if (color == Building::Color::BROWN) {
+		totalWidth = m_otherPlayer->getBrownBuildings().size() * cardWidth + (m_otherPlayer->getBrownBuildings().size() - 1) * spacing;
+	}
+	else {
+		totalWidth = m_otherPlayer->getGreyBuildings().size() * cardWidth + (m_otherPlayer->getGreyBuildings().size() - 1) * spacing;
+	}
+
+	const float startX = static_cast<float>(window.getSize().x) / 2.f - totalWidth / 2.f;
+	const float startY = static_cast<float>(window.getSize().y) / 2.f - cardHeight / 2.f;
+	if (color == Building::Color::BROWN)
+		for (int i = 0; i < m_otherPlayer->getBrownBuildings().size(); ++i)
+		{
+			sf::FloatRect cardRect(
+				sf::Vector2f(startX + i * (cardWidth + spacing), startY),
+				sf::Vector2f(cardWidth, cardHeight)
+			);
+
+			if (cardRect.contains(worldPos))
+			{
+				m_otherPlayer->discardBuilding(Building::Color::BROWN, i);
+				return true;
+			}
+		}
+	else
+		for (int i = 0; i < m_otherPlayer->getGreyBuildings().size(); ++i)
+		{
+			sf::FloatRect cardRect(
+				sf::Vector2f(startX + i * (cardWidth + spacing), startY),
+				sf::Vector2f(cardWidth, cardHeight)
+			);
+			if (cardRect.contains(worldPos))
+			{
+				m_otherPlayer->discardBuilding(Building::Color::GREY, i);
+				return true;
+			}
+		}
+	return false;
+}
+
+void Game::discardOpponentCard(sf::RenderWindow& window, Building::Color color)
+{
+	window.draw(m_backgroundSprite);
+	if (color == Building::Color::BROWN)
+		drawOpponentGreyOrBrownBuildings(window, Building::Color::BROWN);
+	else
+		drawOpponentGreyOrBrownBuildings(window, Building::Color::GREY);
+	window.display();
+	while (const std::optional event = window.waitEvent())
+	{
+		if (event->is<sf::Event::MouseButtonPressed>())
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+			if (color == Building::Color::BROWN) {
+				if (selectGreyOrBrownCard(window, mousePos, Building::Color::BROWN))
+					break;
+			}
+			else {
+				if (selectGreyOrBrownCard(window, mousePos, Building::Color::GREY))
+					break;
+			}
+		}
+	}
+}
+
 void Game::drawTokenSelection(sf::RenderWindow& window)
 {
 	float x = static_cast<float>(window.getSize().x) / 2.f - (m_progressTokensDeck.size() * 148.f) / 2.f;
@@ -2189,7 +2334,18 @@ void Game::PollEvents(sf::RenderWindow& window)
 	}
 }
 
-
+void Game::drawSelectedCard(sf::RenderWindow& window)
+{
+	if (m_selectedBuilding != nullptr)
+	{
+		sf::Texture bigCard;
+		bigCard.loadFromFile("..\\..\\Images\\" + std::to_string(m_selectedBuilding->getId()) + ".jpg");
+		sf::Sprite bigCardSprite(bigCard);
+		bigCardSprite.setScale(sf::Vector2f{ 0.5,0.5});
+		bigCardSprite.setPosition({75.f,35.f});
+		window.draw(bigCardSprite);
+	}
+}
 
 void Game::run()
 {
@@ -2201,6 +2357,7 @@ void Game::run()
 	std::uint8_t move;
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	//std::uint16_t iteration = 0;
+	m_selectedBuilding = nullptr;
 
 	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(60);

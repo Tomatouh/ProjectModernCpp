@@ -48,7 +48,8 @@ private:
 	GameState m_gamestate = GAMESTART;
 	//bool m_waitingForWonderSelection = false;
 	bool m_waitingForDiscardedChoice = false;
-
+	bool m_waitingToDiscardBrown = false;
+	bool m_waitingToDiscardGrey = false;
 
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
@@ -83,7 +84,11 @@ private:
 	bool selectDiscardedCard(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void constructDiscardedCard(sf::RenderWindow& window);
 	void checkAndApplyZoneRewards();
+	void drawOpponentGreyOrBrownBuildings(sf::RenderWindow& window, Building::Color color);
+	bool selectGreyOrBrownCard(sf::RenderWindow& window, const sf::Vector2i& mousePos, Building::Color color);
+	void discardOpponentCard(sf::RenderWindow& window, Building::Color color);
 
+	void drawSelectedCard(sf::RenderWindow& window);
 public:
 
 	Game();
