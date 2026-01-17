@@ -1717,8 +1717,8 @@ std::uint8_t wasPlayerDetailBoxClicked(const sf::RenderWindow& window, const sf:
 
 bool wasExitPlayerBoxClicked(const sf::RenderWindow& window, const sf::Vector2i& mousePos)
 {
-	const float boxX = 840.0f;
-	const float boxY = 160.0f;
+	const float boxX = 840.f;
+	const float boxY = 35.f;
 	const float boxWidth = 100.f;
 	const float boxHeight = 40.f;
 	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
@@ -1814,108 +1814,160 @@ void Game::drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>
 		return font;
 		}();
 	sf::RectangleShape backgroundBox;
-	backgroundBox.setSize({ 400.f, 700.f });
+	backgroundBox.setSize({ 400.f, 850.f });
 	backgroundBox.setFillColor(sf::Color::White);
 	backgroundBox.setOutlineColor(sf::Color::Black);
 	backgroundBox.setOutlineThickness(3.f);
-	backgroundBox.setPosition({ static_cast<float>(window.getSize().x) / 2 - 200.f, static_cast<float>(window.getSize().y) / 2 - 300.f });
+	backgroundBox.setPosition({ static_cast<float>(window.getSize().x) / 2 - 200.f, static_cast<float>(window.getSize().y) / 2 - 425.f });
 
-	sf::Text coinsLabel(font, "Coins: " + std::to_string(selectedPlayer->getCoins()), 20);
-	coinsLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 20.f });
+	sf::Texture coinTexture;
+	coinTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\coins.png");
+	sf::Sprite coinSprite(coinTexture);
+	coinSprite.setScale({ 0.1f, 0.1f });
+	coinSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 20.f });
+
+	sf::Text coinsLabel(font, ": " + std::to_string(selectedPlayer->getCoins()), 20);
+	coinsLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 30.f });
 	coinsLabel.setFillColor(sf::Color::Black);
 
-	sf::Text victoryPointsLabel(font, "Victory Points: " + std::to_string(selectedPlayer->getVictoryPoints()), 20);
-	victoryPointsLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 60.f });
+	sf::Texture victoryPointTexture;
+	victoryPointTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\victory points.png");
+	sf::Sprite victoryPointSprite(victoryPointTexture);
+	victoryPointSprite.setScale({ 0.3f, 0.3f });
+	victoryPointSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 80.f });
+
+	sf::Text victoryPointsLabel(font, ": " + std::to_string(selectedPlayer->getVictoryPoints()), 20);
+	victoryPointsLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 90.f });
 	victoryPointsLabel.setFillColor(sf::Color::Black);
 
-	sf::Text woodLabel(font, "Wood: " + std::to_string(selectedPlayer->getWood()), 20);
-	woodLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 100.f });
+	sf::Texture woodTexture;
+	woodTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\wood.jpg");
+	sf::Sprite woodSprite(woodTexture);
+	woodSprite.setScale({ 0.3f, 0.3f });
+	woodSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 130.f });
+
+	sf::Text woodLabel(font, ": " + std::to_string(selectedPlayer->getWood()), 20);
+	woodLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 135.f });
 	woodLabel.setFillColor(sf::Color::Black);
 
-	sf::Text stoneLabel(font, "Stone: " + std::to_string(selectedPlayer->getStone()), 20);
-	stoneLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 140.f });
+	sf::Texture stoneTexture;
+	stoneTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\stone.jpg");
+	sf::Sprite stoneSprite(stoneTexture);
+	stoneSprite.setScale({ 0.3f, 0.3f });
+	stoneSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 180.f });
+
+	sf::Text stoneLabel(font, ": " + std::to_string(selectedPlayer->getStone()), 20);
+	stoneLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 185.f });
 	stoneLabel.setFillColor(sf::Color::Black);
 
-	sf::Text clayLabel(font, "Clay: " + std::to_string(selectedPlayer->getClay()), 20);
-	clayLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 180.f });
+	sf::Texture clayTexture;
+	clayTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\brick.jpg");
+	sf::Sprite claySprite(clayTexture);
+	claySprite.setScale({ 0.3f, 0.3f });
+	claySprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 230.f });
+
+	sf::Text clayLabel(font, ": " + std::to_string(selectedPlayer->getClay()), 20);
+	clayLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 235.f });
 	clayLabel.setFillColor(sf::Color::Black);
 
-	sf::Text glassLabel(font, "Glass: " + std::to_string(selectedPlayer->getGlass()), 20);
-	glassLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 220.f });
+	sf::Texture glassTexture;
+	glassTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\glass.jpg");
+	sf::Sprite glassSprite(glassTexture);
+	glassSprite.setScale({ 0.3f, 0.3f });
+	glassSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 280.f });
+
+	sf::Text glassLabel(font, ": " + std::to_string(selectedPlayer->getGlass()), 20);
+	glassLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 285.f });
 	glassLabel.setFillColor(sf::Color::Black);
 
-	sf::Text papyrusLabel(font, "Papyrus: " + std::to_string(selectedPlayer->getPapyrus()), 20);
-	papyrusLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 260.f });
+	sf::Texture papyrusTexture;
+	papyrusTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\paper.jpg");
+	sf::Sprite papyrusSprite(papyrusTexture);
+	papyrusSprite.setScale({ 0.3f, 0.3f });
+	papyrusSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 330.f });
+
+	sf::Text papyrusLabel(font, ": " + std::to_string(selectedPlayer->getPapyrus()), 20);
+	papyrusLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 335.f });
 	papyrusLabel.setFillColor(sf::Color::Black);
+
+	sf::Texture shieldTexture;
+	shieldTexture.loadFromFile("..\\..\\Images\\Miscellaneous\\shield.jpg");
+	sf::Sprite shieldSprite(shieldTexture);
+	shieldSprite.setScale({ 0.3f, 0.3f });
+	shieldSprite.setPosition({ backgroundBox.getPosition().x + 23.f, backgroundBox.getPosition().y + 380.f });
+
+	sf::Text shieldLabel(font, ": " + std::to_string(selectedPlayer->getShields()), 20);
+	shieldLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 385.f });
+	shieldLabel.setFillColor(sf::Color::Black);
 
 	sf::Texture globeTexture;
 	globeTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\ball.png");
 	sf::Sprite globeSprite(globeTexture);
 	globeSprite.setScale({ 0.3f, 0.3f });
-	globeSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 300.f });
+	globeSprite.setPosition({ backgroundBox.getPosition().x + 23.f, backgroundBox.getPosition().y + 430.f });
 
 	sf::Texture featherTexture;
 	featherTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\feather.png");
 	sf::Sprite featherSprite(featherTexture);
 	featherSprite.setScale({ 0.3f, 0.3f });
-	featherSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 350.f });
+	featherSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 480.f });
 
 	sf::Texture mortarTexture;
 	mortarTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\pestil.png");
 	sf::Sprite mortarSprite(mortarTexture);
 	mortarSprite.setScale({ 0.3f, 0.3f });
-	mortarSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 400.f });
+	mortarSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 530.f });
 
 	sf::Texture sundialTexture;
 	sundialTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\sundial.png");
 	sf::Sprite sundialSprite(sundialTexture);
 	sundialSprite.setScale({ 0.3f, 0.3f });
-	sundialSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 450.f });
+	sundialSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 580.f });
 
 	sf::Texture triangleTexture;
 	triangleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\triangle.png");
 	sf::Sprite triangleSprite(triangleTexture);
 	triangleSprite.setScale({ 0.3f, 0.3f });
-	triangleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 500.f });
+	triangleSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 630.f });
 
 	sf::Texture scaleTexture;
 	scaleTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\scale.png");
 	sf::Sprite scaleSprite(scaleTexture);
 	scaleSprite.setScale({ 0.3f, 0.3f });
-	scaleSprite.setPosition({ backgroundBox.getPosition().x + 17.f, backgroundBox.getPosition().y + 545.f });
+	scaleSprite.setPosition({ backgroundBox.getPosition().x + 17.f, backgroundBox.getPosition().y + 680.f });
 
 	sf::Texture wheelTexture;
 	wheelTexture.loadFromFile("..\\..\\Images\\Scientific Symbols\\wheel.png");
 	sf::Sprite wheelSprite(wheelTexture);
 	wheelSprite.setScale({ 0.3f, 0.3f });
-	wheelSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 600.f });
+	wheelSprite.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 735.f });
 
 	sf::Text globeLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[0]), 20);
-	globeLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 307.f });
+	globeLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 435.f });
 	globeLabel.setFillColor(sf::Color::Black);
 
 	sf::Text featherLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[5]), 20);
-	featherLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 357.f });
+	featherLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 485.f });
 	featherLabel.setFillColor(sf::Color::Black);
 
 	sf::Text mortarLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[3]), 20);
-	mortarLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 407.f });
+	mortarLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 535.f });
 	mortarLabel.setFillColor(sf::Color::Black);
 
 	sf::Text sundialLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[2]), 20);
-	sundialLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 457.f });
+	sundialLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 585.f });
 	sundialLabel.setFillColor(sf::Color::Black);
 
 	sf::Text triangleLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[4]), 20);
-	triangleLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 507.f });
+	triangleLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 635.f });
 	triangleLabel.setFillColor(sf::Color::Black);
 
 	sf::Text scaleLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[1]), 20);
-	scaleLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 557.f });
+	scaleLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 690.f });
 	scaleLabel.setFillColor(sf::Color::Black);
 
 	sf::Text wheelLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[6]), 20);
-	wheelLabel.setPosition({ backgroundBox.getPosition().x + 70.f, backgroundBox.getPosition().y + 607.f });
+	wheelLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 740.f });
 	wheelLabel.setFillColor(sf::Color::Black);
 
 	sf::RectangleShape exitBox;
@@ -1930,27 +1982,52 @@ void Game::drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>
 
 
 	window.draw(backgroundBox);
+
+	window.draw(coinSprite);
 	window.draw(coinsLabel);
+
+	window.draw(victoryPointSprite);
 	window.draw(victoryPointsLabel);
+
+	window.draw(woodSprite);
 	window.draw(woodLabel);
+
+	window.draw(stoneSprite);
 	window.draw(stoneLabel);
+
+	window.draw(claySprite);
 	window.draw(clayLabel);
+
+	window.draw(glassSprite);
 	window.draw(glassLabel);
+
+	window.draw(papyrusSprite);
 	window.draw(papyrusLabel);
+
+	window.draw(shieldSprite);
+	window.draw(shieldLabel);
+
 	window.draw(globeSprite);
-	window.draw(featherSprite);
-	window.draw(mortarSprite);
-	window.draw(sundialSprite);
-	window.draw(triangleSprite);
-	window.draw(wheelSprite);
-	window.draw(scaleSprite);
 	window.draw(globeLabel);
+
+	window.draw(featherSprite);
 	window.draw(featherLabel);
+
+	window.draw(mortarSprite);
 	window.draw(mortarLabel);
+
+	window.draw(sundialSprite);
 	window.draw(sundialLabel);
+
+	window.draw(triangleSprite);
 	window.draw(triangleLabel);
-	window.draw(scaleLabel);
+
+	window.draw(wheelSprite);
 	window.draw(wheelLabel);
+
+	window.draw(scaleSprite);
+	window.draw(scaleLabel);
+
 	window.draw(exitBox);
 	window.draw(exitLabel);
 }
@@ -2127,12 +2204,12 @@ void Game::checkAndApplyZoneRewards()
 	};
 
 	std::array<ZoneReward, 6> rewards = { {
-		{5, 5, -9, -6},
-		{2, 2, -6, -3},
+		{10, 5, -9, -6},
+		{5, 2, -6, -3},
 		{2, 0, -3, -1},
 		{2, 0, 1, 3},
-		{2, 2, 3, 6},
-		{5, 5, 6, 9}
+		{5, 2, 3, 6},
+		{10, 5, 6, 9}
 	} };
 
 	for (int i = 0; i < 6; i++) {
