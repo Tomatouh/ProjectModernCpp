@@ -1435,9 +1435,6 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 	{
 	case 0:
 		// Use Player::canBuild to check for resources, coins, trading logic, and chains
-		window.draw(m_backgroundSprite);
-		drawDiscardedCards(window);
-		window.display();
 		if (m_currentPlayer->canBuild(*m_selectedBuilding)) {
 			// Player::addBuilding handles payment (including trading costs to opponent) and adding the building to vectors
 			m_currentPlayer->addBuilding(*m_selectedBuilding);
@@ -1447,7 +1444,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
 
 			turnCards();
-			
+
 			if (m_currentPlayer->hasTokenSelectionRight())
 			{
 				window.draw(m_backgroundSprite);
@@ -1538,6 +1535,14 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 void Game::activateCardEffects(std::shared_ptr<Building> building)
 {
 	for (auto& effect : building->getEffects())
+	{
+		m_cardEffects[effect](*this);
+	}
+}
+
+void Game::activateWonderEffects(std::shared_ptr<Card> card)
+{
+	for (auto& effect : card->getEffects())
 	{
 		m_cardEffects[effect](*this);
 	}
@@ -2038,6 +2043,80 @@ void Game::constructDiscardedCard(sf::RenderWindow& window)
 		}
 	}
 
+}
+
+void Game::checkAndApplyZoneRewards()
+{
+	std::vector<bool> zoneTriggers = m_board.getZoneTriggers();
+	int currentPos = m_board.getPos();
+
+	struct ZoneReward {
+		int vpGain;
+		int opponentCoinLoss;
+		int minPos;
+		int maxPos;
+	};
+
+	std::array<ZoneReward, 6> rewards = { {
+		{5, 5, -9, -6},
+		{2, 2, -6, -3},
+		{2, 0, -3, -1},
+		{2, 0, 1, 3},
+		{2, 2, 3, 6},
+		{5, 5, 6, 9}
+	} };
+
+	for (int i = 0; i < 6; i++) {
+		bool isInZone = (currentPos >= rewards[i].minPos && currentPos <= rewards[i].maxPos);
+
+		if (zoneTriggers[i] && isInZone && !m_zoneRewardsGiven[i]) {
+			std::shared_ptr<Player> rewardPlayer;
+			std::shared_ptr<Player> penaltyPlayer;
+
+			if (i < 3) {
+				if (m_currentPlayer->name() == "player1") {
+					rewardPlayer = m_currentPlayer;
+					penaltyPlayer = m_otherPlayer;
+				}
+				else {
+					rewardPlayer = m_otherPlayer;
+					penaltyPlayer = m_currentPlayer;
+				}
+			}
+			else {
+				if (m_currentPlayer->name() == "player2") {
+					rewardPlayer = m_currentPlayer;
+					penaltyPlayer = m_otherPlayer;
+				}
+				else {
+					rewardPlayer = m_otherPlayer;
+					penaltyPlayer = m_currentPlayer;
+				}
+			}
+
+			rewardPlayer->addVictoryPoints(rewards[i].vpGain);
+
+			if (rewards[i].opponentCoinLoss > 0) {
+				int currentCoins = penaltyPlayer->getCoins();
+				int coinsToLose = std::min(currentCoins, rewards[i].opponentCoinLoss);
+				penaltyPlayer->payCoin(coinsToLose);
+			}
+
+			std::cout << rewardPlayer->name() << " entered zone ";
+
+
+			int visualZoneNumber = 6 - i;
+
+			std::cout << visualZoneNumber << " and gained " << rewards[i].vpGain << " VP";
+			if (rewards[i].opponentCoinLoss > 0) {
+				std::cout << ". " << penaltyPlayer->name()
+					<< " lost " << rewards[i].opponentCoinLoss << " coins";
+			}
+			std::cout << "!\n";
+
+			m_zoneRewardsGiven[i] = true;
+		}
+	}
 }
 
 void Game::drawTokenSelection(sf::RenderWindow& window)

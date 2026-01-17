@@ -954,3 +954,10 @@ void Player::setAgricultureProgressToken(bool value) noexcept
 {
     m_hasAgricultureProgressToken = value;
 }
+bool Player::hasSecondTurn() const noexcept
+{
+    return m_secondTurn;
+}
+void Player::setSecondTurn(bool value) noexcept
+{
+    m_secondTurn = value;

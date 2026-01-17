@@ -22,12 +22,13 @@ private:
 	static bool m_isInPlayerBox;
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
+	std::array<bool, 6> m_zoneRewardsGiven = { false, false, false, false, false, false };
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
 	std::vector<std::optional<std::shared_ptr<Card>>> m_wondersDisplay;
 	std::vector<sf::FloatRect> m_wonderRects;
-	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIDeck;
-	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIDeck;
-	std::unordered_map<std::uint16_t,std::shared_ptr<Building>> m_ageIIIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> m_ageIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> m_ageIIDeck;
+	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> m_ageIIIDeck;
 	std::shared_ptr<std::vector<std::shared_ptr<Building>>> m_discardedCards;
 	std::vector<std::vector<std::optional<displayCard>>> m_cardDisplay;
 	std::unordered_map<std::uint16_t, std::optional<guiCard>> m_guiCardDisplay;
@@ -47,7 +48,7 @@ private:
 	GameState m_gamestate = GAMESTART;
 	//bool m_waitingForWonderSelection = false;
 	bool m_waitingForDiscardedChoice = false;
-	
+
 
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
@@ -65,7 +66,7 @@ private:
 	void redrawCurrentAgeCards(sf::RenderWindow& window);
 	void drawPlayerCards(sf::RenderWindow& window);
 	bool selectCardEffect(sf::RenderWindow& window, sf::Vector2i&& mousePos);
-	std::pair<int, int> getWonderPosition(int index,const sf::RenderWindow& window);
+	std::pair<int, int> getWonderPosition(int index, const sf::RenderWindow& window);
 	int wonderIndexAtPosition(const sf::Vector2i& mousePos, const sf::RenderWindow& window);
 	void drawWondersSelection(sf::RenderWindow& window);
 	void wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos);
@@ -73,6 +74,7 @@ private:
 	int getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	int chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void activateCardEffects(std::shared_ptr<Building> building);
+	void activateWonderEffects(std::shared_ptr<Card> card);
 	void drawMilitaryBoard(sf::RenderWindow& window);
 	void drawTokenSelection(sf::RenderWindow& window);
 	bool selectToken(sf::RenderWindow& window, const sf::Vector2i& mousePos);
@@ -80,7 +82,7 @@ private:
 	void drawDiscardedCards(sf::RenderWindow& window);
 	bool selectDiscardedCard(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void constructDiscardedCard(sf::RenderWindow& window);
-
+	void checkAndApplyZoneRewards();
 
 public:
 
@@ -99,7 +101,7 @@ public:
 	void initAgeIBoard();
 	void initAgeIIBoard();
 	void initAgeIIIBoard();
-	
+
 	void initCardEffects();
 
 	void displayBoard();
@@ -113,13 +115,13 @@ public:
 	void handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos);
 
 	template<typename... Args>
-	void drawAll(sf::RenderWindow& window,Args... args);
+	void drawAll(sf::RenderWindow& window, Args... args);
 
 	void drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>& selectedPlayer);
 
 
 	void run();
-	
+
 };
 
 
