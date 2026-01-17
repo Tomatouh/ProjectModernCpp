@@ -778,8 +778,8 @@ void Player::buildWonder(std::uint16_t wonderId, std::shared_ptr<Building> ageCa
             wonderPair.second = ageCardUsed;
 
             // Add the wonder's benefits
-            addVictoryPoints(wonderPair.first->getVictoryPoints());
-            addShields(wonderPair.first->getShields());
+            /*addVictoryPoints(wonderPair.first->getVictoryPoints());
+            addShields(wonderPair.first->getShields());*/
 
             // Note: Resources are production capacity, not consumables
             // We only paid coins for what we needed to trade
