@@ -83,7 +83,7 @@ private:
 	bool selectDiscardedCard(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void constructDiscardedCard(sf::RenderWindow& window);
 	void checkAndApplyZoneRewards();
-
+	void drawSelectedCard(sf::RenderWindow& window);
 public:
 
 	Game();

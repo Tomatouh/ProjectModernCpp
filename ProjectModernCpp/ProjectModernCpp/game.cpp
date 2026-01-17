@@ -1526,6 +1526,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		drawPlayerCards(window);
 		drawClickAreaForPlayerDetails(window);
 		drawMilitaryBoard(window);
+		drawSelectedCard(window);
 		window.display();
 		return option;
 
@@ -1628,6 +1629,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 		}
 	if (found)
 		return true;
+	m_selectedBuilding = nullptr;
 	return false;
 }
 
@@ -1720,6 +1722,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			}
 			drawPlayerTurn(window);
 			drawMilitaryBoard(window);
+			drawSelectedCard(window);
 			window.display();
 		}
 		else
@@ -1732,6 +1735,8 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
 				drawMilitaryBoard(window);
+				drawPlayerTurn(window);
+				drawSelectedCard(window);
 				window.display();
 			}
 		}
@@ -2189,7 +2194,18 @@ void Game::PollEvents(sf::RenderWindow& window)
 	}
 }
 
-
+void Game::drawSelectedCard(sf::RenderWindow& window)
+{
+	if (m_selectedBuilding != nullptr)
+	{
+		sf::Texture bigCard;
+		bigCard.loadFromFile("..\\..\\Images\\" + std::to_string(m_selectedBuilding->getId()) + ".jpg");
+		sf::Sprite bigCardSprite(bigCard);
+		bigCardSprite.setScale(sf::Vector2f{ 0.5,0.5});
+		bigCardSprite.setPosition({75.f,35.f});
+		window.draw(bigCardSprite);
+	}
+}
 
 void Game::run()
 {
@@ -2201,6 +2217,7 @@ void Game::run()
 	std::uint8_t move;
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
 	//std::uint16_t iteration = 0;
+	m_selectedBuilding = nullptr;
 
 	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(60);
