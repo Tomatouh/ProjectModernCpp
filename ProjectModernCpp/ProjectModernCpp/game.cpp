@@ -1402,6 +1402,7 @@ bool Game::selectToken(sf::RenderWindow& window, const sf::Vector2i& mousePos)
 		);
 		if (tokenRect.contains(worldPos)) {
 			m_currentPlayer->addProgressToken(*(m_progressTokensDeck[i]));
+			m_progressTokensDeck[i]->applyEffect(m_currentPlayer);
 			m_progressTokensDeck.erase(m_progressTokensDeck.begin() + i);
 			return true;
 		}
