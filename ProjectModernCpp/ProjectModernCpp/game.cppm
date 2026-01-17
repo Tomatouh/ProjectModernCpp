@@ -88,6 +88,7 @@ private:
 	bool selectGreyOrBrownCard(sf::RenderWindow& window, const sf::Vector2i& mousePos, Building::Color color);
 	void discardOpponentCard(sf::RenderWindow& window, Building::Color color);
 
+	void drawSelectedCard(sf::RenderWindow& window);
 public:
 
 	Game();
