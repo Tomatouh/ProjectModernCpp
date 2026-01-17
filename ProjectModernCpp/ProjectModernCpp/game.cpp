@@ -1963,7 +1963,7 @@ void Game::drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>
 	triangleLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 635.f });
 	triangleLabel.setFillColor(sf::Color::Black);
 
-	sf::Text scaleLabel(font, ": " + std::to_string(selectedPlayer->getScientificPoints()[1]), 20);
+	sf::Text scaleLabel(font, ": " + std::to_string(selectedPlayer->hasLawProgressToken()), 20);
 	scaleLabel.setPosition({ backgroundBox.getPosition().x + 75.f, backgroundBox.getPosition().y + 690.f });
 	scaleLabel.setFillColor(sf::Color::Black);
 
