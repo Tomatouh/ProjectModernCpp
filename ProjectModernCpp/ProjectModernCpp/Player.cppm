@@ -30,7 +30,7 @@ public:
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
     void addBuildingDirectly(const Building& building); // pentru efectul de construie a unui discarded card
-    void discardBuilding(Building::Color color, std::uint16_t id);
+    void discardBuilding(Building::Color color, std::uint16_t i);
     void addWonder(const std::shared_ptr<Card>& wonder);
 
     // Getters for Buildings, by colour

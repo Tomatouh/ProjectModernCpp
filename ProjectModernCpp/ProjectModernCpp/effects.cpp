@@ -7,61 +7,61 @@ import board;
 
 
 
-void discardGrey(std::shared_ptr<Player> player)
-{
-	Player otherPlayer = *(player->getOtherPlayer());
-	for (auto& greyCard : otherPlayer.getGreyBuildings())
-	{
-		std::cout << "[" << greyCard.getId() << "] ";
-	}
-	uint16_t idCard;
-	std::shared_ptr<Building> discarded;
-	std::cout << "\nCard id to discard: ";
-	while (true)
-	{
-		std::cin >> idCard;
-		auto it = std::find_if(otherPlayer.getGreyBuildings().begin(), otherPlayer.getGreyBuildings().end(),
-			[idCard](const Building& b) { return b.getId() == idCard; });
-		if (it != otherPlayer.getGreyBuildings().end()) {
-			discarded = std::make_shared<Building>(*it);
-			break;
-		}
-		std::cout << "Invalid input. Please enter a valid card id: ";
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	}
-
-	otherPlayer.discardBuilding(Building::Color::GREY, idCard);
-	otherPlayer.removeResources(discarded->getResources());
-}
-
-void discardBrown(std::shared_ptr<Player> player)
-{
-	Player otherPlayer = *(player->getOtherPlayer());
-	for (auto& brownCard : otherPlayer.getBrownBuildings())
-	{
-		std::cout << "[" << brownCard.getId() << "] ";
-	}
-	uint16_t idCard;
-	std::shared_ptr<Building> discarded;
-	std::cout << "\nCard id to discard: ";
-	while (true)
-	{
-		std::cin >> idCard;
-		auto it = std::find_if(otherPlayer.getBrownBuildings().begin(), otherPlayer.getBrownBuildings().end(),
-			[idCard](const Building& b) { return b.getId() == idCard; });
-		if (it != otherPlayer.getBrownBuildings().end()) {
-			discarded = std::make_shared<Building>(*it);
-			break;
-		}
-		std::cout << "Invalid input. Please enter a valid card id: ";
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	}
-
-	otherPlayer.discardBuilding(Building::Color::BROWN, idCard);
-	otherPlayer.removeResources(discarded->getResources());
-}
+//void discardGrey(std::shared_ptr<Player> player)
+//{
+//	Player otherPlayer = *(player->getOtherPlayer());
+//	for (auto& greyCard : otherPlayer.getGreyBuildings())
+//	{
+//		std::cout << "[" << greyCard.getId() << "] ";
+//	}
+//	uint16_t idCard;
+//	std::shared_ptr<Building> discarded;
+//	std::cout << "\nCard id to discard: ";
+//	while (true)
+//	{
+//		std::cin >> idCard;
+//		auto it = std::find_if(otherPlayer.getGreyBuildings().begin(), otherPlayer.getGreyBuildings().end(),
+//			[idCard](const Building& b) { return b.getId() == idCard; });
+//		if (it != otherPlayer.getGreyBuildings().end()) {
+//			discarded = std::make_shared<Building>(*it);
+//			break;
+//		}
+//		std::cout << "Invalid input. Please enter a valid card id: ";
+//		std::cin.clear();
+//		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//	}
+//
+//	otherPlayer.discardBuilding(Building::Color::GREY, idCard);
+//	otherPlayer.removeResources(discarded->getResources());
+//}
+//
+//void discardBrown(std::shared_ptr<Player> player)
+//{
+//	Player otherPlayer = *(player->getOtherPlayer());
+//	for (auto& brownCard : otherPlayer.getBrownBuildings())
+//	{
+//		std::cout << "[" << brownCard.getId() << "] ";
+//	}
+//	uint16_t idCard;
+//	std::shared_ptr<Building> discarded;
+//	std::cout << "\nCard id to discard: ";
+//	while (true)
+//	{
+//		std::cin >> idCard;
+//		auto it = std::find_if(otherPlayer.getBrownBuildings().begin(), otherPlayer.getBrownBuildings().end(),
+//			[idCard](const Building& b) { return b.getId() == idCard; });
+//		if (it != otherPlayer.getBrownBuildings().end()) {
+//			discarded = std::make_shared<Building>(*it);
+//			break;
+//		}
+//		std::cout << "Invalid input. Please enter a valid card id: ";
+//		std::cin.clear();
+//		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//	}
+//
+//	otherPlayer.discardBuilding(Building::Color::BROWN, idCard);
+//	otherPlayer.removeResources(discarded->getResources());
+//}
 
 std::uint16_t maxConstructedWonders(std::shared_ptr<Player> player)
 {
