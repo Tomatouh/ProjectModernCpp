@@ -100,7 +100,10 @@ void Player::addCoin(std::uint16_t amount) noexcept
 }
 
 void Player::payCoin(uint16_t amount) noexcept {
+
     m_coins -= amount;
+    if(m_coins < 0)
+		m_coins = 0;
 }
 
 uint16_t Player::getCoins() const noexcept {

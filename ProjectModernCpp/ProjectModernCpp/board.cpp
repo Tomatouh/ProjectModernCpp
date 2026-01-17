@@ -26,7 +26,7 @@ void Board::checkZones()
         zone = -Board::k_zone2;
     }
     else if (pos <= -Board::k_zone3_start && pos > -Board::k_zone_win) {
-        zone =- Board::k_zone3;
+        zone = -Board::k_zone3;
 		zoneTriggers[0] = true;
 
     }
