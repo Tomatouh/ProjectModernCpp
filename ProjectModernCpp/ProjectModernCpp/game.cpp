@@ -1,4 +1,4 @@
-﻿#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <fstream>
@@ -22,7 +22,7 @@ m_wondersDeck(loadWondersDeck()),
 m_ageIDeck(loadAgeIDeck()),
 m_ageIIDeck(loadAgeIIDeck()),
 m_ageIIIDeck(loadAgeIIIDeck()),
-m_discardedCards(std::make_shared<std::unordered_map<std::uint16_t, std::shared_ptr<Building>>>()),
+m_discardedCards(std::make_shared<std::vector<std::shared_ptr<Building>>>()),
 m_cardDisplay(),
 m_currentAge(Building::Age::AGEI)
 {
@@ -76,7 +76,7 @@ void Game::saveGame()
 	for (int i = 0; i < this->m_discardedCards->size(); i++) {
 		auto it = this->m_discardedCards->begin();
 		std::advance(it, i);
-		f << it->first << " ";
+		f << it->get()->getId() << " ";
 	}
 	f << "\n";
 	f << "gui" << "\n";
@@ -96,7 +96,7 @@ void Game::saveGame()
 	}
 	f << "playerCURRENT" << "\n";
 
-	playerBuildings = this->m_currentPlayer->getAllBuildings();	
+	playerBuildings = this->m_currentPlayer->getAllBuildings();
 	f << "b ";
 	for (int i = 0; i < this->m_currentPlayer->getBuildingCount(); i++) {
 		f << playerBuildings[i].getId() << " ";
@@ -329,7 +329,7 @@ void Game::initCardEffects()
 		{Card::Effect::buildersGuild, [](Game& game) {if (game.m_gamestate != GameState::ONGOING) game.m_currentPlayer->addVictoryPoints(2 * maxConstructedWonders(game.m_currentPlayer)); }},
 		{Card::Effect::addManufacturedGoodProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); }},
 		{Card::Effect::addRawResourceProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); } },
-		{Card::Effect::constructCard, [](Game& game) {constructCard(game.m_currentPlayer); }},
+		{Card::Effect::constructCard, [](Game& game) {/*constructCard(game.m_currentPlayer);*/ game.m_waitingForDiscardedChoice = true; }},
 		{Card::Effect::discardBrown, [](Game& game) {discardBrown(game.m_currentPlayer); }},
 		{Card::Effect::discardGrey, [](Game& game) {discardGrey(game.m_currentPlayer); }},
 		{Card::Effect::drawProgress, [](Game& game) {drawProgress(game.m_currentPlayer, game.m_progressTokensDeck); }},
@@ -390,8 +390,7 @@ void Game::initCardEffects()
 		{Card::Effect::oneCoinGlass, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::GLASS); }},
 		{Card::Effect::oneCoinPapyrus, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::PAPYRUS); }},
 		{Card::Effect::oneCoinStone, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::STONE); }},
-		{Card::Effect::oneCoinWood, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::WOOD); }},
-		{Card::Effect::playSecondTurn,[](Game& game) {game.m_currentPlayer->setSecondTurn(true); }}
+		{Card::Effect::oneCoinWood, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::WOOD); }}
 	};
 }
 
@@ -565,7 +564,7 @@ std::shared_ptr<Card> Game::selectWonder(std::vector<std::optional<std::shared_p
 	}
 	return nullptr;
 }
-void Game::removeCardFromDeck(std::uint8_t id)
+void Game::removeCardFromDeck(std::uint8_t id, bool discarded)
 {
 	for (int i = 0; i < m_cardDisplay.size(); i++)
 		for (int j = 0; j < m_cardDisplay[i].size(); j++) {
@@ -573,6 +572,10 @@ void Game::removeCardFromDeck(std::uint8_t id)
 			{
 				if (m_cardDisplay[i][j].value().getBuilding()->getId() == id)
 				{
+					if (discarded)
+					{
+						m_discardedCards->emplace_back(m_cardDisplay[i][j].value().getBuilding());
+					}
 					m_cardDisplay[i][j] = std::nullopt;
 					m_guiCardDisplay.erase(id);
 					break;
@@ -677,7 +680,7 @@ void Game::turnCards()
 				if (m_cardDisplay[i][j].has_value())
 				{
 					auto& card = m_cardDisplay[i][j].value();
-					if (card.isFaceUp()) continue; 
+					if (card.isFaceUp()) continue;
 
 					bool isCovered = false;
 
@@ -777,7 +780,7 @@ void drawClickAreaForPlayerDetails(sf::RenderWindow& window)
 		return font;
 		}();
 
-	sf::Text leftText(font,"Player 1 Details", 16);
+	sf::Text leftText(font, "Player 1 Details", 16);
 	leftText.setFillColor(sf::Color::Blue);
 	leftText.setPosition({ leftX + 5.f, yPos + 10.f });
 	sf::Text rightText(font, "Player 2 Details", 16);
@@ -878,18 +881,18 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 			}
 			if (currentRowCard == maxRowCards)
 			{
-					x = x - (maxRowCards + centeringOffset) * BoxSizes::boxHeight / 2;
-					y += BoxSizes::boxHeight * 0.75 + 5;
-					currentRowCard = 1;
-					maxRowCards++;
-					centeringOffset++;
-					if (maxRowCards == 5)
-					{
-						firstSectionDone = true;
-						currentRowCard = 0;
-					}
-					else
-						return { x,y };
+				x = x - (maxRowCards + centeringOffset) * BoxSizes::boxHeight / 2;
+				y += BoxSizes::boxHeight * 0.75 + 5;
+				currentRowCard = 1;
+				maxRowCards++;
+				centeringOffset++;
+				if (maxRowCards == 5)
+				{
+					firstSectionDone = true;
+					currentRowCard = 0;
+				}
+				else
+					return { x,y };
 			}
 			else
 			{
@@ -901,12 +904,12 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		}
 		if (!secondSectionDone)
 		{
-			if(currentRowCard == 0)
-				x = 647 - BoxSizes::boxHeight/2;
+			if (currentRowCard == 0)
+				x = 647 - BoxSizes::boxHeight / 2;
 			else
-				x += BoxSizes::boxHeight*2;
+				x += BoxSizes::boxHeight * 2;
 			currentRowCard++;
-			if(currentRowCard == 2)
+			if (currentRowCard == 2)
 			{
 				secondSectionDone = true;
 				currentRowCard = 0;
@@ -915,15 +918,15 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 				auto auxX = x;
 				auto auxY = y;
 				y += BoxSizes::boxHeight * 0.75 + 5;
-				x = 647 - BoxSizes::boxHeight ;
+				x = 647 - BoxSizes::boxHeight;
 				return { auxX,auxY };
 
 			}
 			return { x,y };
 		}
-		if(!thirdSectionDone)
+		if (!thirdSectionDone)
 		{
-			if (currentRowCard==0)
+			if (currentRowCard == 0)
 			{
 				currentRowCard = 1;
 				x = x + BoxSizes::boxHeight;
@@ -1255,7 +1258,7 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 		}
 
 
-		
+
 		for (int i = 0; i < total; ++i)
 		{
 			auto pos = getWonderPosition(i, window);
@@ -1271,11 +1274,11 @@ void Game::drawWondersSelection(sf::RenderWindow& window)
 			}
 		}
 	}
-	if(m_gamestate == ONGOING)
+	if (m_gamestate == ONGOING)
 	{
 		m_wondersDisplay.clear();
 		total = 0;
-		for(auto& wonderPair : m_currentPlayer->getWonders())
+		for (auto& wonderPair : m_currentPlayer->getWonders())
 		{
 			if (!wonderPair.second.has_value())
 			{
@@ -1323,7 +1326,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 						}
-						else if (m_currentPlayer.get()->name() == "player2" && iteration==3) {
+						else if (m_currentPlayer.get()->name() == "player2" && iteration == 3) {
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 						}
@@ -1334,7 +1337,7 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 						}
-						else if (m_currentPlayer.get()->name() == "player1" && iteration==3) {
+						else if (m_currentPlayer.get()->name() == "player1" && iteration == 3) {
 							std::swap(m_currentPlayer, m_otherPlayer);
 							iteration++;
 
@@ -1350,14 +1353,14 @@ void Game::wondersSetup(sf::RenderWindow& window, const sf::Vector2i mousePos)
 					if (iteration > 4)
 					{
 						m_wondersDisplay.clear();
-				step++;
-				iteration = 1;
-				if (step == 2)
-				{
-					window.draw(m_backgroundSprite);
-					drawWondersSelection(window);
-					window.display();
-				}
+						step++;
+						iteration = 1;
+						if (step == 2)
+						{
+							window.draw(m_backgroundSprite);
+							drawWondersSelection(window);
+							window.display();
+						}
 					}
 					/*while (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && window.isOpen()) {
 						PollEvents(window);
@@ -1436,19 +1439,20 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			// Player::addBuilding handles payment (including trading costs to opponent) and adding the building to vectors
 			m_currentPlayer->addBuilding(*m_selectedBuilding);
 
-			removeCardFromDeck(m_selectedBuilding->getId());
+			removeCardFromDeck(m_selectedBuilding->getId(), false);
 			activateCardEffects(m_selectedBuilding);
 			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
-			checkAndApplyZoneRewards();
+
 			turnCards();
+
 			if (m_currentPlayer->hasTokenSelectionRight())
 			{
 				window.draw(m_backgroundSprite);
 				drawTokenSelection(window);
 				window.display();
-				while(const std::optional event = window.waitEvent())
+				while (const std::optional event = window.waitEvent())
 				{
-					if(event->is<sf::Event::MouseButtonPressed>())
+					if (event->is<sf::Event::MouseButtonPressed>())
 					{
 						sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 						if (selectToken(window, mousePos))
@@ -1467,7 +1471,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		break;
 	case 1:
 		m_currentPlayer->addCoin(sellProfit);
-		removeCardFromDeck(m_selectedBuilding->getId());
+		removeCardFromDeck(m_selectedBuilding->getId(), true);
 		turnCards();
 		std::swap(m_currentPlayer, m_otherPlayer);
 		break;
@@ -1493,14 +1497,13 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 					if (m_currentPlayer->canBuildWonder(*(selectedWonder))) {
 						m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
 						Game::m_constructedWonders++;
-						removeCardFromDeck(m_selectedBuilding->getId());
-						activateWonderEffects(selectedWonder);	
-
-						if (m_currentPlayer->hasSecondTurn())
-							m_currentPlayer->setSecondTurn(false);
-						else
-							std::swap(m_currentPlayer, m_otherPlayer);
-
+						removeCardFromDeck(m_selectedBuilding->getId(), false);
+						activateCardEffects(m_selectedBuilding);
+						if (m_waitingForDiscardedChoice) {
+							constructDiscardedCard(window);
+							m_waitingForDiscardedChoice = false;
+						}
+						std::swap(m_currentPlayer, m_otherPlayer);
 						break;
 					}
 					else {
@@ -1523,7 +1526,6 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		drawPlayerCards(window);
 		drawClickAreaForPlayerDetails(window);
 		drawMilitaryBoard(window);
-		drawPlayerTurn(window);
 		window.display();
 		return option;
 
@@ -1571,7 +1573,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 					}
 					if (m_currentAge == Building::Age::AGEII)
 					{
-						if(i == m_cardDisplay.size() - 1)
+						if (i == m_cardDisplay.size() - 1)
 						{
 							m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
 							m_cardDisplay[i][j].value().setSelected(true);
@@ -1580,7 +1582,7 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 							found = true;
 						}
 						else {
-							if((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false))
+							if ((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false))
 							{
 								m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
 								m_cardDisplay[i][j].value().setSelected(true);
@@ -1593,17 +1595,17 @@ bool Game::findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& wind
 								m_cardDisplay[i][j].value().setSelected(false);
 								m_guiCardDisplay[m_cardDisplay[i][j].value().getBuilding()->getId()].value().setHighlighted(false);
 							}
-							
+
 						}
 					}
-					if(m_currentAge == Building::Age::AGEIII)
+					if (m_currentAge == Building::Age::AGEIII)
 					{
 						if (i == m_cardDisplay.size() - 1 ||
-						   (i < 2 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false) ||
-						   (i==2 && m_cardDisplay[i+1][j / 2].has_value() == false) ||
-						   (i==3 && m_cardDisplay[i+1][j * 2].has_value() == false && m_cardDisplay[i+1][j * 2 + 1].has_value() == false) ||
-						   (i>3 && ((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
-							   )))
+							(i < 2 && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false) ||
+							(i == 2 && m_cardDisplay[i + 1][j / 2].has_value() == false) ||
+							(i == 3 && m_cardDisplay[i + 1][j * 2].has_value() == false && m_cardDisplay[i + 1][j * 2 + 1].has_value() == false) ||
+							(i > 3 && ((j == 0 && m_cardDisplay[i + 1][j].has_value() == false) || (j == m_cardDisplay[i].size() - 1 && m_cardDisplay[i + 1][j - 1].has_value() == false) || (j > 0 && j < m_cardDisplay[i].size() && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j - 1].has_value() == false)
+								)))
 						{
 							m_selectedBuilding = m_cardDisplay[i][j].value().getBuilding();
 							m_cardDisplay[i][j].value().setSelected(true);
@@ -1670,59 +1672,59 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 	{
 		if (!m_isInPlayerBox)
 		{
-		if (wasPlayerDetailBoxClicked(window, mousePos))
-		{
-			window.draw(m_backgroundSprite);
-			std::uint8_t boxClicked = wasPlayerDetailBoxClicked(window, mousePos);
-			if (boxClicked == 1)
+			if (wasPlayerDetailBoxClicked(window, mousePos))
 			{
-				if (m_currentPlayer->name().compare("player1")==0)
-					drawPlayerBox(window, m_currentPlayer);
-				else
-					drawPlayerBox(window, m_otherPlayer);
+				window.draw(m_backgroundSprite);
+				std::uint8_t boxClicked = wasPlayerDetailBoxClicked(window, mousePos);
+				if (boxClicked == 1)
+				{
+					if (m_currentPlayer->name().compare("player1") == 0)
+						drawPlayerBox(window, m_currentPlayer);
+					else
+						drawPlayerBox(window, m_otherPlayer);
+				}
+				else if (boxClicked == 2)
+				{
+					if (m_currentPlayer->name().compare("player2") == 0)
+						drawPlayerBox(window, m_currentPlayer);
+					else
+						drawPlayerBox(window, m_otherPlayer);
+				}
+				window.display();
+				m_isInPlayerBox = true;
+				return;
 			}
-			else if (boxClicked == 2)
+			if (constructionOptionDrawn)
 			{
-				if (m_currentPlayer->name().compare("player2") == 0)
-					drawPlayerBox(window, m_currentPlayer);
-				else
-					drawPlayerBox(window, m_otherPlayer);
+				option = chooseConstructionOption(window, sf::Mouse::getPosition(window));
+				constructionOptionDrawn = false;
+				//alreadyDrawn = false;
 			}
-			window.display();
-			m_isInPlayerBox = true;
-			return;
-		}
-		if (constructionOptionDrawn)
-		{
-			option = chooseConstructionOption(window, sf::Mouse::getPosition(window));
-			constructionOptionDrawn = false;
-			//alreadyDrawn = false;
-		}
-		if (alreadyDrawn) {
-			bool selected = selectCardEffect(window, sf::Mouse::getPosition(window));
-			if (selected && !constructionOptionDrawn)
-			{
-				drawConstructionChoices(window);
-				constructionOptionDrawn = true;
-				//chooseConstructionOption(window, sf::Mouse::getPosition(window));
+			if (alreadyDrawn) {
+				bool selected = selectCardEffect(window, sf::Mouse::getPosition(window));
+				if (selected && !constructionOptionDrawn)
+				{
+					drawConstructionChoices(window);
+					constructionOptionDrawn = true;
+					//chooseConstructionOption(window, sf::Mouse::getPosition(window));
+				}
+				drawClickAreaForPlayerDetails(window);
 			}
-			drawClickAreaForPlayerDetails(window);
-		}
 
-		if (!alreadyDrawn && m_gamestate == ONGOING) {
-			window.draw(m_backgroundSprite);
-			drawCurrentAgeCards(window);
-			drawPlayerCards(window);
-			drawClickAreaForPlayerDetails(window);
-			alreadyDrawn = true;
-		}
-		drawPlayerTurn(window);
-		drawMilitaryBoard(window);
-		window.display();
+			if (!alreadyDrawn && m_gamestate == ONGOING) {
+				window.draw(m_backgroundSprite);
+				drawCurrentAgeCards(window);
+				drawPlayerCards(window);
+				drawClickAreaForPlayerDetails(window);
+				alreadyDrawn = true;
+			}
+			drawPlayerTurn(window);
+			drawMilitaryBoard(window);
+			window.display();
 		}
 		else
 		{
-			if(wasExitPlayerBoxClicked(window, mousePos))
+			if (wasExitPlayerBoxClicked(window, mousePos))
 			{
 				m_isInPlayerBox = false;
 				window.draw(m_backgroundSprite);
@@ -1736,7 +1738,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 	}
 }
 
-void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>& selectedPlayer)
+void Game::drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>& selectedPlayer)
 {
 	const sf::Font font = []() {
 		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
@@ -1748,7 +1750,7 @@ void Game::drawPlayerBox(sf::RenderWindow& window,const std::shared_ptr<Player>&
 	backgroundBox.setOutlineColor(sf::Color::Black);
 	backgroundBox.setOutlineThickness(3.f);
 	backgroundBox.setPosition({ static_cast<float>(window.getSize().x) / 2 - 200.f, static_cast<float>(window.getSize().y) / 2 - 300.f });
-	
+
 	sf::Text coinsLabel(font, "Coins: " + std::to_string(selectedPlayer->getCoins()), 20);
 	coinsLabel.setPosition({ backgroundBox.getPosition().x + 20.f, backgroundBox.getPosition().y + 20.f });
 	coinsLabel.setFillColor(sf::Color::Black);
@@ -1890,13 +1892,13 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	militaryTexture.loadFromFile("..\\..\\Images\\Board\\board.png");
 	sf::Sprite militarySprite(militaryTexture);
 	militarySprite.setScale({ 0.15f, 0.15f });
-	militarySprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f-225, 720.f});
+	militarySprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 225, 720.f });
 	window.draw(militarySprite);
 
 
 	sf::Texture tokenTexture;
 	int i = 0;
-	for (float x= static_cast<float>(window.getSize().x) / 2.f - 115;i<m_progressTokensDeck.size();x=x+45,i++)
+	for (float x = static_cast<float>(window.getSize().x) / 2.f - 115; i < m_progressTokensDeck.size(); x = x + 45, i++)
 	{
 		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(m_progressTokensDeck[i]->getId()) + ".png");
 		sf::Sprite tokenSprite(tokenTexture);
@@ -1913,8 +1915,8 @@ void Game::drawMilitaryBoard(sf::RenderWindow& window)
 	peonSprite.setPosition({ static_cast<float>(window.getSize().x) / 2.f - pos, 770.f });
 	window.draw(peonSprite);
 
-	if(!m_board.getZoneTriggers()[1])
-		{
+	if (!m_board.getZoneTriggers()[1])
+	{
 		sf::Texture war1Texture;
 		war1Texture.loadFromFile("..\\..\\Images\\Board\\military token 2.png");
 		sf::Sprite warSprite(war1Texture);
@@ -1962,18 +1964,166 @@ void Game::drawPlayerTurn(sf::RenderWindow& window)
 		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
 		return font;
 		}();
-	sf::Text turnText(font,"",24);
-	turnText.setFillColor(m_currentPlayer->name()=="player1"?sf::Color::Blue:sf::Color::Red);
+	sf::Text turnText(font, "", 24);
+	turnText.setFillColor(m_currentPlayer->name() == "player1" ? sf::Color::Blue : sf::Color::Red);
 	turnText.setPosition({ static_cast<float>(window.getSize().x) - 325.f, 200.f });
 	turnText.setString("Current turn: " + m_currentPlayer->name());
 	window.draw(turnText);
+}
+
+void Game::drawDiscardedCards(sf::RenderWindow& window)
+{
+	const float cardWidth = static_cast<float>(BoxSizes::boxWidth);
+	const float cardHeight = static_cast<float>(BoxSizes::boxHeight);
+	const float spacing = 10.f;
+	const float totalWidth = m_discardedCards->size() * cardWidth + (m_discardedCards->size() - 1) * spacing;
+	float x = static_cast<float>(window.getSize().x) / 2.f - totalWidth / 2.f;
+	float y = static_cast<float>(window.getSize().y) / 2.f - cardHeight / 2.f;
+
+	float currentX = x;
+	for (const auto& card : *m_discardedCards)
+	{
+		sf::Texture cardTexture;
+		cardTexture.loadFromFile("..\\..\\Images\\" + std::to_string(card->getId()) + ".jpg");
+		sf::Sprite cardSprite(cardTexture);
+		cardSprite.setScale(sf::Vector2f{ cardWidth / cardTexture.getSize().x, cardHeight / cardTexture.getSize().y });
+		cardSprite.setPosition({ currentX, y });
+		window.draw(cardSprite);
+
+		currentX += cardWidth + spacing;
+
+	}
+}
+
+bool Game::selectDiscardedCard(sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+
+	const float cardWidth = static_cast<float>(BoxSizes::boxWidth);
+	const float cardHeight = static_cast<float>(BoxSizes::boxHeight);
+	const float spacing = 10.f;
+	const float totalWidth = m_discardedCards->size() * cardWidth + (m_discardedCards->size() - 1) * spacing;
+
+	const float startX = static_cast<float>(window.getSize().x) / 2.f - totalWidth / 2.f;
+	const float startY = static_cast<float>(window.getSize().y) / 2.f - cardHeight / 2.f;
+
+	for (int i = 0; i < m_discardedCards->size(); ++i)
+	{
+		sf::FloatRect cardRect(
+			sf::Vector2f(startX + i * (cardWidth + spacing), startY),
+			sf::Vector2f(cardWidth, cardHeight)
+		);
+
+		if (cardRect.contains(worldPos))
+		{
+			m_selectedBuilding = m_discardedCards->at(i);
+
+			m_currentPlayer->addBuildingDirectly(*(m_discardedCards->at(i)));
+			activateCardEffects(m_discardedCards->at(i));
+			m_board.movePeon(m_discardedCards->at(i)->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
+			m_discardedCards->erase(m_discardedCards->begin() + i);
+			return true;
+		}
+	}
+	return false;
+}
+
+void Game::constructDiscardedCard(sf::RenderWindow& window)
+{
+	window.draw(m_backgroundSprite);
+	drawDiscardedCards(window);
+	window.display();
+	while (const std::optional event = window.waitEvent())
+	{
+		if (event->is<sf::Event::MouseButtonPressed>())
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+			if (selectDiscardedCard(window, mousePos))
+				break;
+		}
+	}
+
+}
+
+void Game::checkAndApplyZoneRewards()
+{
+	std::vector<bool> zoneTriggers = m_board.getZoneTriggers();
+	int currentPos = m_board.getPos();
+
+	struct ZoneReward {
+		int vpGain;
+		int opponentCoinLoss;
+		int minPos;
+		int maxPos;
+	};
+
+	std::array<ZoneReward, 6> rewards = { {
+		{5, 5, -9, -6},
+		{2, 2, -6, -3},
+		{2, 0, -3, -1},
+		{2, 0, 1, 3},
+		{2, 2, 3, 6},
+		{5, 5, 6, 9}
+	} };
+
+	for (int i = 0; i < 6; i++) {
+		bool isInZone = (currentPos >= rewards[i].minPos && currentPos <= rewards[i].maxPos);
+
+		if (zoneTriggers[i] && isInZone && !m_zoneRewardsGiven[i]) {
+			std::shared_ptr<Player> rewardPlayer;
+			std::shared_ptr<Player> penaltyPlayer;
+
+			if (i < 3) {
+				if (m_currentPlayer->name() == "player1") {
+					rewardPlayer = m_currentPlayer;
+					penaltyPlayer = m_otherPlayer;
+				}
+				else {
+					rewardPlayer = m_otherPlayer;
+					penaltyPlayer = m_currentPlayer;
+				}
+			}
+			else {
+				if (m_currentPlayer->name() == "player2") {
+					rewardPlayer = m_currentPlayer;
+					penaltyPlayer = m_otherPlayer;
+				}
+				else {
+					rewardPlayer = m_otherPlayer;
+					penaltyPlayer = m_currentPlayer;
+				}
+			}
+
+			rewardPlayer->addVictoryPoints(rewards[i].vpGain);
+
+			if (rewards[i].opponentCoinLoss > 0) {
+				int currentCoins = penaltyPlayer->getCoins();
+				int coinsToLose = std::min(currentCoins, rewards[i].opponentCoinLoss);
+				penaltyPlayer->payCoin(coinsToLose);
+			}
+
+			std::cout << rewardPlayer->name() << " entered zone ";
+
+
+			int visualZoneNumber = 6 - i;
+
+			std::cout << visualZoneNumber << " and gained " << rewards[i].vpGain << " VP";
+			if (rewards[i].opponentCoinLoss > 0) {
+				std::cout << ". " << penaltyPlayer->name()
+					<< " lost " << rewards[i].opponentCoinLoss << " coins";
+			}
+			std::cout << "!\n";
+
+			m_zoneRewardsGiven[i] = true;
+		}
+	}
 }
 
 void Game::drawTokenSelection(sf::RenderWindow& window)
 {
 	float x = static_cast<float>(window.getSize().x) / 2.f - (m_progressTokensDeck.size() * 148.f) / 2.f;
 	float y = static_cast<float>(window.getSize().y) / 2.f - 75.f;
-	for(auto& token : m_progressTokensDeck)
+	for (auto& token : m_progressTokensDeck)
 	{
 		sf::Texture tokenTexture;
 		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(token->getId()) + ".png");
@@ -2212,77 +2362,3 @@ sf::Sprite Game::m_backgroundSprite = []() {
 	}();
 
 bool Game::m_isInPlayerBox = false;
-
-void Game::checkAndApplyZoneRewards()
-{
-	std::vector<bool> zoneTriggers = m_board.getZoneTriggers();
-	int currentPos = m_board.getPos();
-
-	struct ZoneReward {
-		int vpGain;
-		int opponentCoinLoss;
-		int minPos;
-		int maxPos;
-	};
-
-	std::array<ZoneReward, 6> rewards = { {
-		{5, 5, -9, -6},
-		{2, 2, -6, -3},
-		{2, 0, -3, -1},
-		{2, 0, 1, 3},
-		{2, 2, 3, 6},
-		{5, 5, 6, 9}  
-	} };
-
-	for (int i = 0; i < 6; i++) {
-		bool isInZone = (currentPos >= rewards[i].minPos && currentPos <= rewards[i].maxPos);
-
-		if (zoneTriggers[i] && isInZone && !m_zoneRewardsGiven[i]) {
-			std::shared_ptr<Player> rewardPlayer;
-			std::shared_ptr<Player> penaltyPlayer;
-
-			if (i < 3) {
-				if (m_currentPlayer->name() == "player1") {
-					rewardPlayer = m_currentPlayer;
-					penaltyPlayer = m_otherPlayer;
-				}
-				else {
-					rewardPlayer = m_otherPlayer;
-					penaltyPlayer = m_currentPlayer;
-				}
-			}
-			else {
-				if (m_currentPlayer->name() == "player2") {
-					rewardPlayer = m_currentPlayer;
-					penaltyPlayer = m_otherPlayer;
-				}
-				else {
-					rewardPlayer = m_otherPlayer;
-					penaltyPlayer = m_currentPlayer;
-				}
-			}
-
-			rewardPlayer->addVictoryPoints(rewards[i].vpGain);
-
-			if (rewards[i].opponentCoinLoss > 0) {
-				int currentCoins = penaltyPlayer->getCoins();
-				int coinsToLose = std::min(currentCoins, rewards[i].opponentCoinLoss);
-				penaltyPlayer->payCoin(coinsToLose);
-			}
-
-			std::cout << rewardPlayer->name() << " entered zone ";
-
-			
-			int visualZoneNumber = 6 - i;
-
-			std::cout << visualZoneNumber << " and gained " << rewards[i].vpGain << " VP";
-			if (rewards[i].opponentCoinLoss > 0) {
-				std::cout << ". " << penaltyPlayer->name()
-					<< " lost " << rewards[i].opponentCoinLoss << " coins";
-			}
-			std::cout << "!\n";
-
-			m_zoneRewardsGiven[i] = true;
-		}
-	}
-}

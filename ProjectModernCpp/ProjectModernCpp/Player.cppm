@@ -29,6 +29,7 @@ public:
     std::uint16_t getCoins() const noexcept;
 
     void addBuilding(const Building& building); // Modificata pentru a adauga o cladire
+    void addBuildingDirectly(const Building& building); // pentru efectul de construie a unui discarded card
     void discardBuilding(Building::Color color, std::uint16_t id);
     void addWonder(const std::shared_ptr<Card>& wonder);
 
@@ -102,9 +103,9 @@ public:
 
     std::shared_ptr<Player> getOtherPlayer();
     void setOtherPlayer(const std::shared_ptr<Player>& otherPlayer);
-    const std::shared_ptr<std::unordered_map<uint16_t,std::shared_ptr<Building>>> getDiscardPile() const;
-    void setDiscardPile(const std::shared_ptr<std::unordered_map<uint16_t, std::shared_ptr<Building>>>& discardPile);
-	void removeCardFromDiscardPile(uint16_t cardId);
+    const std::shared_ptr<std::vector<std::shared_ptr<Building>>> getDiscardPile() const;
+    void setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Building>>>& discardPile);
+	//void removeCardFromDiscardPile(uint16_t cardId);
 
     std::unordered_map<ResourceType, bool> getTradeDiscounts() const noexcept;
 	void addTradeDiscount(ResourceType type) noexcept;
@@ -242,7 +243,7 @@ private:
     // pointer to the other player
     std::weak_ptr<Player> m_otherPlayer;
     // pointer to the discard pile
-    std::shared_ptr<std::unordered_map<uint16_t,std::shared_ptr<Building>>> m_discardPile;
+    std::shared_ptr<std::vector<std::shared_ptr<Building>>> m_discardPile;
 
     // productions per turn
     std::unordered_map<ResourceType, std::uint16_t> m_productions;

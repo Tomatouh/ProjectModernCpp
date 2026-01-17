@@ -103,23 +103,23 @@ void drawProgress(std::shared_ptr<Player> player, std::vector<std::unique_ptr<Pl
 	m_progressTokensDeck.insert(m_progressTokensDeck.end(), std::make_move_iterator(copyDeck.begin()), std::make_move_iterator(copyDeck.end()));
 }
 
-void constructCard(std::shared_ptr<Player> player)
-{
-	for (auto& pair : *(player->getDiscardPile()))
-	{
-		std::cout << "[" << pair.first << "] " << pair.second->getName() << "\n";
-	}
-	std::uint16_t idCard;
-	std::cout << "\nCard id to construct: ";
-	while (!(std::cin >> idCard) || player->getDiscardPile()->find(idCard) == player->getDiscardPile()->end())
-	{
-		std::cout << "Invalid input. Please enter a valid card id: ";
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	}
-
-	player->addBuilding(*(player->getDiscardPile()->at(idCard)));
-	player->removeCardFromDiscardPile(idCard);
-}
+//void constructCard(std::shared_ptr<Player> player)
+//{
+//	for (auto& pair : *(player->getDiscardPile()))
+//	{
+//		std::cout << "[" << pair.first << "] " << pair.second->getName() << "\n";
+//	}
+//	std::uint16_t idCard;
+//	std::cout << "\nCard id to construct: ";
+//	while (!(std::cin >> idCard) || player->getDiscardPile()->find(idCard) == player->getDiscardPile()->end())
+//	{
+//		std::cout << "Invalid input. Please enter a valid card id: ";
+//		std::cin.clear();
+//		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//	}
+//
+//	player->addBuilding(*(player->getDiscardPile()->at(idCard)));
+//	player->removeCardFromDiscardPile(idCard);
+//}
 
 
