@@ -1085,6 +1085,7 @@ int drawPlayerColumn(const std::shared_ptr<Player>& player, int xPos, sf::Render
 		drawCardSet(player->getRedBuildings(), xPos, yPos, window, true);
 		drawCardSet(player->getGreenBuildings(), xPos, yPos, window, true);
 		drawCardSet(player->getBlueBuildings(), xPos, yPos, window, true);
+		drawCardSet(player->getPurpleBuildings(), xPos, yPos, window, true);
 	}
 	else {
 		drawCardSet(player->getBrownBuildings(), xPos, yPos, window, false);
@@ -1093,6 +1094,8 @@ int drawPlayerColumn(const std::shared_ptr<Player>& player, int xPos, sf::Render
 		drawCardSet(player->getRedBuildings(), xPos, yPos, window, false);
 		drawCardSet(player->getGreenBuildings(), xPos, yPos, window, false);
 		drawCardSet(player->getBlueBuildings(), xPos, yPos, window, false);
+		drawCardSet(player->getPurpleBuildings(), xPos, yPos, window, true);
+
 	}
 
 	return yPos;
@@ -1445,6 +1448,18 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			activateCardEffects(m_selectedBuilding);
 			m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
 			checkAndApplyZoneRewards();
+			checkMilitaryVictory();
+			if (m_gamestate == MILITARY)
+			{
+
+				PollEvents(window);
+				break;
+			}
+			if (m_currentPlayer->hasScientificSupremacy())
+			{
+				m_gamestate = SCIENTIFIC;
+				PollEvents(window);
+			}
 			turnCards();
 
 
@@ -1462,13 +1477,13 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 							break;
 					}
 				}
+				m_currentPlayer->consumeTokenSelectionRight();
 			}
 			std::swap(m_currentPlayer, m_otherPlayer);
 
 		}
 		else
 		{
-			// Assuming getName() exists on Building/Card, otherwise use getId()
 			std::cout << "You don't have enough resources/coins to build: " << m_selectedBuilding->getId() << ", retry\n";
 		}
 		break;
@@ -1502,8 +1517,18 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						Game::m_constructedWonders++;
 						removeCardFromDeck(m_selectedBuilding->getId(), false);
 						activateWonderEffects(selectedWonder);
-
-					
+						m_board.movePeon(m_selectedBuilding->getShields() * (m_currentPlayer->name() == "player1" ? -1 : 1));
+						checkAndApplyZoneRewards();
+						checkMilitaryVictory();
+						if (m_gamestate == MILITARY)
+						{
+							PollEvents(window);
+						}
+						if (m_currentPlayer->hasScientificSupremacy())
+						{
+							m_gamestate = SCIENTIFIC;
+							PollEvents(window);
+						}
 
 						if (m_waitingToDiscardBrown && m_otherPlayer->getBrownBuildings().size() > 0) {
 							discardOpponentCard(window, Building::Color::BROWN);
@@ -1548,6 +1573,8 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 			}
 		}
 		m_selectedBuilding = nullptr;
+		if (m_gamestate == MILITARY)
+			return option;
 		window.draw(m_backgroundSprite);
 		redrawCurrentAgeCards(window);
 		drawPlayerCards(window);
@@ -1570,6 +1597,16 @@ void Game::activateCardEffects(std::shared_ptr<Building> building)
 
 void Game::activateWonderEffects(std::shared_ptr<Card> card)
 {
+	//auto originalSelected = m_selectedBuilding;
+
+	// creez o cladire temporara pentru a activa efectele wonder-ului
+	m_selectedBuilding = std::make_shared<Building>(
+		Building::Age::AGEI,
+		Building::Color::PURPLE,
+		std::vector<ResourceType>{},
+		std::nullopt,
+		* card
+	);
 	for (auto& effect : card->getEffects())
 	{
 		m_cardEffects[effect](*this);
@@ -2284,23 +2321,29 @@ void Game::PollEvents(sf::RenderWindow& window)
 {
 	while (const std::optional event = window.waitEvent())
 	{
+		
 		if (event->is<sf::Event::Closed>())
 			window.close();
-		/*if (event->is<sf::Event::Resized>()) {
-			window.setView(window.getDefaultView());
-			window.draw(m_backgroundSprite);
-			m_wonderRects.clear();
-			if (m_gamestate == GAMESTART)
-				drawWondersSelection(window);
-			if (m_gamestate == ONGOING) {
 
-				redrawCurrentAgeCards(window);
-				drawPlayerCards(window);
-				drawClickAreaForPlayerDetails(window);
-				drawMilitaryBoard(window);
-			}
-			window.display();
-		}*/
+		if (GameState::MILITARY == m_gamestate)
+		{
+			window.clear();
+			drawMilitaryVictoryScreen(window);
+			continue;
+		}
+		if (GameState::SCIENTIFIC == m_gamestate)
+		{
+			window.clear();
+			drawScientificVictoryScreen(window);
+			continue;
+		}
+		if(GameState::CIVILIAN == m_gamestate)
+		{
+			window.clear();
+			drawCivilianVictoryScreen(window);
+			continue;
+		}
+
 		if (event->is<sf::Event::MouseButtonPressed>())
 		{
 			handleClick(window, sf::Mouse::getPosition(window));
@@ -2322,11 +2365,17 @@ void Game::PollEvents(sf::RenderWindow& window)
 				m_cardDisplay.clear();
 				initAgeIIBoard();
 			}
-			else
+			else if (m_currentAge == Building::Age::AGEII)
 			{
 				m_currentAge = Building::Age::AGEIII;
 				m_cardDisplay.clear();
 				initAgeIIIBoard();
+			}
+			else {
+				m_gamestate = CIVILIAN;
+				window.clear();
+				drawCivilianVictoryScreen(window);
+				continue;
 			}
 			drawCurrentAgeCards(window);
 			window.display();
@@ -2341,10 +2390,203 @@ void Game::drawSelectedCard(sf::RenderWindow& window)
 		sf::Texture bigCard;
 		bigCard.loadFromFile("..\\..\\Images\\" + std::to_string(m_selectedBuilding->getId()) + ".jpg");
 		sf::Sprite bigCardSprite(bigCard);
-		bigCardSprite.setScale(sf::Vector2f{ 0.5,0.5});
-		bigCardSprite.setPosition({75.f,35.f});
+		bigCardSprite.setScale(sf::Vector2f{ 0.5,0.5 });
+		bigCardSprite.setPosition({ 75.f,35.f });
 		window.draw(bigCardSprite);
 	}
+}
+
+//void Game::calculateFinalScores()
+//{
+//	std::shared_ptr<Player> player1 = m_currentPlayer->name() == "player1" ? m_currentPlayer : m_otherPlayer;
+//	std::shared_ptr<Player> player2 = m_currentPlayer->name() == "player2" ? m_currentPlayer : m_otherPlayer;
+//	std::uint16_t player1Score = player1->calculateFinalScore();
+//	std::uint16_t player2Score = player2->calculateFinalScore();
+//	for (auto& guild : player1->getPurpleBuildings())
+//	{
+//		activateCardEffects(std::make_shared<Building>(guild));
+//	}
+//	for (auto& guild : player2->getPurpleBuildings())
+//	{
+//		activateCardEffects(std::make_shared<Building>(guild));
+//	}
+//	if (m_board.getPos() > 0 && m_board.getPos() < 3) {
+//		player2Score += 2;
+//	}
+//	else if(m_board.getPos() >= 3 && m_board.getPos() < 6) {
+//		player2Score += 5;
+//	}
+//	else if (m_board.getPos() >= 6 && m_board.getPos() < 9) {
+//		player2Score += 10;
+//	}
+//	else if(m_board.getPos() < 0 && m_board.getPos() > -3) {
+//		player1Score += 2;
+//	}
+//	else if (m_board.getPos() <= -3 && m_board.getPos() > -6) {
+//		player1Score += 5;
+//	}
+//	else if (m_board.getPos() <= -6 && m_board.getPos() > -9) {
+//		player1Score += 10;
+//	}
+//
+//	std::cout << "Final Scores:\n";
+//	std::cout << player1->name() << ": " << player1Score << " points\n" << player2Score << " points\n";
+//	if (player1Score > player2Score)
+//		std::cout << player1->name() << " wins!\n";
+//	else if (player2Score > player1Score)
+//		std::cout << player2->name() << " wins!\n";
+//	else
+//		std::cout << "It's a tie!\n";
+//}
+
+void Game::checkMilitaryVictory()
+{
+	if (m_board.getPos() >= 9)
+	{
+		m_gamestate = MILITARY;
+		std::cout << "player2 wins by military conquest!\n";
+	}
+	else if (m_board.getPos() <= -9)
+	{
+		m_gamestate = MILITARY;
+		std::cout << "player1 wins by military conquest!\n";
+	}
+}
+
+void Game::drawMilitaryVictoryScreen(sf::RenderWindow& window)
+{
+	window.draw(m_backgroundSprite);
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text titleText(font, "Military Victory", 50);
+	titleText.setFillColor(sf::Color::Red);
+	titleText.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 200.f, static_cast<float>(window.getSize().y) / 2.f - 150.f });
+
+	sf::Text victoryText(font, "", 50);
+	victoryText.setFillColor(sf::Color::Black);
+	victoryText.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 200.f, static_cast<float>(window.getSize().y) / 2.f - 50.f });
+	if (m_board.getPos() >= 9)
+		victoryText.setString("player2 wins by military conquest!");
+	else
+		victoryText.setString("player1 wins by military conquest!");
+
+	sf::FloatRect textRect = victoryText.getLocalBounds();
+	victoryText.setOrigin(sf::Vector2f{ textRect.position.x + textRect.size.x / 2.0f,
+		textRect.position.y + textRect.size.y / 2.0f });
+	victoryText.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 2.0f));
+
+	window.draw(titleText);
+	window.draw(victoryText);
+	window.display();
+}
+
+void Game::drawCivilianVictoryScreen(sf::RenderWindow& window)
+{
+	window.draw(m_backgroundSprite);
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+
+	std::shared_ptr<Player> player1 = m_currentPlayer->name() == "player1" ? m_currentPlayer : m_otherPlayer;
+	std::shared_ptr<Player> player2 = m_currentPlayer->name() == "player2" ? m_currentPlayer : m_otherPlayer;
+	std::uint16_t player1Score = player1->calculateFinalScore();
+	std::uint16_t player2Score = player2->calculateFinalScore();
+	for (auto& guild : player1->getPurpleBuildings())
+	{
+		activateCardEffects(std::make_shared<Building>(guild));
+	}
+	for (auto& guild : player2->getPurpleBuildings())
+	{
+		activateCardEffects(std::make_shared<Building>(guild));
+	}
+
+	if (m_board.getPos() > 0 && m_board.getPos() < 3) {
+		player2Score += 2;
+	}
+	else if (m_board.getPos() >= 3 && m_board.getPos() < 6) {
+		player2Score += 5;
+	}
+	else if (m_board.getPos() >= 6 && m_board.getPos() < 9) {
+		player2Score += 10;
+	}
+	else if (m_board.getPos() < 0 && m_board.getPos() > -3) {
+		player1Score += 2;
+	}
+	else if (m_board.getPos() <= -3 && m_board.getPos() > -6) {
+		player1Score += 5;
+	}
+	else if (m_board.getPos() <= -6 && m_board.getPos() > -9) {
+		player1Score += 10;
+	}
+
+	std::string winnerText;
+	if (player1Score > player2Score) winnerText = "Player 1 Wins!";
+	else if (player2Score > player1Score) winnerText = "Player 2 Wins!";
+	else winnerText = "It's a Tie!";
+
+	sf::Text titleText(font, "Civilian Victory", 50);
+	titleText.setFillColor(sf::Color::Blue);
+
+	sf::Text p1Text(font, "Player 1: " + std::to_string(player1Score), 35);
+	p1Text.setFillColor(sf::Color::Black);
+	
+	sf::Text p2Text(font, "Player 2: " + std::to_string(player2Score), 35);
+	p2Text.setFillColor(sf::Color::Black);
+
+	sf::Text resultText(font, winnerText, 45);
+	resultText.setFillColor(sf::Color::Red);
+
+	// Positioning
+	float centerX = window.getSize().x / 2.0f;
+	float centerY = window.getSize().y / 2.0f;
+
+	auto centerOrigin = [](sf::Text& t) {
+		sf::FloatRect r = t.getLocalBounds();
+		t.setOrigin(sf::Vector2f{ r.position.x + r.size.x / 2.0f, r.position.y + r.size.y / 2.0f });
+		};
+
+	centerOrigin(titleText);
+	centerOrigin(p1Text);
+	centerOrigin(p2Text);
+	centerOrigin(resultText);
+
+	titleText.setPosition({ centerX, centerY - 150 });
+	p1Text.setPosition({ centerX, centerY - 50 });
+	p2Text.setPosition({ centerX, centerY + 50 });
+	resultText.setPosition({ centerX, centerY + 150 });
+
+	window.draw(titleText);
+	window.draw(p1Text);
+	window.draw(p2Text);
+	window.draw(resultText);
+	window.display();
+}
+
+void Game::drawScientificVictoryScreen(sf::RenderWindow& window)
+{
+	window.draw(m_backgroundSprite);
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text titleText(font, "Scientific Victory", 50);
+	titleText.setFillColor(sf::Color::Green);
+	titleText.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 200.f, static_cast<float>(window.getSize().y) / 2.f - 100.f });
+	sf::Text victoryText(font, "", 50);
+	victoryText.setFillColor(sf::Color::Black);
+	victoryText.setPosition({ static_cast<float>(window.getSize().x) / 2.f - 200.f, static_cast<float>(window.getSize().y) / 2.f });
+	
+	victoryText.setString(m_currentPlayer->name() + " wins by scientific supremacy!");
+	sf::FloatRect textRect = victoryText.getLocalBounds();
+	victoryText.setOrigin(sf::Vector2f{ textRect.position.x + textRect.size.x / 2.0f,
+		textRect.position.y + textRect.size.y / 2.0f });
+	victoryText.setPosition(sf::Vector2f(window.getSize().x / 2.0f, window.getSize().y / 2.0f));
+	window.draw(titleText);
+	window.draw(victoryText);
+	window.display();
 }
 
 void Game::run()
@@ -2356,7 +2598,6 @@ void Game::run()
 	m_currentAge = Building::Age::AGEI;
 	std::uint8_t move;
 	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
-	//std::uint16_t iteration = 0;
 	m_selectedBuilding = nullptr;
 
 	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Titlebar | sf::Style::Close);
@@ -2365,140 +2606,13 @@ void Game::run()
 
 	while (window.isOpen())
 	{
+		
 		window.draw(m_backgroundSprite);
 		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
 		window.display();
 		PollEvents(window);
-		//wondersSetup(window);
-
-
-
-
-
-
-		/*while (true)
-		{
-			bool setup = true;
-			showFourWonders(wonders);
-			std::uint16_t step = 0;
-			bool secondTurn = true;
-			while (setup) {
-				std::uint16_t id;
-				std::cout << "current player: " << m_currentPlayer->name() << "\n";
-				std::cout << "choose one wonder: ";
-				std::cin >> id;
-				std::shared_ptr<Card> selectedWonder = selectWonder(wonders, id);
-				if (selectedWonder)
-				{
-					m_currentPlayer->addWonder(selectedWonder);
-					removeWonderFromDisplay(wonders, id);
-				}
-				else {
-					std::cout << "wonder not available\n";
-					continue;
-				}
-				if (iteration == 0) {
-					if (m_currentPlayer->name() == "player2" && secondTurn) {
-						secondTurn = false;
-						step++;
-
-					}
-					else {
-						step++;
-						std::swap(m_currentPlayer, m_otherPlayer);
-					}
-				}
-				else if (iteration == 1)
-				{
-					if (m_currentPlayer->name() == "player1" && secondTurn) {
-						secondTurn = false;
-						step++;
-
-					}
-					else {
-						step++;
-						std::swap(m_currentPlayer, m_otherPlayer);
-					}
-				}
-				if (step == 4)
-				{
-					setup = false;
-				}
-			}
-			if (iteration == 1) break;
-			iteration++;
-			wonders.clear();
-			system("cls");
-		}
-		system("cls");
-		while (this->m_gamestate==ONGOING)
-		{
-			displayBoard();
-			std::cout << "current player: " << m_currentPlayer->name() << "\n";
-			std::cout << "1.build\n2.discard\n3.wonder\nmove:";
-			std::cin >> move;
-			if (move == '1')
-			{
-				m_selectedBuilding = selectAcceptableCard();
-				if (CheckPlayerResources(m_currentPlayer, m_selectedBuilding) && CheckPlayerCoins(m_currentPlayer, m_selectedBuilding))
-					m_currentPlayer->addBuilding(*m_selectedBuilding);
-				else
-				{
-					std::cout << "You don't have enough resources/coins to build this building. Retry\n";
-					continue;
-				}
-
-				/*if (player1Turn && m_selectedBuilding->getColor() == Building::Color::RED)
-					m_board.setPos(m_board.getPos() + m_selectedBuilding->getShields());
-				else
-					m_board.setPos(m_board.getPos() - m_selectedBuilding->getShields());/*
-
-				removeCardFromDeck(m_selectedBuilding->getId());
-				turnCards();
-			}
-			if (move == '2')
-			{
-				m_selectedBuilding = selectAcceptableCard();
-				std::uint8_t profit = 2 + m_currentPlayer->getYellowBuildings().size();
-				m_currentPlayer->addCoin(profit);
-				m_discardedCards->insert({ m_selectedBuilding->getId(), m_selectedBuilding });
-				removeCardFromDeck(m_selectedBuilding->getId());
-				turnCards();
-			}
-			if (move == '3')
-			{
-				if (Game::m_constructedWonders == 7)
-				{
-					system("cls");
-					std::cout << "Nu se mai pot construi minuni";
-					continue;
-				}
-				std::cout << "Your wonders:\n";
-				for(auto wonder:m_currentPlayer->getWonders())
-					std::cout << "[" << wonder.first->getId() << "] ";
-				std::cout << "\n";
-				auto selectedWonder=selectAcceptableWonder();
-				m_selectedBuilding = selectAcceptableCard();
-				if(m_currentPlayer->canBuildWonder(*(selectedWonder.first)))
-				{
-					m_currentPlayer->buildWonder(selectedWonder.first->getId(), m_selectedBuilding);
-					Game::m_constructedWonders++;
-					removeCardFromDeck(m_selectedBuilding->getId());
-				}
-				else
-				{
-					system("cls");
-					std::cout << "You cannot build this wonder now. Retry\n";
-					continue;
-				}
-			}
-
-			std::swap(m_currentPlayer, m_otherPlayer);
-			player1Turn = !player1Turn;
-			system("cls");
-		}*/
 	}
 }
 

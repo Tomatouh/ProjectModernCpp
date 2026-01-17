@@ -194,6 +194,8 @@ public:
     bool hasSecondTurn() const noexcept;
     void setSecondTurn(bool value) noexcept;
 
+	std::uint16_t calculateFinalScore();
+
 private:
 
     std::string m_name;

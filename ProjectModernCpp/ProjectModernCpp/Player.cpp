@@ -973,3 +973,9 @@ void Player::setSecondTurn(bool value) noexcept
 {
     m_secondTurn = value;
 }
+
+std::uint16_t Player::calculateFinalScore()
+{
+    std::uint16_t totalScore = m_victoryPoints + m_coins / 3;
+    return totalScore;
+}
