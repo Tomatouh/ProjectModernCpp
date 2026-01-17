@@ -2200,17 +2200,17 @@ void Game::checkAndApplyZoneRewards()
 	struct ZoneReward {
 		int vpGain;
 		int opponentCoinLoss;
-		int minPos;
-		int maxPos;
+		int minPos; 
+		int maxPos;  
 	};
 
 	std::array<ZoneReward, 6> rewards = { {
-		{10, 5, -9, -6},
-		{5, 2, -6, -3},
-		{2, 0, -3, -1},
-		{2, 0, 1, 3},
-		{5, 2, 3, 6},
-		{10, 5, 6, 9}
+		{10, 5, -9, -6},   
+		{5, 2, -6, -3},   
+		{2, 0, -3, -1},   
+		{2, 0, 1, 3},     
+		{5, 2, 3, 6},   
+		{10, 5, 6, 9}    
 	} };
 
 	for (int i = 0; i < 6; i++) {
@@ -2241,29 +2241,84 @@ void Game::checkAndApplyZoneRewards()
 				}
 			}
 
-			rewardPlayer->addVictoryPoints(rewards[i].vpGain);
-
 			if (rewards[i].opponentCoinLoss > 0) {
 				int currentCoins = penaltyPlayer->getCoins();
 				int coinsToLose = std::min(currentCoins, rewards[i].opponentCoinLoss);
 				penaltyPlayer->payCoin(coinsToLose);
 			}
 
+			m_pendingZoneVictoryPoints[i] = rewards[i].vpGain;
+
 			std::cout << rewardPlayer->name() << " entered zone ";
 
+			int visualZoneNumber = 6 - i; 
 
-			int visualZoneNumber = 6 - i;
-
-			std::cout << visualZoneNumber << " and gained " << rewards[i].vpGain << " VP";
+			std::cout << visualZoneNumber << " (will gain " << rewards[i].vpGain << " VP at game end)";
 			if (rewards[i].opponentCoinLoss > 0) {
 				std::cout << ". " << penaltyPlayer->name()
-					<< " lost " << rewards[i].opponentCoinLoss << " coins";
+					<< " lost " << rewards[i].opponentCoinLoss << " coins now";
 			}
 			std::cout << "!\n";
 
 			m_zoneRewardsGiven[i] = true;
 		}
 	}
+}
+
+void Game::awardPendingZoneVictoryPoints()
+{
+	std::vector<bool> zoneTriggers = m_board.getZoneTriggers();
+	int currentPos = m_board.getPos();
+
+	struct ZoneReward {
+		int vpGain;
+		int opponentCoinLoss;
+		int minPos;
+		int maxPos;
+	};
+
+	std::array<ZoneReward, 6> rewards = { {
+		{10, 5, -9, -6}, 
+		{5, 2, -6, -3},   
+		{2, 0, -3, -1},   
+		{2, 0, 1, 3},     
+		{5, 2, 3, 6},     
+		{10, 5, 6, 9}     
+	} };
+
+	std::cout << "\n=== Awarding Military Zone Victory Points ===\n";
+
+	for (int i = 0; i < 6; i++) {
+		if (m_pendingZoneVictoryPoints[i] > 0) {
+			std::shared_ptr<Player> rewardPlayer;
+
+			if (i < 3) {
+				if (m_currentPlayer->name() == "player1") {
+					rewardPlayer = m_currentPlayer;
+				}
+				else {
+					rewardPlayer = m_otherPlayer;
+				}
+			}
+			else {
+				if (m_currentPlayer->name() == "player2") {
+					rewardPlayer = m_currentPlayer;
+				}
+				else {
+					rewardPlayer = m_otherPlayer;
+				}
+			}
+
+			rewardPlayer->addVictoryPoints(m_pendingZoneVictoryPoints[i]);
+
+			int visualZoneNumber = 6 - i;
+			std::cout << rewardPlayer->name() << " gains "
+				<< m_pendingZoneVictoryPoints[i]
+				<< " VP from zone " << visualZoneNumber << "\n";
+		}
+	}
+
+	std::cout << "==========================================\n\n";
 }
 
 void Game::drawOpponentGreyOrBrownBuildings(sf::RenderWindow& window, Building::Color color)

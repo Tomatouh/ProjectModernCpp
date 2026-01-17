@@ -23,6 +23,7 @@ private:
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
 	std::array<bool, 6> m_zoneRewardsGiven = { false, false, false, false, false, false };
+	std::array<int, 6> m_pendingZoneVictoryPoints = { 0, 0, 0, 0, 0, 0 };
 	std::vector<std::shared_ptr<Card>> m_wondersDeck;
 	std::vector<std::optional<std::shared_ptr<Card>>> m_wondersDisplay;
 	std::vector<sf::FloatRect> m_wonderRects;
@@ -95,6 +96,9 @@ private:
 	void drawCivilianVictoryScreen(sf::RenderWindow& window);
 
 	void drawScientificVictoryScreen(sf::RenderWindow& window);
+
+	void awardPendingZoneVictoryPoints();
+
 public:
 
 	Game();
