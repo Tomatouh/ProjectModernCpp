@@ -52,6 +52,7 @@ private:
 	bool m_waitingToDiscardBrown = false;
 	bool m_waitingToDiscardGrey = false;
 	bool m_waitingForTokenSelection = false;
+	std::vector<std::unique_ptr<Player::ProgressToken>> m_current3TokenChoices;
 
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
