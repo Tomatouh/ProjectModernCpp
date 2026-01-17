@@ -961,3 +961,4 @@ bool Player::hasSecondTurn() const noexcept
 void Player::setSecondTurn(bool value) noexcept
 {
     m_secondTurn = value;
+}
