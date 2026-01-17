@@ -1493,6 +1493,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
 						Game::m_constructedWonders++;
 						removeCardFromDeck(m_selectedBuilding->getId());
+						activateCardEffects(m_selectedBuilding);
 						std::swap(m_currentPlayer, m_otherPlayer);
 						break;
 					}

@@ -606,7 +606,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIDec
     // must connect to observatory
     {
         std::vector<Card::Effect> effects = { Card::Effect::addScientificSymbol, Card::Effect::addVictoryPoints };
-        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::WOOD, ResourceType::PAPYRUS, ResourceType::PAPYRUS}, 0 };
+        Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::WOOD, ResourceType::GLASS, ResourceType::GLASS}, 0 };
         std::string name = "Laboratory";
         uint8_t id = 35;
         uint8_t vp = 1;
