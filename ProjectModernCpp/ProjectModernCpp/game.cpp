@@ -1094,7 +1094,7 @@ int drawPlayerColumn(const std::shared_ptr<Player>& player, int xPos, sf::Render
 		drawCardSet(player->getRedBuildings(), xPos, yPos, window, false);
 		drawCardSet(player->getGreenBuildings(), xPos, yPos, window, false);
 		drawCardSet(player->getBlueBuildings(), xPos, yPos, window, false);
-		drawCardSet(player->getPurpleBuildings(), xPos, yPos, window, true);
+		drawCardSet(player->getPurpleBuildings(), xPos, yPos, window, false);
 
 	}
 
