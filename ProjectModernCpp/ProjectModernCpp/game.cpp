@@ -332,7 +332,7 @@ void Game::initCardEffects()
 		{Card::Effect::constructCard, [](Game& game) {game.m_waitingForDiscardedChoice = true; }},
 		{Card::Effect::discardBrown, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
 		{Card::Effect::discardGrey, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
-		{Card::Effect::drawProgress, [](Game& game) {drawProgress(game.m_currentPlayer, game.m_progressTokensDeck); }},
+		{Card::Effect::drawProgress, [](Game& game) { game.m_waitingForTokenSelection = true; }},
 		{Card::Effect::loseThreeCoins, [](Game& game) {game.m_otherPlayer->addCoin(-3); }},
 		{Card::Effect::magistratesGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
@@ -441,11 +441,11 @@ void Game::initProgressTokens()
 	loadProgressTokens();
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	for (int i = 0; i < m_progressTokens.size(); ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
 		std::uint16_t index = dist(gen);
-		m_progressTokens[i] = std::make_optional<Player::ProgressToken>(*m_progressTokensDeck[index]);
+		m_remainingProgressTokens.emplace_back(std::move(m_progressTokensDeck[index]));
 		m_progressTokensDeck.erase(m_progressTokensDeck.begin() + index);
 	}
 
@@ -1531,6 +1531,11 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 							PollEvents(window);
 						}
 
+						if(m_waitingForTokenSelection)
+						{
+							takeProgressToken(window);
+							m_waitingForTokenSelection = false;
+						}
 						if (m_waitingToDiscardBrown && m_otherPlayer->getBrownBuildings().size() > 0) {
 							discardOpponentCard(window, Building::Color::BROWN);
 							m_waitingToDiscardGrey = false;
@@ -2323,6 +2328,66 @@ void Game::awardPendingZoneVictoryPoints()
 	}
 
 	std::cout << "==========================================\n\n";
+}
+
+void Game::draw3ProgressTokens(sf::RenderWindow& window)
+{
+	float x = static_cast<float>(window.getSize().x) / 2.f - (m_remainingProgressTokens.size() * 148.f) / 2.f;
+	float y = static_cast<float>(window.getSize().y) / 2.f - 75.f;
+	std::vector<Player::ProgressToken> tokensToDraw;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	for (int i =0;i<m_remainingProgressTokens.size();++i)
+	{
+		std::uniform_int_distribution<> dist(0, m_remainingProgressTokens.size() - 1);
+		int randomIndex = dist(gen);
+		sf::Texture tokenTexture;
+		tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(m_remainingProgressTokens[i]->getId()) + ".png");
+		sf::Sprite tokenSprite(tokenTexture);
+		tokenSprite.setScale({ 0.4f, 0.4f });
+		tokenSprite.setPosition({ x, y });
+		x += 154;
+		window.draw(tokenSprite);
+		tokensToDraw.push_back(*m_remainingProgressTokens[randomIndex]);
+	}
+}
+
+bool Game::selectFrom3ProgressTokens(sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	const float xPosStart = static_cast<float>(window.getSize().x) / 2.f - (m_remainingProgressTokens.size() * 148.f) / 2.f;
+	const float yPos = static_cast<float>(window.getSize().y) / 2.f - 75.f;
+	const float tokenBoxWidth = 100.f;
+	const float tokenBoxHeight = 80.f;
+	for (int i = 0; i < m_remainingProgressTokens.size(); ++i) {
+		sf::FloatRect tokenRect(
+			sf::Vector2f(xPosStart + i * 154, yPos),
+			sf::Vector2f(tokenBoxWidth, tokenBoxHeight)
+		);
+		if (tokenRect.contains(worldPos)) {
+			m_currentPlayer->addProgressToken(*(m_remainingProgressTokens[i]));
+			m_remainingProgressTokens[i]->applyEffect(m_currentPlayer);
+			m_remainingProgressTokens.erase(m_remainingProgressTokens.begin() + i);
+			return true;
+		}
+	}
+	return false;
+}
+
+void Game::takeProgressToken(sf::RenderWindow& window)
+{
+	window.draw(m_backgroundSprite);
+	draw3ProgressTokens(window);
+	window.display();
+	while (const std::optional event = window.waitEvent())
+	{
+		if (event->is<sf::Event::MouseButtonPressed>())
+		{
+			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+			if (selectFrom3ProgressTokens(window, mousePos))
+				break;
+		}
+	}
 }
 
 void Game::drawOpponentGreyOrBrownBuildings(sf::RenderWindow& window, Building::Color color)

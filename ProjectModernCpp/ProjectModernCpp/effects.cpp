@@ -76,32 +76,32 @@ std::uint16_t maxConstructedWonders(std::shared_ptr<Player> player)
 	return std::max(constructedWonders1, constructedWonders2);
 }
 
-void drawProgress(std::shared_ptr<Player> player, std::vector<std::unique_ptr<Player::ProgressToken>>& m_progressTokensDeck)
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	auto copyDeck = std::move(m_progressTokensDeck);
-	for (int i = 0; i < 2; ++i)
-	{
-		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
-		std::uint16_t index = dist(gen);
-		std::cout << "[" << index << "] ";
-		copyDeck.emplace_back(std::move(m_progressTokensDeck[index]));
-	}
-
-	std::cout << "\nProgress token id to choose: ";
-	std::uint16_t idToken;
-	while (!(std::cin >> idToken) || idToken >= copyDeck.size())
-	{
-		std::cout << "Invalid input. Please enter a valid progress token id: ";
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	}
-	player->addProgressToken(*copyDeck[idToken]);
-	copyDeck[idToken]->applyEffect(player);
-	copyDeck.erase(copyDeck.begin() + idToken);
-	m_progressTokensDeck.insert(m_progressTokensDeck.end(), std::make_move_iterator(copyDeck.begin()), std::make_move_iterator(copyDeck.end()));
-}
+//void drawProgress(std::shared_ptr<Player> player, std::vector<std::unique_ptr<Player::ProgressToken>>& m_progressTokensDeck)
+//{
+//	std::random_device rd;
+//	std::mt19937 gen(rd());
+//	auto copyDeck = std::move(m_progressTokensDeck);
+//	for (int i = 0; i < 2; ++i)
+//	{
+//		std::uniform_int_distribution<> dist(0, m_progressTokensDeck.size() - 1);
+//		std::uint16_t index = dist(gen);
+//		std::cout << "[" << index << "] ";
+//		copyDeck.emplace_back(std::move(m_progressTokensDeck[index]));
+//	}
+//
+//	std::cout << "\nProgress token id to choose: ";
+//	std::uint16_t idToken;
+//	while (!(std::cin >> idToken) || idToken >= copyDeck.size())
+//	{
+//		std::cout << "Invalid input. Please enter a valid progress token id: ";
+//		std::cin.clear();
+//		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//	}
+//	player->addProgressToken(*copyDeck[idToken]);
+//	copyDeck[idToken]->applyEffect(player);
+//	copyDeck.erase(copyDeck.begin() + idToken);
+//	m_progressTokensDeck.insert(m_progressTokensDeck.end(), std::make_move_iterator(copyDeck.begin()), std::make_move_iterator(copyDeck.end()));
+//}
 
 //void constructCard(std::shared_ptr<Player> player)
 //{
