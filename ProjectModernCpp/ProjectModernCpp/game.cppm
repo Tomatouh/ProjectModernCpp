@@ -70,11 +70,11 @@ private:
 	int getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	int chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void activateCardEffects(std::shared_ptr<Building> building);
+	void activateCardEffects(std::shared_ptr<Card> card);
 	void drawMilitaryBoard(sf::RenderWindow& window);
 	void drawTokenSelection(sf::RenderWindow& window);
 	bool selectToken(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void drawPlayerTurn(sf::RenderWindow& window);
-
 public:
 
 	Game();

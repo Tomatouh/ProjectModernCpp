@@ -190,12 +190,16 @@ public:
     bool hasAgricultureProgressToken() const noexcept;
     void setAgricultureProgressToken(bool value) noexcept;
 
+    bool hasSecondTurn() const noexcept;
+    void setSecondTurn(bool value) noexcept;
+
 private:
 
     std::string m_name;
     uint16_t m_coins;
     uint16_t m_victoryPoints=0;
     uint16_t m_shields;
+    bool m_secondTurn = false;
 
     // Resources
     uint16_t m_wood;

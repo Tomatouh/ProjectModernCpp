@@ -390,7 +390,8 @@ void Game::initCardEffects()
 		{Card::Effect::oneCoinGlass, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::GLASS); }},
 		{Card::Effect::oneCoinPapyrus, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::PAPYRUS); }},
 		{Card::Effect::oneCoinStone, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::STONE); }},
-		{Card::Effect::oneCoinWood, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::WOOD); }}
+		{Card::Effect::oneCoinWood, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::WOOD); }},
+		{Card::Effect::playSecondTurn,[](Game& game) {game.m_currentPlayer->setSecondTurn(true); }}
 	};
 }
 
@@ -1492,8 +1493,13 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 						m_currentPlayer->buildWonder(selectedWonder->getId(), m_selectedBuilding);
 						Game::m_constructedWonders++;
 						removeCardFromDeck(m_selectedBuilding->getId());
-						activateCardEffects(m_selectedBuilding);
-						std::swap(m_currentPlayer, m_otherPlayer);
+						activateCardEffects(selectedWonder);	
+
+						if (m_currentPlayer->hasSecondTurn())
+							m_currentPlayer->setSecondTurn(false);
+						else
+							std::swap(m_currentPlayer, m_otherPlayer);
+
 						break;
 					}
 					else {
@@ -1516,6 +1522,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		drawPlayerCards(window);
 		drawClickAreaForPlayerDetails(window);
 		drawMilitaryBoard(window);
+		drawPlayerTurn(window);
 		window.display();
 		return option;
 
@@ -1525,6 +1532,14 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 void Game::activateCardEffects(std::shared_ptr<Building> building)
 {
 	for (auto& effect : building->getEffects())
+	{
+		m_cardEffects[effect](*this);
+	}
+}
+
+void Game::activateCardEffects(std::shared_ptr<Card> card)
+{
+	for (auto& effect : card->getEffects())
 	{
 		m_cardEffects[effect](*this);
 	}
