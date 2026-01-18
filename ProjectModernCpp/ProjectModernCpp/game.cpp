@@ -1000,7 +1000,7 @@ void drawClickAreaForPlayerDetails(sf::RenderWindow& window)
 
 
 
-std::pair<int, int> getNextCardPosition(Building::Age age,bool& fromGameLoad)
+std::pair<int, int> getNextCardPosition(Building::Age age)
 {
 
 	if (age == Building::Age::AGEI)
@@ -1010,16 +1010,6 @@ std::pair<int, int> getNextCardPosition(Building::Age age,bool& fromGameLoad)
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
-
-		if(fromGameLoad)
-		{
-			fromGameLoad = false;
-			x = 647;
-			y = 10;
-			currentRowCard = 0;
-			maxRowCards = 2;
-			centeringOffset = 1;
-		}
 
 		if (x == 647 && y == 10)
 		{
@@ -1052,17 +1042,6 @@ std::pair<int, int> getNextCardPosition(Building::Age age,bool& fromGameLoad)
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 3;
 		static bool firstCall = true;
-
-		if(fromGameLoad)
-		{
-			fromGameLoad = false;
-			x = 400;
-			y = 10;
-			currentRowCard = 0;
-			maxRowCards = 6;
-			centeringOffset = 3;
-			firstCall = true;
-		}
 
 		if (x == 400 && y == 10)
 		{
@@ -1100,20 +1079,6 @@ std::pair<int, int> getNextCardPosition(Building::Age age,bool& fromGameLoad)
 		static bool thirdSectionDone = false;
 
 		static bool firstCall = true;
-
-		if(fromGameLoad)
-		{
-			fromGameLoad = false;
-			x = 647;
-			y = 10;
-			firstSectionDone = false;
-			secondSectionDone = false;
-			thirdSectionDone = false;
-			currentRowCard = 0;
-			maxRowCards = 2;
-			centeringOffset = 1;
-			firstCall = true;
-		}
 
 		if (!firstSectionDone)
 		{
@@ -1219,7 +1184,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 				if (card.value().isFaceUp())
 				{
 					std::uint16_t id = card.value().getBuilding()->getId();
-					auto pos = getNextCardPosition(m_currentAge, m_wasGameLoaded);
+					auto pos = getNextCardPosition(m_currentAge);
 					guiCard gCard = card.value().getGuiCard();
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
@@ -1259,7 +1224,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 			}
 			else
 			{
-				auto pos = getNextCardPosition(m_currentAge, m_wasGameLoaded);
+				auto pos = getNextCardPosition(m_currentAge);
 
 			}
 		}
