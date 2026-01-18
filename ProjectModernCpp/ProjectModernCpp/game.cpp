@@ -1237,7 +1237,6 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 				window.draw(gCard);
 			}
 		}
-	std::cout << "Ok";
 }
 
 void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
@@ -1948,6 +1947,35 @@ bool wasReturnToPlayerBoxClicked(const sf::RenderWindow& window, const sf::Vecto
 	return returnBoxRect.contains(worldPos);
 }
 
+void drawSave(sf::RenderWindow& window)
+{
+	sf::RectangleShape saveBox;
+	saveBox.setSize({ 150.f, 60.f });
+	saveBox.setFillColor(sf::Color::White);
+	saveBox.setOutlineColor(sf::Color::Black);
+	saveBox.setOutlineThickness(2.f);
+	saveBox.setPosition({ static_cast<float>(window.getSize().x) - 160.f, 180.f });
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text saveText(font,"Save game", 20);
+	saveText.setFillColor(sf::Color::Black);
+	saveText.setPosition({ saveBox.getPosition().x + 20.f, saveBox.getPosition().y + 15.f });
+	window.draw(saveBox);
+	window.draw(saveText);
+}
+
+bool wasSaveBoxClicked(const sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	const float boxX = static_cast<float>(window.getSize().x) - 160.f;
+	const float boxY = 180.f;
+	const float boxWidth = 150.f;
+	const float boxHeight = 60.f;
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	sf::FloatRect saveBoxRect(sf::Vector2f(boxX, boxY), sf::Vector2f(boxWidth, boxHeight));
+	return saveBoxRect.contains(worldPos);
+}
 void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	static bool alreadyDrawn = false;
@@ -2018,9 +2046,13 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				drawClickAreaForPlayerDetails(window);
 				alreadyDrawn = true;
 			}
+			if (wasSaveBoxClicked(window, mousePos))
+				saveGame();
+
 			drawPlayerTurn(window);
 			drawMilitaryBoard(window);
 			drawSelectedCard(window);
+			drawSave(window);
 			window.display();
 		}
 		else
