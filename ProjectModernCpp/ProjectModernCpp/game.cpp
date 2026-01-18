@@ -120,7 +120,7 @@ bool Game::loadGame()
 			{9, []() { return Player::ProgressToken::urbanismToken; }},
 			{10, []() { return Player::ProgressToken::architectureToken; }}
 		};
-
+		this->m_progressTokensDeck.clear();
 		for (int id : tokens) {
 			if (tokenFactory.find(id) != tokenFactory.end()) {
 				this->m_progressTokensDeck.push_back(
