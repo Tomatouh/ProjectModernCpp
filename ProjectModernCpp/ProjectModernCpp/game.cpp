@@ -2169,7 +2169,7 @@ void Game::drawPlayerTurn(sf::RenderWindow& window)
 		}();
 	sf::Text turnText(font, "", 24);
 	turnText.setFillColor(m_currentPlayer->name() == "player1" ? sf::Color::Blue : sf::Color::Red);
-	turnText.setPosition({ static_cast<float>(window.getSize().x) - 325.f, 200.f });
+	turnText.setPosition({ static_cast<float>(window.getSize().x) - 325.f, 400.f });
 	turnText.setString("Current turn: " + m_currentPlayer->name());
 	window.draw(turnText);
 }
