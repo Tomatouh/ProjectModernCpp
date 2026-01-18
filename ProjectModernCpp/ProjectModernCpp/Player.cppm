@@ -34,7 +34,7 @@ public:
     void addWonder(const std::shared_ptr<Card>& wonder);
 
     // Getters for Buildings, by colour
-	const std::vector<Building>& getAllBuildings() const noexcept;
+	std::vector<Building> getAllBuildings() const noexcept;
     const std::vector<Building>& getBrownBuildings() const noexcept;
     const std::vector<Building>& getGreyBuildings() const noexcept;
     const std::vector<Building>& getBlueBuildings() const noexcept;

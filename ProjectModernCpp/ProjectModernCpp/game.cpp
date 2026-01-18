@@ -370,13 +370,17 @@ void Game::saveGame()
 		f << label << "\n";
 
 		// Buildings
-		const std::vector<Building>& allBuildings = player->getAllBuildings();
+		std::vector<Building> allBuildings = player->getAllBuildings();
 		f << "b ";
-		for (int i = 0; i < player->getBuildingCount(); i++) {
-			f << allBuildings[i].getId() << " ";
+		if(allBuildings.empty()) {
+			f << "\n";
 		}
-		f << "\n";
-
+		else {
+			for (int i = 0; i < player->getBuildingCount(); i++) {
+				f << allBuildings[i].getId() << " ";
+			}
+			f << "\n";
+		}
 		f << "c " << player->getCoins() << "\n";
 		f << "vp " << player->getVictoryPoints() << "\n";
 		f << "s " << player->getShields() << "\n";
