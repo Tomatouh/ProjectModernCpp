@@ -120,7 +120,7 @@ bool Game::loadGame()
 			{9, []() { return Player::ProgressToken::urbanismToken; }},
 			{10, []() { return Player::ProgressToken::architectureToken; }}
 		};
-
+		this->m_progressTokensDeck.clear();
 		for (int id : tokens) {
 			if (tokenFactory.find(id) != tokenFactory.end()) {
 				this->m_progressTokensDeck.push_back(
@@ -1206,11 +1206,11 @@ std::pair<int, int> getNextCardPosition(Building::Age age,bool& fromGameLoad)
 		}
 	}
 }
-
 void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 {
 	int contor = 0;
 	for (auto& row : m_cardDisplay)
+	{
 		for (auto& card : row)
 		{
 			contor++;
@@ -1223,45 +1223,37 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 					guiCard gCard = card.value().getGuiCard();
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
+
+					// Note: This creates a texture lifetime issue (White Square bug). 
+					// The texture needs to exist as long as the sprite. 
+					// Ideally, use a ResourceManager or member variable for textures.
 					sf::Texture texture;
 					texture.loadFromFile("..\\..\\Images\\" + std::to_string(id) + ".jpg");
 					gCard.setTexture(texture);
+
 					m_guiCardDisplay.insert({ id, gCard });
 					window.draw(gCard);
 				}
 				else
 				{
-					auto pos = getNextCardPosition(m_currentAge, m_wasGameLoaded);
-
+					auto pos = getNextCardPosition(m_currentAge);
 					guiCard gCard = card.value().getGuiCard();
 					std::string currentAgeNumber;
+
 					switch (m_currentAge)
 					{
-					case Building::Age::AGEI:
-					{
-						currentAgeNumber = "I";
-						break;
+					case Building::Age::AGEI:   currentAgeNumber = "I"; break;
+					case Building::Age::AGEII:  currentAgeNumber = "II"; break;
+					case Building::Age::AGEIII: currentAgeNumber = "III"; break;
+					default: break;
 					}
-					case Building::Age::AGEII:
-					{
-						currentAgeNumber = "II";
-						break;
-					}
-					case Building::Age::AGEIII:
-					{
-						currentAgeNumber = "III";
-						break;
-					}
-					default:
-						break;
-					}
+
 					sf::Texture texture;
 					texture.loadFromFile("..\\..\\Images\\Miscellaneous\\age " + currentAgeNumber + " deck.png");
 					gCard.setTexture(texture);
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
 					m_guiCardDisplay.insert({ card.value().getBuilding()->getId(), gCard });
-
 					window.draw(gCard);
 				}
 			}
@@ -1269,14 +1261,10 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 			{
 				auto pos = getNextCardPosition(m_currentAge, m_wasGameLoaded);
 
-				guiCard gCard;
-				gCard.setPosition(pos);
-				card.value().setPosition(pos);
-				window.draw(gCard);
 			}
 		}
+	}
 }
-
 void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 {
 
@@ -3265,7 +3253,6 @@ void Game::drawScientificVictoryScreen(sf::RenderWindow& window)
 	window.draw(victoryText);
 	window.display();
 }
-
 void Game::run()
 {
 	// Create window first so it is available for both new and loaded games
@@ -3283,22 +3270,42 @@ void Game::run()
 	else
 	{
 		// --- Loaded Game Setup ---
-		// The game is already in progress
 		m_gamestate = ONGOING;
 		m_selectedBuilding = nullptr;
 
-		// We need to initialize the graphical representations (sprites) 
-		// based on the logical grid loaded into m_cardDisplay.
-		// drawCurrentAgeCards iterates the grid and populates m_guiCardDisplay.
-		// We call it once here to set up the visual state.
-		m_wasGameLoaded = true;
+		// 1. Sanitize Board State: 
+		// loadGame() sets all cards to FaceUp(true). We must reset the "Hidden" rows 
+		// (rows 1, 3, etc.) to FaceDown based on the standard Age rules (Odd rows are usually hidden).
+		for (int i = 0; i < m_cardDisplay.size(); ++i)
+		{
+			// In this implementation, odd rows (1, 3, 5) are initialized as face-down
+			// in initAgeI, II, and III.
+			if (i % 2 != 0)
+			{
+				for (auto& card : m_cardDisplay[i])
+				{
+					if (card.has_value())
+					{
+						card.value().setFaceUp(false);
+					}
+				}
+			}
+		}
+
+		// 2. Apply Game Logic:
+		// Now that hidden rows are reset, turnCards() will check if they 
+		// should actually be revealed because the cards covering them are missing.
+		turnCards();
+
+		// 3. Initialize Visuals:
+		// Create the sprites/textures based on the calculated state.
 		drawCurrentAgeCards(window);
 	}
 
 	// Main Game Loop
 	while (window.isOpen())
 	{
-		// Clear the previous frame (good practice, even if background covers it)
+		// Clear the previous frame
 		window.clear();
 
 		// Always draw the background
@@ -3311,8 +3318,7 @@ void Game::run()
 		}
 		else if (m_gamestate == ONGOING)
 		{
-			// For the ongoing game, we need to draw the board components every frame.
-			// redrawCurrentAgeCards uses existing positions from m_guiCardDisplay.
+			// Redraw board components using existing sprite positions
 			redrawCurrentAgeCards(window);
 
 			drawPlayerCards(window);
@@ -3328,7 +3334,6 @@ void Game::run()
 		window.display();
 
 		// Handle Input
-		// Note: Your PollEvents uses waitEvent(), so this loop blocks here until input occurs.
 		PollEvents(window);
 	}
 }
