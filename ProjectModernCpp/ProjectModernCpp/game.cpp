@@ -2029,7 +2029,10 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 
 			if (!alreadyDrawn && m_gamestate == ONGOING) {
 				window.draw(m_backgroundSprite);
-				redrawCurrentAgeCards(window);
+				if(m_wasGameLoaded)
+					redrawCurrentAgeCards(window);
+				else
+					drawCurrentAgeCards(window);
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
 				alreadyDrawn = true;
