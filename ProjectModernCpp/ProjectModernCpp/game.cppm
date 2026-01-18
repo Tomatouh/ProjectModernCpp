@@ -19,6 +19,8 @@ private:
 	static sf::Sprite m_backgroundSprite;
 	static std::uint8_t m_constructedWonders;
 	static bool m_isInPlayerBox;
+	static bool m_isInCardsBox;
+	static bool m_isFirstPlayerBox;
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
 	std::array<bool, 6> m_zoneRewardsGiven = { false, false, false, false, false, false };

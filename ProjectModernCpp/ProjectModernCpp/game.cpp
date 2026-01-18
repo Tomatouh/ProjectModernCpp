@@ -1030,51 +1030,38 @@ void Game::redrawCurrentAgeCards(sf::RenderWindow& window)
 		}
 }
 
-void drawCardSet(const std::vector<Building>& Buildings, int xPos, int& yPos, sf::RenderWindow& window, bool isLeft)
+void drawCardSet(const std::vector<Building>& Buildings, int xPos, int& yPos, sf::RenderWindow& window)
 {
-	int spacing = 5;
+	int spacing = 30;
 
 	for (const auto& card : Buildings) {
 
 		auto cardPtr = std::make_shared<Building>(card);
 		sf::Texture cardTexture;
 		cardTexture.loadFromFile("..\\..\\Images\\" + std::to_string(cardPtr->getId()) + ".jpg");
-		guiCard gCard(cardPtr);
+		/*guiCard gCard(cardPtr);
 		gCard.setSize(sf::Vector2f(static_cast<float>(BoxSizes::boxWidth / 2.f), static_cast<float>(BoxSizes::boxHeight / 2.f)));
 		gCard.setPosition({ xPos, yPos });
-		gCard.setTexture(cardTexture);
-		window.draw(gCard);
+		gCard.setTexture(cardTexture);*/
+		sf::Sprite cardSprite(cardTexture);
+		cardSprite.setScale({ 0.13f, 0.13f });
+		cardSprite.setPosition({ xPos*1.f, yPos*1.f });
+		window.draw(cardSprite);
 		//yPos += BoxSizes::boxHeight / 2 + spacing;
-		if (isLeft)
-			xPos += BoxSizes::boxWidth / 2 + spacing;
-		else
-			xPos -= BoxSizes::boxWidth / 2 + spacing;
+		xPos += BoxSizes::boxWidth / 2 + 40;
 	}
-	yPos += BoxSizes::boxHeight / 2 + spacing;
+	yPos += BoxSizes::boxHeight / 2 + 50;
 }
 
 int drawPlayerColumn(const std::shared_ptr<Player>& player, int xPos, sf::RenderWindow& window) {
-	int yPos = 20;
-	if (player->name() == "player1") {
-		drawCardSet(player->getBrownBuildings(), xPos, yPos, window, true);
-		drawCardSet(player->getGreyBuildings(), xPos, yPos, window, true);
-		drawCardSet(player->getYellowBuildings(), xPos, yPos, window, true);
-		drawCardSet(player->getRedBuildings(), xPos, yPos, window, true);
-		drawCardSet(player->getGreenBuildings(), xPos, yPos, window, true);
-		drawCardSet(player->getBlueBuildings(), xPos, yPos, window, true);
-		drawCardSet(player->getPurpleBuildings(), xPos, yPos, window, true);
-	}
-	else {
-		drawCardSet(player->getBrownBuildings(), xPos, yPos, window, false);
-		drawCardSet(player->getGreyBuildings(), xPos, yPos, window, false);
-		drawCardSet(player->getYellowBuildings(), xPos, yPos, window, false);
-		drawCardSet(player->getRedBuildings(), xPos, yPos, window, false);
-		drawCardSet(player->getGreenBuildings(), xPos, yPos, window, false);
-		drawCardSet(player->getBlueBuildings(), xPos, yPos, window, false);
-		drawCardSet(player->getPurpleBuildings(), xPos, yPos, window, false);
-
-	}
-
+	int yPos = 10;
+	drawCardSet(player->getBrownBuildings(), xPos, yPos, window);
+	drawCardSet(player->getGreyBuildings(), xPos, yPos, window);
+	drawCardSet(player->getYellowBuildings(), xPos, yPos, window);
+	drawCardSet(player->getRedBuildings(), xPos, yPos, window);
+	drawCardSet(player->getGreenBuildings(), xPos, yPos, window);
+	drawCardSet(player->getBlueBuildings(), xPos, yPos, window);
+	drawCardSet(player->getPurpleBuildings(), xPos, yPos, window);
 	return yPos;
 }
 
@@ -1165,8 +1152,8 @@ void Game::drawPlayerCards(sf::RenderWindow& window)
 		leftPlayer = m_otherPlayer;
 		rightPlayer = m_currentPlayer;
 	}
-	drawPlayerColumn(leftPlayer, leftX, window);
-	drawPlayerColumn(rightPlayer, rightX, window);
+	/*drawPlayerColumn(leftPlayer, leftX, window);
+	drawPlayerColumn(rightPlayer, rightX, window);*/
 	/*int leftBottomY = drawPlayerColumn(leftPlayer, leftX, window);
 	int rightBottomY = drawPlayerColumn(rightPlayer, rightX, window);*/
 	int bottomY = 485.0f;
@@ -1714,6 +1701,28 @@ bool wasExitPlayerBoxClicked(const sf::RenderWindow& window, const sf::Vector2i&
 	return exitBoxRect.contains(worldPos);
 }
 
+bool wasCardListClicked(const sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	const float boxX = 695.f;
+	const float boxY = 835.f;
+	const float boxWidth = 250.f;
+	const float boxHeight = 50.f;
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	sf::FloatRect cardListBoxRect(sf::Vector2f(boxX, boxY), sf::Vector2f(boxWidth, boxHeight));
+	return cardListBoxRect.contains(worldPos);
+}
+
+bool wasReturnToPlayerBoxClicked(const sf::RenderWindow& window, const sf::Vector2i& mousePos)
+{
+	const float boxX = 600.f;
+	const float boxY = 820.f;
+	const float boxWidth = 300.f;
+	const float boxHeight = 40.f;
+	sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+	sf::FloatRect returnBoxRect(sf::Vector2f(boxX, boxY), sf::Vector2f(boxWidth, boxHeight));
+	return returnBoxRect.contains(worldPos);
+}
+
 void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 {
 	static bool alreadyDrawn = false;
@@ -1733,16 +1742,28 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 				if (boxClicked == 1)
 				{
 					if (m_currentPlayer->name().compare("player1") == 0)
+					{
+						m_isFirstPlayerBox = true;
 						drawPlayerBox(window, m_currentPlayer);
+					}
 					else
+					{
+						m_isFirstPlayerBox = true;
 						drawPlayerBox(window, m_otherPlayer);
+					}
 				}
 				else if (boxClicked == 2)
 				{
 					if (m_currentPlayer->name().compare("player2") == 0)
+					{
+						m_isFirstPlayerBox = false;
 						drawPlayerBox(window, m_currentPlayer);
+					}
 					else
+					{
+						m_isFirstPlayerBox = false;
 						drawPlayerBox(window, m_otherPlayer);
+					}
 				}
 				window.display();
 				m_isInPlayerBox = true;
@@ -1779,17 +1800,52 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 		}
 		else
 		{
-			if (wasExitPlayerBoxClicked(window, mousePos))
+			if (m_isInCardsBox)
 			{
-				m_isInPlayerBox = false;
-				window.draw(m_backgroundSprite);
-				redrawCurrentAgeCards(window);
-				drawPlayerCards(window);
-				drawClickAreaForPlayerDetails(window);
-				drawMilitaryBoard(window);
-				drawPlayerTurn(window);
-				drawSelectedCard(window);
-				window.display();
+				if (wasReturnToPlayerBoxClicked(window, mousePos))
+				{
+					window.draw(m_backgroundSprite);
+					if(m_isFirstPlayerBox)
+					{
+						if(m_currentPlayer->name() == "player1")
+							drawPlayerBox(window, m_currentPlayer);
+						else
+							drawPlayerBox(window, m_otherPlayer);
+					}
+					else
+					{
+						if(m_currentPlayer->name() == "player2")
+							drawPlayerBox(window, m_currentPlayer);
+						else
+							drawPlayerBox(window, m_otherPlayer);
+					}
+					m_isInCardsBox = false;
+					window.display();
+				}
+				
+			}
+			else
+			{
+				if (wasCardListClicked(window, mousePos))
+				{
+					window.draw(m_backgroundSprite);
+					drawPlayerCardsBox(window);
+					m_isInCardsBox = true;
+					window.display();
+				}
+
+				if (wasExitPlayerBoxClicked(window, mousePos))
+				{
+					m_isInPlayerBox = false;
+					window.draw(m_backgroundSprite);
+					redrawCurrentAgeCards(window);
+					drawPlayerCards(window);
+					drawClickAreaForPlayerDetails(window);
+					drawMilitaryBoard(window);
+					drawPlayerTurn(window);
+					drawSelectedCard(window);
+					window.display();
+				}
 			}
 		}
 	}
@@ -1969,6 +2025,17 @@ void Game::drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>
 	exitLabel.setFillColor(sf::Color::White);
 
 
+	sf::RectangleShape cardsBox;
+	cardsBox.setSize({ 250.f, 50.f });
+	cardsBox.setFillColor(sf::Color::White);
+	cardsBox.setOutlineColor(sf::Color::Black);
+	cardsBox.setOutlineThickness(3.f);
+	cardsBox.setPosition({ backgroundBox.getPosition().x + backgroundBox.getSize().x / 2 - cardsBox.getSize().x/2, backgroundBox.getPosition().y + 800.f});
+
+	sf::Text cardsLabel(font, "See Cards", 20);
+	cardsLabel.setPosition({ cardsBox.getPosition().x + 70.f, cardsBox.getPosition().y + 10.f });
+	cardsLabel.setFillColor(sf::Color::Black);
+
 	window.draw(backgroundBox);
 
 	window.draw(coinSprite);
@@ -2018,6 +2085,9 @@ void Game::drawPlayerBox(sf::RenderWindow& window, const std::shared_ptr<Player>
 
 	window.draw(exitBox);
 	window.draw(exitLabel);
+
+	window.draw(cardsBox);
+	window.draw(cardsLabel);
 }
 
 void Game::drawMilitaryBoard(sf::RenderWindow& window)
@@ -2646,7 +2716,7 @@ void Game::drawPlayerCardsBox(sf::RenderWindow& window)
 	exitBox.setOutlineColor(sf::Color::Black);
 	exitBox.setOutlineThickness(3.f);
 	exitBox.setPosition({ static_cast<float>(window.getSize().x) / 2.f - exitBox.getSize().x / 2,
-		backgroundBox.getPosition().y + backgroundBox.getSize().y - 50.f });
+		backgroundBox.getPosition().y + backgroundBox.getSize().y - 40.f });
 
 	const sf::Font font = []() {
 		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
@@ -2656,12 +2726,24 @@ void Game::drawPlayerCardsBox(sf::RenderWindow& window)
 	returnText.setPosition({ static_cast<float>(window.getSize().x) / 2.f - exitBox.getSize().x / 2 + 20.f, exitBox.getPosition().y + 5.f });
 	returnText.setFillColor(sf::Color::Black);
 
-
-
-
 	window.draw(backgroundBox);
 	window.draw(exitBox);
 	window.draw(returnText);
+
+	if (m_isFirstPlayerBox == true)
+	{
+		if (m_currentPlayer->name() == "player1")
+			drawPlayerColumn(m_currentPlayer, backgroundBox.getPosition().x + 20.f, window);
+		else
+			drawPlayerColumn(m_otherPlayer, backgroundBox.getPosition().x + 20.f, window);
+	}
+	else
+	{
+		if (m_currentPlayer->name() == "player2")
+			drawPlayerColumn(m_currentPlayer, backgroundBox.getPosition().x + 20.f, window);
+		else
+			drawPlayerColumn(m_otherPlayer, backgroundBox.getPosition().x + 20.f, window);
+	}
 }
 
 void Game::checkMilitaryVictory()
@@ -2875,3 +2957,5 @@ sf::Sprite Game::m_backgroundSprite = []() {
 	}();
 
 bool Game::m_isInPlayerBox = false;
+bool Game::m_isInCardsBox = false;
+bool Game::m_isFirstPlayerBox = false;
