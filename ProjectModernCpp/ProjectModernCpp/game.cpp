@@ -2115,7 +2115,7 @@ void Game::drawPlayerProgressTokens(sf::RenderWindow& window)
 			sf::Texture tokenTexture;
 			tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(token.getId()) + ".png");
 			sf::Sprite tokenSprite(tokenTexture);
-			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setScale({ 0.3f, 0.3f });
 			tokenSprite.setPosition({ leftTokenX, tokenY });
 			window.draw(tokenSprite);
 			tokenY += 70.f;
@@ -2126,7 +2126,7 @@ void Game::drawPlayerProgressTokens(sf::RenderWindow& window)
 			sf::Texture tokenTexture;
 			tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(token.getId()) + ".png");
 			sf::Sprite tokenSprite(tokenTexture);
-			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setScale({ 0.3f, 0.3f });
 			tokenSprite.setPosition({ rightTokenX, tokenY });
 			window.draw(tokenSprite);
 			tokenY += 70.f;
@@ -2140,7 +2140,7 @@ void Game::drawPlayerProgressTokens(sf::RenderWindow& window)
 			sf::Texture tokenTexture;
 			tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(token.getId()) + ".png");
 			sf::Sprite tokenSprite(tokenTexture);
-			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setScale({ 0.3f, 0.3f });
 			tokenSprite.setPosition({ leftTokenX, tokenY });
 			window.draw(tokenSprite);
 			tokenY += 70.f;
@@ -2151,7 +2151,7 @@ void Game::drawPlayerProgressTokens(sf::RenderWindow& window)
 			sf::Texture tokenTexture;
 			tokenTexture.loadFromFile("..\\..\\Images\\Progress tokens\\" + std::to_string(token.getId()) + ".png");
 			sf::Sprite tokenSprite(tokenTexture);
-			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setScale({ 0.3f, 0.3f });
 			tokenSprite.setPosition({ rightTokenX, tokenY });
 			window.draw(tokenSprite);
 			tokenY += 70.f;
