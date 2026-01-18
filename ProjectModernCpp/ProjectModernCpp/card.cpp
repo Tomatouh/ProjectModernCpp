@@ -13,10 +13,6 @@ module card;
 	{
 		return m_resources;
 	}
-	/*std::vector<ResourceType> Card::Cost::getResources() const
-	{
-		return m_resources;
-	}*/
 
 	std::uint16_t Card::Cost::getCostCoins() const
 	{

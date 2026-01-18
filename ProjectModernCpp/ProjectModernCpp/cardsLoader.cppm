@@ -5,9 +5,6 @@ import buildingResource;
 import std;
 
 export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIDeck() {
-    /*using std::make_unique;
-    using std::vector;
-    using std::string;*/
     std::unordered_map<std::uint16_t, std::shared_ptr<Building>> out;
 
     // BROWN CARDS
@@ -1086,7 +1083,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
         std::vector<Card::Effect> effects = { Card::Effect::tradersGuild };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::WOOD, ResourceType::GLASS, ResourceType::PAPYRUS }, 0 };
         std::string name = "Traders Guild";
-        uint8_t id = 67;
+        uint8_t id = 68;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;
@@ -1101,7 +1098,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
         std::vector<Card::Effect> effects = { Card::Effect::shipownersGuild };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::STONE, ResourceType::GLASS, ResourceType::PAPYRUS }, 0 };
         std::string name = "Shipowners Guild";
-        uint8_t id = 68;
+        uint8_t id = 73;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;
@@ -1116,7 +1113,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
         std::vector<Card::Effect> effects = { Card::Effect::buildersGuild };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::STONE, ResourceType::STONE, ResourceType::CLAY, ResourceType::WOOD, ResourceType::GLASS }, 0 };
         std::string name = "Builders Guild";
-        uint8_t id = 69;
+        uint8_t id = 70;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;
@@ -1131,7 +1128,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
         std::vector<Card::Effect> effects = { Card::Effect::magistratesGuild };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::WOOD, ResourceType::WOOD, ResourceType::CLAY, ResourceType::PAPYRUS }, 0 };
         std::string name = "Magistrates Guild";
-        uint8_t id = 70;
+        uint8_t id = 71;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;
@@ -1146,7 +1143,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
         std::vector<Card::Effect> effects = { Card::Effect::scientistsGuild };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::CLAY, ResourceType::CLAY, ResourceType::WOOD, ResourceType::WOOD }, 0 };
         std::string name = "Scientists Guild";
-        uint8_t id = 71;
+        uint8_t id = 72;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;
@@ -1161,7 +1158,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
         std::vector<Card::Effect> effects = { Card::Effect::moneylendersGuild };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::STONE, ResourceType::STONE, ResourceType::WOOD, ResourceType::WOOD }, 0 };
         std::string name = "Moneylenders Guild";
-        uint8_t id = 72;
+        uint8_t id = 69;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;
@@ -1176,7 +1173,7 @@ export std::unordered_map<std::uint16_t, std::shared_ptr<Building>> loadAgeIIIDe
         std::vector<Card::Effect> effects = { Card::Effect::tacticiansGuild };
         Card::Cost cost{ 0, std::vector<ResourceType>{ ResourceType::STONE, ResourceType::STONE, ResourceType::CLAY, ResourceType::PAPYRUS }, 0 };
         std::string name = "Tacticians Guild";
-        uint8_t id = 73;
+        uint8_t id = 67;
         uint8_t vp = 0;
         uint8_t shields = 0;
         uint8_t coins = 0;

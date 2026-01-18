@@ -366,20 +366,20 @@ uint16_t Player::getClay() const noexcept { return m_clay; }
 uint16_t Player::getGlass() const noexcept { return m_glass; }
 uint16_t Player::getPapyrus() const noexcept { return m_papyrus; }
 
-void Player::showStatus(std::ostream& os) const {
-    os << "Player " << m_name << " | coins=" << getCoins() << "\n";
-}
-
-void Player::showCards(std::ostream& os) const {
-    os << m_name << " owns buildings:\n";
-    os << " - Brown: " << m_brownBuildings.size() << "\n";
-    os << " - Grey: " << m_greyBuildings.size() << "\n";
-    os << " - Blue: " << m_blueBuildings.size() << "\n";
-    os << " - Green: " << m_greenBuildings.size() << "\n";
-    os << " - Yellow: " << m_yellowBuildings.size() << "\n";
-    os << " - Red: " << m_redBuildings.size() << "\n";
-    os << " - Purple: " << m_purpleBuildings.size() << "\n";
-}
+//void Player::showStatus(std::ostream& os) const {
+//    os << "Player " << m_name << " | coins=" << getCoins() << "\n";
+//}
+//
+//void Player::showCards(std::ostream& os) const {
+//    os << m_name << " owns buildings:\n";
+//    os << " - Brown: " << m_brownBuildings.size() << "\n";
+//    os << " - Grey: " << m_greyBuildings.size() << "\n";
+//    os << " - Blue: " << m_blueBuildings.size() << "\n";
+//    os << " - Green: " << m_greenBuildings.size() << "\n";
+//    os << " - Yellow: " << m_yellowBuildings.size() << "\n";
+//    os << " - Red: " << m_redBuildings.size() << "\n";
+//    os << " - Purple: " << m_purpleBuildings.size() << "\n";
+//}
 
 void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
 {

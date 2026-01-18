@@ -15,7 +15,6 @@ import choiceBox;
 export class Game {
 private:
 	const static std::uint16_t k_boardSize = 20;
-	//const static std::uint16_t k_tokensNumber = 5;
 	static sf::Texture m_background;
 	static sf::Sprite m_backgroundSprite;
 	static std::uint8_t m_constructedWonders;
@@ -47,12 +46,12 @@ private:
 		CIVILIAN
 	};
 	GameState m_gamestate = GAMESTART;
-	//bool m_waitingForWonderSelection = false;
 	bool m_waitingForDiscardedChoice = false;
 	bool m_waitingToDiscardBrown = false;
 	bool m_waitingToDiscardGrey = false;
 	bool m_waitingForTokenSelection = false;
 	std::vector<std::unique_ptr<Player::ProgressToken>> m_current3TokenChoices;
+	bool m_activatedGuildCards = false;
 
 
 	std::shared_ptr<Building> getBuildingById(std::uint8_t searchId);
@@ -64,7 +63,6 @@ private:
 	void turnCards();
 	void removeWonderFromDisplay(std::vector<std::optional<std::shared_ptr<Card>>>& wonders, std::uint16_t searchId);
 	bool findSelectedCard(const sf::Vector2i& mousePos, sf::RenderWindow& window);
-	//void handleEvents(const sf::Event& event, sf::RenderWindow& window);
 	void PollEvents(sf::RenderWindow& window);
 	void drawCurrentAgeCards(sf::RenderWindow& window);
 	void redrawCurrentAgeCards(sf::RenderWindow& window);
@@ -93,7 +91,6 @@ private:
 
 	void drawSelectedCard(sf::RenderWindow& window);
 	void drawPlayerCardsBox(sf::RenderWindow& window);
-	//void calculateFinalScores();
 	void checkMilitaryVictory();
 	void drawMilitaryVictoryScreen(sf::RenderWindow& window);
 	void drawCivilianVictoryScreen(sf::RenderWindow& window);
@@ -119,15 +116,11 @@ public:
 		const std::vector<std::shared_ptr<Card>>& ageIIDeck,
 		const std::vector<std::shared_ptr<Card>>& m_ageIIIDeck,
 		const std::vector<std::shared_ptr<Card>>& m_discardedCards);*/
-	void setGamestate(GameState& gamestate);
 	void initAgeIBoard();
 	void initAgeIIBoard();
 	void initAgeIIIBoard();
 
 	void initCardEffects();
-
-	void displayBoard();
-	void clearBoard();
 
 	void loadProgressTokens();
 	void initProgressTokens();

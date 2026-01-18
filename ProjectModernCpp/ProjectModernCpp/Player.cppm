@@ -66,8 +66,8 @@ public:
     uint16_t getGlass() const noexcept;
     uint16_t getPapyrus() const noexcept;
 
-    void showStatus(std::ostream& os = std::cout) const;
-    void showCards(std::ostream& os = std::cout) const;
+    /*void showStatus(std::ostream& os = std::cout) const;
+    void showCards(std::ostream& os = std::cout) const;*/
 
     //Functii pentru folosirea punctelor stiintifice
     void addScientificPoint(Building::ScientificSymbol point) noexcept;

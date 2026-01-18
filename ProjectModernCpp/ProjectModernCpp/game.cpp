@@ -210,15 +210,13 @@ void Game::saveGame()
 
 }
 
-void Game::setGamestate(GameState& gamestate)
-{
-	this->m_gamestate = gamestate;
-}
+//void Game::setGamestate(GameState& gamestate)
+//{
+//	this->m_gamestate = gamestate;
+//}
 
 void Game::initAgeIBoard()
 {
-	/*GameState state = ONGOING;
-	setGamestate(state);*/
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::unordered_map<std::uint16_t, std::shared_ptr<Building>> copyDeck = m_ageIDeck;
@@ -337,10 +335,12 @@ void Game::initCardEffects()
 		{Card::Effect::magistratesGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
 			{
-				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBlueBuildings().size(), game.m_otherPlayer->getBlueBuildings().size()));
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::BLUE),
+					game.m_otherPlayer->getBuildingCount(Building::Color::BLUE)));
 			}
-			else {
-				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBlueBuildings().size(), game.m_otherPlayer->getBlueBuildings().size()));
+			else if (game.m_gamestate == GameState::ONGOING) {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::BLUE),
+					game.m_otherPlayer->getBuildingCount(Building::Color::BLUE)));
 		} }},
 		{Card::Effect::moneylendersGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
@@ -350,41 +350,49 @@ void Game::initCardEffects()
 		{Card::Effect::scientistsGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
 			{
-				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getGreenBuildings().size(), game.m_otherPlayer->getGreenBuildings().size()));
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::GREEN),
+					game.m_otherPlayer->getBuildingCount(Building::Color::GREEN)));
 			}
-			else {
-				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getGreenBuildings().size(), game.m_otherPlayer->getGreenBuildings().size()));
+
+			else if(game.m_gamestate == GameState::ONGOING) {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::GREEN),
+					game.m_otherPlayer->getBuildingCount(Building::Color::GREEN)));
 		} }},
 		{Card::Effect::tacticiansGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
 			{
-				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getRedBuildings().size(), game.m_otherPlayer->getRedBuildings().size()));
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::RED),
+					game.m_otherPlayer->getBuildingCount(Building::Color::RED)));
 			}
-			else {
-				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getRedBuildings().size(), game.m_otherPlayer->getRedBuildings().size()));
+			else if (game.m_gamestate == GameState::ONGOING) {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::RED),
+					game.m_otherPlayer->getBuildingCount(Building::Color::RED)));
 		} }},
 		{Card::Effect::tradersGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
 			{
-				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getYellowBuildings().size(), game.m_otherPlayer->getYellowBuildings().size()));
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::YELLOW),
+					game.m_otherPlayer->getBuildingCount(Building::Color::YELLOW)));
 			}
-			else {
-				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getYellowBuildings().size(), game.m_otherPlayer->getYellowBuildings().size()));
+			else if (game.m_gamestate == GameState::ONGOING) {
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::YELLOW),
+					game.m_otherPlayer->getBuildingCount(Building::Color::YELLOW)));
 		} }},
 		{Card::Effect::shipownersGuild, [](Game& game) {
 			if (game.m_gamestate != GameState::ONGOING)
 			{
-				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBrownBuildings().size() + game.m_currentPlayer->getGreyBuildings().size(),
-					game.m_otherPlayer->getBrownBuildings().size() + game.m_otherPlayer->getGreyBuildings().size()));
+				game.m_currentPlayer->addVictoryPoints(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::BROWN, Building::Color::GREY),
+					game.m_otherPlayer->getBuildingCount(Building::Color::BROWN, Building::Color::GREY)));
 			}
-			else {
-				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBrownBuildings().size() + game.m_currentPlayer->getGreyBuildings().size(),
-					game.m_otherPlayer->getBrownBuildings().size() + game.m_otherPlayer->getGreyBuildings().size()));
+			else if (game.m_gamestate == GameState::ONGOING) {
+
+				game.m_currentPlayer->addCoin(std::max(game.m_currentPlayer->getBuildingCount(Building::Color::BROWN, Building::Color::GREY),
+					game.m_otherPlayer->getBuildingCount(Building::Color::BROWN, Building::Color::GREY)));
 		} }},
-		{Card::Effect::threeCoinsPerGrey, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getGreyBuildings().size() * 3); }},
-		{Card::Effect::twoCoinsPerBrown, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getBrownBuildings().size() * 2); }},
-		{Card::Effect::oneCoinPerYellow, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getYellowBuildings().size()); }},
-		{Card::Effect::oneCoinPerRed, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getRedBuildings().size()); }},
+		{Card::Effect::threeCoinsPerGrey, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getBuildingCount(Building::Color::GREY) * 3); }},
+		{Card::Effect::twoCoinsPerBrown, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getBuildingCount(Building::Color::BROWN) * 2); }},
+		{Card::Effect::oneCoinPerYellow, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getBuildingCount(Building::Color::YELLOW)); }},
+		{Card::Effect::oneCoinPerRed, [](Game& game) {game.m_currentPlayer->addCoin(game.m_currentPlayer->getBuildingCount(Building::Color::RED)); }},
 		{Card::Effect::twoCoinsPerWonder, [](Game& game) {game.m_currentPlayer->addCoin(maxConstructedWonders(game.m_currentPlayer) * 2); }},
 		{Card::Effect::oneCoinClay, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::CLAY); }},
 		{Card::Effect::oneCoinGlass, [](Game& game) {game.m_currentPlayer->addTradeDiscount(ResourceType::GLASS); }},
@@ -396,31 +404,6 @@ void Game::initCardEffects()
 	};
 }
 
-void Game::displayBoard()
-{
-	for (int i = 0; i < m_cardDisplay.size(); ++i)
-	{
-		for (int j = 0; j < m_cardDisplay[i].size(); ++j)
-		{
-			if (m_cardDisplay[i][j].has_value())
-			{
-				if (m_cardDisplay[i][j].value().isFaceUp())
-					std::cout << "[" << m_cardDisplay[i][j].value().getBuilding()->getId() << "] ";
-				else
-					std::cout << "[hidden]";
-			}
-			else
-				std::cout << "[NC]";
-
-		}
-		std::cout << "\n";
-	}
-}
-
-void Game::clearBoard()
-{
-	m_cardDisplay.clear();
-}
 
 void Game::loadProgressTokens()
 {
@@ -752,11 +735,7 @@ std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> Game:
 }
 
 
-/*
-To do:
-Make it so that wonders actually have an effect
-Implement correct functionality for each age deck
-*/
+
 void drawClickAreaForPlayerDetails(sf::RenderWindow& window)
 {
 	constexpr float boxWidth = 170.f;
@@ -972,10 +951,8 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 		for (auto& card : row)
 		{
 			contor++;
-			//std::pair<int, int> pos = getNextCardPosition(m_currentAge);
 			if (card.has_value())
 			{
-				//card.value().setPosition(pos);
 				if (card.value().isFaceUp())
 				{
 					std::uint16_t id = card.value().getBuilding()->getId();
@@ -2333,7 +2310,7 @@ void Game::awardPendingZoneVictoryPoints()
 
 void Game::draw3ProgressTokens(sf::RenderWindow& window)
 {
-	
+
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -2570,12 +2547,18 @@ void Game::PollEvents(sf::RenderWindow& window)
 			if (m_currentAge == Building::Age::AGEI)
 			{
 				m_currentAge = Building::Age::AGEII;
+				if (m_currentPlayer->getShields() < m_otherPlayer->getShields()) {
+					std::swap(m_currentPlayer, m_otherPlayer);
+				}
 				m_cardDisplay.clear();
 				initAgeIIBoard();
 			}
 			else if (m_currentAge == Building::Age::AGEII)
 			{
 				m_currentAge = Building::Age::AGEIII;
+				if (m_currentPlayer->getShields() < m_otherPlayer->getShields()) {
+					std::swap(m_currentPlayer, m_otherPlayer);
+				}
 				m_cardDisplay.clear();
 				initAgeIIIBoard();
 			}
@@ -2662,8 +2645,8 @@ void Game::drawPlayerCardsBox(sf::RenderWindow& window)
 	exitBox.setFillColor(sf::Color::White);
 	exitBox.setOutlineColor(sf::Color::Black);
 	exitBox.setOutlineThickness(3.f);
-	exitBox.setPosition({ static_cast<float>(window.getSize().x) / 2.f  - exitBox.getSize().x/2,
-		backgroundBox.getPosition().y + backgroundBox.getSize().y - 50.f});
+	exitBox.setPosition({ static_cast<float>(window.getSize().x) / 2.f - exitBox.getSize().x / 2,
+		backgroundBox.getPosition().y + backgroundBox.getSize().y - 50.f });
 
 	const sf::Font font = []() {
 		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
@@ -2732,18 +2715,25 @@ void Game::drawCivilianVictoryScreen(sf::RenderWindow& window)
 		return font;
 		}();
 
+	if (!m_activatedGuildCards)
+	{
+		for (auto& guild : m_currentPlayer->getPurpleBuildings())
+		{
+			activateCardEffects(std::make_shared<Building>(guild));
+		}
+		std::swap(m_currentPlayer, m_otherPlayer);
+		for (auto& guild : m_currentPlayer->getPurpleBuildings())
+		{
+			activateCardEffects(std::make_shared<Building>(guild));
+		}
+	}
+	m_activatedGuildCards = true;
+
 	std::shared_ptr<Player> player1 = m_currentPlayer->name() == "player1" ? m_currentPlayer : m_otherPlayer;
 	std::shared_ptr<Player> player2 = m_currentPlayer->name() == "player2" ? m_currentPlayer : m_otherPlayer;
 	std::uint16_t player1Score = player1->calculateFinalScore();
 	std::uint16_t player2Score = player2->calculateFinalScore();
-	for (auto& guild : player1->getPurpleBuildings())
-	{
-		activateCardEffects(std::make_shared<Building>(guild));
-	}
-	for (auto& guild : player2->getPurpleBuildings())
-	{
-		activateCardEffects(std::make_shared<Building>(guild));
-	}
+
 
 	if (m_board.getPos() > 0 && m_board.getPos() < 3) {
 		player2Score += 2;
@@ -2767,7 +2757,16 @@ void Game::drawCivilianVictoryScreen(sf::RenderWindow& window)
 	std::string winnerText;
 	if (player1Score > player2Score) winnerText = "Player 1 Wins!";
 	else if (player2Score > player1Score) winnerText = "Player 2 Wins!";
-	else winnerText = "It's a Tie!";
+	else {
+		std::uint16_t player1BlueBuildingsVP = 0, player2BlueBuildingsVP = 0;
+		for(auto& blueBuilding : player1->getBlueBuildings())
+			player1BlueBuildingsVP += blueBuilding.getVictoryPoints();
+		for (auto& blueBuilding : player2->getBlueBuildings())
+			player2BlueBuildingsVP += blueBuilding.getVictoryPoints();
+		if (player1BlueBuildingsVP > player2BlueBuildingsVP) winnerText = "Player 1 Wins by Blue Buildings Tie-Breaker!";
+		else if (player2BlueBuildingsVP > player1BlueBuildingsVP) winnerText = "Player 2 Wins by Blue Buildings Tie-Breaker!";
+		else winnerText = "It's a Tie!";
+	}
 
 	sf::Text titleText(font, "Civilian Victory", 50);
 	titleText.setFillColor(sf::Color::Blue);

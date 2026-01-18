@@ -11,7 +11,6 @@ ChoiceBox::ChoiceBox() :text(font, "", ChoiceBoxSizes::fontSize)
 	for(auto & optionBox : optionBoxes)
 	{
 		optionBox.setSize(sf::Vector2f(ChoiceBoxSizes::optionBoxWidth, ChoiceBoxSizes::optionBoxHeight));
-		//optionBox.setFillColor(sf::Color(150, 75, 0));
 		optionBox.setOutlineColor(sf::Color::Black);
 		optionBox.setOutlineThickness(2.f);
 	}
