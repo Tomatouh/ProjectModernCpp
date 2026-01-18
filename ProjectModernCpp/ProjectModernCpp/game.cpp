@@ -1000,7 +1000,7 @@ void drawClickAreaForPlayerDetails(sf::RenderWindow& window)
 
 
 
-std::pair<int, int> getNextCardPosition(Building::Age age)
+std::pair<int, int> getNextCardPosition(Building::Age age,bool& fromGameLoad)
 {
 
 	if (age == Building::Age::AGEI)
@@ -1010,6 +1010,17 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		static std::uint8_t maxRowCards = 2;
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 1;
+
+		if(fromGameLoad)
+		{
+			fromGameLoad = false;
+			x = 647;
+			y = 10;
+			currentRowCard = 0;
+			maxRowCards = 2;
+			centeringOffset = 1;
+		}
+
 		if (x == 647 && y == 10)
 		{
 			currentRowCard = 1;
@@ -1041,6 +1052,18 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		static std::uint8_t currentRowCard = 0;
 		static std::uint8_t centeringOffset = 3;
 		static bool firstCall = true;
+
+		if(fromGameLoad)
+		{
+			fromGameLoad = false;
+			x = 400;
+			y = 10;
+			currentRowCard = 0;
+			maxRowCards = 6;
+			centeringOffset = 3;
+			firstCall = true;
+		}
+
 		if (x == 400 && y == 10)
 		{
 			currentRowCard = 1;
@@ -1077,6 +1100,21 @@ std::pair<int, int> getNextCardPosition(Building::Age age)
 		static bool thirdSectionDone = false;
 
 		static bool firstCall = true;
+
+		if(fromGameLoad)
+		{
+			fromGameLoad = false;
+			x = 647;
+			y = 10;
+			firstSectionDone = false;
+			secondSectionDone = false;
+			thirdSectionDone = false;
+			currentRowCard = 0;
+			maxRowCards = 2;
+			centeringOffset = 1;
+			firstCall = true;
+		}
+
 		if (!firstSectionDone)
 		{
 			if (x == 647 && y == 10)
@@ -1181,7 +1219,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 				if (card.value().isFaceUp())
 				{
 					std::uint16_t id = card.value().getBuilding()->getId();
-					auto pos = getNextCardPosition(m_currentAge);
+					auto pos = getNextCardPosition(m_currentAge, m_wasGameLoaded);
 					guiCard gCard = card.value().getGuiCard();
 					gCard.setPosition(pos);
 					card.value().setPosition(pos);
@@ -1193,7 +1231,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 				}
 				else
 				{
-					auto pos = getNextCardPosition(m_currentAge);
+					auto pos = getNextCardPosition(m_currentAge, m_wasGameLoaded);
 
 					guiCard gCard = card.value().getGuiCard();
 					std::string currentAgeNumber;
@@ -1229,7 +1267,7 @@ void Game::drawCurrentAgeCards(sf::RenderWindow& window)
 			}
 			else
 			{
-				auto pos = getNextCardPosition(m_currentAge);
+				auto pos = getNextCardPosition(m_currentAge, m_wasGameLoaded);
 
 				guiCard gCard;
 				gCard.setPosition(pos);
@@ -1618,6 +1656,25 @@ int Game::getConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mo
 
 }
 
+void drawSave(sf::RenderWindow& window)
+{
+	sf::RectangleShape saveBox;
+	saveBox.setSize({ 150.f, 60.f });
+	saveBox.setFillColor(sf::Color::White);
+	saveBox.setOutlineColor(sf::Color::Black);
+	saveBox.setOutlineThickness(2.f);
+	saveBox.setPosition({ static_cast<float>(window.getSize().x) - 160.f, 180.f });
+	const sf::Font font = []() {
+		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
+		return font;
+		}();
+	sf::Text saveText(font, "Save game", 20);
+	saveText.setFillColor(sf::Color::Black);
+	saveText.setPosition({ saveBox.getPosition().x + 20.f, saveBox.getPosition().y + 15.f });
+	window.draw(saveBox);
+	window.draw(saveText);
+}
+
 int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i& mousePos)
 {
 	int option = getConstructionOption(window, mousePos);
@@ -1780,6 +1837,7 @@ int Game::chooseConstructionOption(sf::RenderWindow& window, const sf::Vector2i&
 		drawClickAreaForPlayerDetails(window);
 		drawMilitaryBoard(window);
 		drawSelectedCard(window);
+		drawSave(window);
 		window.display();
 		return option;
 
@@ -1947,25 +2005,6 @@ bool wasReturnToPlayerBoxClicked(const sf::RenderWindow& window, const sf::Vecto
 	return returnBoxRect.contains(worldPos);
 }
 
-void drawSave(sf::RenderWindow& window)
-{
-	sf::RectangleShape saveBox;
-	saveBox.setSize({ 150.f, 60.f });
-	saveBox.setFillColor(sf::Color::White);
-	saveBox.setOutlineColor(sf::Color::Black);
-	saveBox.setOutlineThickness(2.f);
-	saveBox.setPosition({ static_cast<float>(window.getSize().x) - 160.f, 180.f });
-	const sf::Font font = []() {
-		sf::Font font("C:\\Windows\\Fonts\\cour.ttf");
-		return font;
-		}();
-	sf::Text saveText(font,"Save game", 20);
-	saveText.setFillColor(sf::Color::Black);
-	saveText.setPosition({ saveBox.getPosition().x + 20.f, saveBox.getPosition().y + 15.f });
-	window.draw(saveBox);
-	window.draw(saveText);
-}
-
 bool wasSaveBoxClicked(const sf::RenderWindow& window, const sf::Vector2i& mousePos)
 {
 	const float boxX = static_cast<float>(window.getSize().x) - 160.f;
@@ -2041,7 +2080,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 
 			if (!alreadyDrawn && m_gamestate == ONGOING) {
 				window.draw(m_backgroundSprite);
-				drawCurrentAgeCards(window);
+				redrawCurrentAgeCards(window);
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
 				alreadyDrawn = true;
@@ -2053,6 +2092,7 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 			drawMilitaryBoard(window);
 			drawSelectedCard(window);
 			drawSave(window);
+			drawPlayerProgressTokens(window);
 			window.display();
 		}
 		else
@@ -2101,9 +2141,66 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 					drawMilitaryBoard(window);
 					drawPlayerTurn(window);
 					drawSelectedCard(window);
+					drawSave(window);
+					drawPlayerProgressTokens(window);
 					window.display();
 				}
 			}
+		}
+	}
+}
+void Game::drawPlayerProgressTokens(sf::RenderWindow& window)
+{
+	float leftTokenX = 150.f;
+	float rightTokenX = static_cast<float>(window.getSize().x) - 150.f;
+	float tokenY = 500.f;
+	if (m_currentPlayer->name() == "player1")
+	{
+		for (const auto& token : m_currentPlayer->getProgressTokens())
+		{
+			sf::Texture tokenTexture;
+			tokenTexture.loadFromFile("..\\..\\Images\\ProgressTokens\\" + std::to_string(token.getId()) + ".png");
+			sf::Sprite tokenSprite(tokenTexture);
+			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setPosition({ leftTokenX, tokenY });
+			window.draw(tokenSprite);
+			tokenY += 70.f;
+		}
+		tokenY = 500.f;
+		for (const auto& token : m_otherPlayer->getProgressTokens())
+		{
+			sf::Texture tokenTexture;
+			tokenTexture.loadFromFile("..\\..\\Images\\ProgressTokens\\" + std::to_string(token.getId()) + ".png");
+			sf::Sprite tokenSprite(tokenTexture);
+			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setPosition({ rightTokenX, tokenY });
+			window.draw(tokenSprite);
+			tokenY += 70.f;
+		}
+
+	}
+	else
+	{
+		for (const auto& token : m_otherPlayer->getProgressTokens())
+		{
+			sf::Texture tokenTexture;
+			tokenTexture.loadFromFile("..\\..\\Images\\ProgressTokens\\" + std::to_string(token.getId()) + ".png");
+			sf::Sprite tokenSprite(tokenTexture);
+			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setPosition({ leftTokenX, tokenY });
+			window.draw(tokenSprite);
+			tokenY += 70.f;
+		}
+		tokenY = 500.f;
+		for (const auto& token : m_currentPlayer->getProgressTokens())
+		{
+			sf::Texture tokenTexture;
+			tokenTexture.loadFromFile("..\\..\\Images\\ProgressTokens\\" + std::to_string(token.getId()) + ".png");
+			sf::Sprite tokenSprite(tokenTexture);
+			tokenSprite.setScale({ 0.5f, 0.5f });
+			tokenSprite.setPosition({ rightTokenX, tokenY });
+			window.draw(tokenSprite);
+			tokenY += 70.f;
 		}
 	}
 }
@@ -3194,6 +3291,7 @@ void Game::run()
 		// based on the logical grid loaded into m_cardDisplay.
 		// drawCurrentAgeCards iterates the grid and populates m_guiCardDisplay.
 		// We call it once here to set up the visual state.
+		m_wasGameLoaded = true;
 		drawCurrentAgeCards(window);
 	}
 
@@ -3253,3 +3351,4 @@ sf::Sprite Game::m_backgroundSprite = []() {
 bool Game::m_isInPlayerBox = false;
 bool Game::m_isInCardsBox = false;
 bool Game::m_isFirstPlayerBox = false;
+bool Game::m_wasGameLoaded = false;
