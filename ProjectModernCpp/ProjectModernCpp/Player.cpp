@@ -225,7 +225,7 @@ void Player::addWonder(const std::shared_ptr<Card>& wonder)
     std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>> card{ wonder, std::nullopt };
     m_wonders.push_back(card);
 }
-const std::vector<Building>& Player::getAllBuildings() const noexcept
+std::vector<Building> Player::getAllBuildings() const noexcept
 {
     std::vector<Building> allBuildings;
 	allBuildings.insert(allBuildings.end(), m_brownBuildings.begin(), m_brownBuildings.end());
