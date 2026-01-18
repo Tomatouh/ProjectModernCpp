@@ -827,110 +827,106 @@ void Game::showFourWonders(std::vector<std::optional<std::shared_ptr<Card>>>& wo
 	}
 	std::cout << "\n";
 
-}
-
-void Game::turnCards()
+}void Game::turnCards()
 {
+	// Use a persistent texture cache to avoid lifetime crashes and performance lag
+	static std::map<uint16_t, sf::Texture> textureCache;
+
+	auto updateGuiCardTexture = [&](uint16_t id) {
+		if (textureCache.find(id) == textureCache.end()) {
+			if (!textureCache[id].loadFromFile("..\\..\\Images\\" + std::to_string(id) + ".jpg"))
+				return; // Guard against missing files
+		}
+
+		// Safety check: ensure the ID exists in the GUI map before calling .value()
+		if (m_guiCardDisplay.contains(id) && m_guiCardDisplay[id].has_value()) {
+			m_guiCardDisplay[id].value().setTexture(textureCache[id]);
+		}
+		};
+
 	if (m_currentAge == Building::Age::AGEI)
 	{
-		for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
-			for (int j = 0; j < m_cardDisplay[i].size(); j++)
-				if (m_cardDisplay[i][j].has_value())
-					if (m_cardDisplay[i][j].value().isFaceUp() == false && m_cardDisplay[i + 1][j].has_value() == false && m_cardDisplay[i + 1][j + 1].has_value() == false)
-					{
+		for (int i = m_cardDisplay.size() - 2; i >= 0; i--) {
+			for (int j = 0; j < m_cardDisplay[i].size(); j++) {
+				if (m_cardDisplay[i][j].has_value() && !m_cardDisplay[i][j].value().isFaceUp()) {
+
+					// Age I logic: Check [i+1][j] and [i+1][j+1]
+					// We must ensure j+1 is within the bounds of the row below
+					bool canTurn = (j + 1 < m_cardDisplay[i + 1].size()) &&
+						!m_cardDisplay[i + 1][j].has_value() &&
+						!m_cardDisplay[i + 1][j + 1].has_value();
+
+					if (canTurn) {
 						m_cardDisplay[i][j].value().setFaceUp(true);
-						std::uint16_t faceUpCardIndex = m_cardDisplay[i][j].value().getBuilding()->getId();
-						sf::Texture texture;
-						texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-						m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-					}
-
-	}
-	if (m_currentAge == Building::Age::AGEII)
-	{
-		for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
-		{
-			for (int j = 0; j < m_cardDisplay[i].size(); j++)
-			{
-				if (m_cardDisplay[i][j].has_value())
-				{
-					auto& card = m_cardDisplay[i][j].value();
-
-					if (!card.isFaceUp())
-					{
-						bool isCovered = false;
-
-						if (j > 0 && m_cardDisplay[i + 1][j - 1].has_value()) {
-							isCovered = true;
-						}
-
-						if (j < m_cardDisplay[i + 1].size() && m_cardDisplay[i + 1][j].has_value()) {
-							isCovered = true;
-						}
-
-						if (!isCovered)
-						{
-							card.setFaceUp(true);
-							std::uint16_t faceUpCardIndex = card.getBuilding()->getId();
-
-							sf::Texture texture;
-							texture.loadFromFile("..\\..\\Images\\" + std::to_string(faceUpCardIndex) + ".jpg");
-							m_guiCardDisplay[faceUpCardIndex].value().setTexture(texture);
-						}
+						updateGuiCardTexture(m_cardDisplay[i][j].value().getBuilding()->getId());
 					}
 				}
 			}
 		}
-	}if (m_currentAge == Building::Age::AGEIII)
+	}
+	else if (m_currentAge == Building::Age::AGEII)
 	{
-		for (int i = m_cardDisplay.size() - 2; i >= 0; i--)
-		{
-			for (int j = 0; j < m_cardDisplay[i].size(); j++)
-			{
-				if (m_cardDisplay[i][j].has_value())
-				{
-					auto& card = m_cardDisplay[i][j].value();
-					if (card.isFaceUp()) continue;
+		for (int i = m_cardDisplay.size() - 2; i >= 0; i--) {
+			for (int j = 0; j < m_cardDisplay[i].size(); j++) {
+				if (m_cardDisplay[i][j].has_value() && !m_cardDisplay[i][j].value().isFaceUp()) {
 
 					bool isCovered = false;
+					// FIX: Age II rows get SMALLER as i increases. 
+					// Card [i][j] is covered by [i+1][j-1] and [i+1][j]
 
-					if (i == 3)
-					{
-						int startIndex = (j == 0) ? 0 : 2;
+					// Check left coverage
+					if (j > 0 && j - 1 < m_cardDisplay[i + 1].size() && m_cardDisplay[i + 1][j - 1].has_value()) {
+						isCovered = true;
+					}
+					// Check right coverage (CRITICAL BOUNDS CHECK)
+					if (!isCovered && j < m_cardDisplay[i + 1].size() && m_cardDisplay[i + 1][j].has_value()) {
+						isCovered = true;
+					}
+
+					if (!isCovered) {
+						m_cardDisplay[i][j].value().setFaceUp(true);
+						updateGuiCardTexture(m_cardDisplay[i][j].value().getBuilding()->getId());
+					}
+				}
+			}
+		}
+	}
+	else if (m_currentAge == Building::Age::AGEIII)
+	{
+		// Age III logic is complex; we apply the same bounds-safe patterns
+		for (int i = m_cardDisplay.size() - 2; i >= 0; i--) {
+			for (int j = 0; j < m_cardDisplay[i].size(); j++) {
+				if (!m_cardDisplay[i][j].has_value() || m_cardDisplay[i][j].value().isFaceUp())
+					continue;
+
+				bool isCovered = false;
+				if (i == 3) { // The "Mid-Join" row in Age III
+					int startIndex = (j == 0) ? 0 : 2;
+					if (startIndex + 1 < m_cardDisplay[i + 1].size()) {
 						if (m_cardDisplay[i + 1][startIndex].has_value() ||
-							m_cardDisplay[i + 1][startIndex + 1].has_value())
-						{
+							m_cardDisplay[i + 1][startIndex + 1].has_value()) {
 							isCovered = true;
 						}
 					}
-					else if (m_cardDisplay[i + 1].size() > m_cardDisplay[i].size())
-					{
-						if (m_cardDisplay[i + 1][j].has_value() ||
-							m_cardDisplay[i + 1][j + 1].has_value())
-						{
+				}
+				else if (m_cardDisplay[i + 1].size() > m_cardDisplay[i].size()) {
+					// Expanding layout
+					if (j + 1 < m_cardDisplay[i + 1].size()) {
+						if (m_cardDisplay[i + 1][j].has_value() || m_cardDisplay[i + 1][j + 1].has_value())
 							isCovered = true;
-						}
 					}
-					else
-					{
-						int targetJ = j / 2;
-						if (m_cardDisplay[i + 1][targetJ].has_value())
-						{
-							isCovered = true;
-						}
+				}
+				else {
+					// Shrinking layout
+					int targetJ = j / 2;
+					if (targetJ < m_cardDisplay[i + 1].size() && m_cardDisplay[i + 1][targetJ].has_value()) {
+						isCovered = true;
 					}
+				}
 
-					if (!isCovered)
-					{
-						card.setFaceUp(true);
-						std::uint16_t id = card.getBuilding()->getId();
-
-						static std::map<uint16_t, sf::Texture> textureCache;
-						if (textureCache.find(id) == textureCache.end()) {
-							textureCache[id].loadFromFile("..\\..\\Images\\" + std::to_string(id) + ".jpg");
-						}
-						m_guiCardDisplay[id].value().setTexture(textureCache[id]);
-					}
+				if (!isCovered) {
+					m_cardDisplay[i][j].value().setFaceUp(true);
+					updateGuiCardTexture(m_cardDisplay[i][j].value().getBuilding()->getId());
 				}
 			}
 		}
@@ -3158,85 +3154,54 @@ void Game::drawScientificVictoryScreen(sf::RenderWindow& window)
 }
 void Game::run()
 {
-	// Create window first so it is available for both new and loaded games
 	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(60);
 
 	if (!loadGame())
 	{
-		// --- New Game Setup ---
 		m_gamestate = GAMESTART;
 		m_currentAge = Building::Age::AGEI;
 		initAgeIBoard();
-		m_selectedBuilding = nullptr;
 	}
 	else
 	{
-		// --- Loaded Game Setup ---
 		m_gamestate = ONGOING;
-		m_selectedBuilding = nullptr;
 
-		// 1. Sanitize Board State: 
-		// loadGame() sets all cards to FaceUp(true). We must reset the "Hidden" rows 
-		// (rows 1, 3, etc.) to FaceDown based on the standard Age rules (Odd rows are usually hidden).
-		for (int i = 0; i < m_cardDisplay.size(); ++i)
-		{
-			// In this implementation, odd rows (1, 3, 5) are initialized as face-down
-			// in initAgeI, II, and III.
-			if (i % 2 != 0)
-			{
-				for (auto& card : m_cardDisplay[i])
-				{
-					if (card.has_value())
-					{
-						card.value().setFaceUp(false);
-					}
+		// 1. Restore Face-Down status for the grid rows (1 and 3 are usually hidden)
+		for (int i = 0; i < m_cardDisplay.size(); ++i) {
+			if (i % 2 != 0) { // Odd rows are hidden
+				for (auto& card : m_cardDisplay[i]) {
+					if (card.has_value()) card.value().setFaceUp(false);
 				}
 			}
 		}
 
-		// 2. Apply Game Logic:
-		// Now that hidden rows are reset, turnCards() will check if they 
-		// should actually be revealed because the cards covering them are missing.
+		// 2. Logic check: Turn cards up if they are no longer covered
 		turnCards();
 
-		// 3. Initialize Visuals:
-		// Create the sprites/textures based on the calculated state.
+		// 3. Initialize the visual Sprites and Map
 		drawCurrentAgeCards(window);
 	}
 
-	// Main Game Loop
 	while (window.isOpen())
 	{
-		// Clear the previous frame
 		window.clear();
-
-		// Always draw the background
 		window.draw(m_backgroundSprite);
 
-		// Handle State-Specific Drawing
-		if (m_gamestate == GAMESTART)
-		{
+		if (m_gamestate == GAMESTART) {
 			drawWondersSelection(window);
 		}
-		else if (m_gamestate == ONGOING)
-		{
-			// Redraw board components using existing sprite positions
+		else if (m_gamestate == ONGOING) {
+			// redraw relies on m_guiCardDisplay being full
 			redrawCurrentAgeCards(window);
-
 			drawPlayerCards(window);
 			drawMilitaryBoard(window);
 			drawPlayerTurn(window);
 			drawClickAreaForPlayerDetails(window);
-
-			// Draw selection preview if a card is selected
 			drawSelectedCard(window);
 		}
 
-		// Display the frame
 		window.display();
-
-		// Handle Input
 		PollEvents(window);
 	}
 }
