@@ -253,16 +253,61 @@ bool Game::loadGame()
 		if (std::regex_search(data, m, reProgressTokens)) {
 			std::vector<int> prog = parseList(m[1]);
 			if (prog.size() >= 10) {
-				p->setAgricultureProgressToken(prog[0] != 0);
-				p->setArchitectureProgressToken(prog[1] != 0);
-				p->setEconomyProgressToken(prog[2] != 0);
-				p->setLawProgressToken(prog[3] != 0);
-				p->setMasonryProgressToken(prog[4] != 0);
+				if (prog[0] != 0)
+				{
+					p->setAgricultureProgressToken(prog[0]);
+					p->addProgressToken(Player::ProgressToken::agricultureToken);
+				}
+				if (prog[1] != 0)
+				{
+					p->setArchitectureProgressToken(prog[1]);
+					p->addProgressToken(Player::ProgressToken::architectureToken);
+				}
+				if (prog[2] != 0) {
+					p->setEconomyProgressToken(prog[2]);
+					p->addProgressToken(Player::ProgressToken::economyToken);
+				}
+				if (prog[3] != 0)
+				{
+					p->setLawProgressToken(prog[3]);
+					p->addProgressToken(Player::ProgressToken::lawToken);
+				}
+				if (prog[4]!=0)
+				{
+					p->setMasonryProgressToken(prog[4]);
+					p->addProgressToken(Player::ProgressToken::masonryToken);
+				}
+				if (prog[5] != 0)
+				{
+					p->setMathematicsProgressToken(prog[5]);
+					p->addProgressToken(Player::ProgressToken::mathematicsToken);
+				}
+				if (prog[6] != 0)
+				{
+					p->setPhilosophyProgressToken(prog[6]);
+					p->addProgressToken(Player::ProgressToken::philosphyToken);
+				}
+				if (prog[7] != 0)
+				{
+					p->setStrategyProgressToken(prog[7]);
+					p->addProgressToken(Player::ProgressToken::strategyToken);
+				}
+				if (prog[8] != 0)
+				{
+					p->setTheologyProgressToken(prog[8]);
+					p->addProgressToken(Player::ProgressToken::theologyToken);
+				}
+				if (prog[9] != 0)
+				{
+					p->setUrbanismProgressToken(prog[9]);
+					p->addProgressToken(Player::ProgressToken::urbanismToken);
+				}
+				/*p->setMasonryProgressToken(prog[4] != 0);
 				p->setMathematicsProgressToken(prog[5] != 0);
 				p->setPhilosophyProgressToken(prog[6] != 0);
 				p->setStrategyProgressToken(prog[7] != 0);
 				p->setTheologyProgressToken(prog[8] != 0);
-				p->setUrbanismProgressToken(prog[9] != 0);
+				p->setUrbanismProgressToken(prog[9] != 0);*/
 			}
 		}
 
