@@ -68,7 +68,6 @@ bool Game::loadGame()
 	std::string content = buffer.str();
 	f.close();
 
-	// Define Regex Patterns
 	std::regex reAge("age (\\d+)");
 	std::regex rePeon("peon (-?\\d+)");
 	std::regex reZTriggers("zTriggers ([01\\s]+)");

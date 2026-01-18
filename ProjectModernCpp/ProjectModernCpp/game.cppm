@@ -14,7 +14,6 @@ import choiceBox;
 
 export class Game {
 private:
-	const static std::uint16_t k_boardSize = 20;
 	static sf::Texture m_background;
 	static sf::Sprite m_backgroundSprite;
 	static std::uint8_t m_constructedWonders;
@@ -112,13 +111,6 @@ public:
 
 	void saveGame();
 	bool loadGame();
-	/*Game(const Player& player1, const Player& player2,
-		const Board& board,
-		const std::vector<std::shared_ptr<Card>>& wondersCard,
-		const std::vector<std::shared_ptr<Card>>& ageIDeck,
-		const std::vector<std::shared_ptr<Card>>& ageIIDeck,
-		const std::vector<std::shared_ptr<Card>>& m_ageIIIDeck,
-		const std::vector<std::shared_ptr<Card>>& m_discardedCards);*/
 	void initAgeIBoard();
 	void initAgeIIBoard();
 	void initAgeIIIBoard();
