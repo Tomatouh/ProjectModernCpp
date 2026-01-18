@@ -2,6 +2,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <fstream>
+#include <sstream>
+#include <regex>
 module game;
 
 
@@ -38,15 +40,245 @@ m_currentAge(Building::Age::AGEI)
 	initProgressTokens();
 	initCardEffects();
 }
+
+std::vector<int> parseList(const std::string& str) {
+	std::vector<int> result;
+	std::stringstream ss(str);
+	std::string temp;
+	while (ss >> temp) {
+		if (temp == "missing") continue;
+		try {
+			result.push_back(std::stoi(temp));
+		}
+		catch (...) { continue; }
+	}
+	return result;
+}
 void Game::loadGame()
 {
-	std::ifstream f("save.txt", std::ios::in);
-	if (!f)
+	std::ifstream f("save.txt");
+	if (!f.is_open()) {
+		std::cerr << "Error: Could not open save.txt" << std::endl;
 		return;
-	else
-	{
-		//load game state from file
 	}
+
+	std::stringstream buffer;
+	buffer << f.rdbuf();
+	std::string content = buffer.str();
+	f.close();
+
+	// Define Regex Patterns
+	std::regex reAge("age (\\d+)");
+	std::regex rePeon("peon (-?\\d+)");
+	std::regex reZTriggers("zTriggers ([01\\s]+)");
+	std::regex reProgressBoard("progressBoard ([\\d\\s]*)");
+	std::regex reDiscard("discard ([\\d\\s]*)");
+	std::regex reGui("gui\\s*\\n([\\s\\S]*?)(?=playerCURRENT)");
+	std::regex reBuildings("b ([\\d\\s]*)");
+	std::regex reCoins("c (\\d+)");
+	std::regex reVP("vp (\\d+)");
+	std::regex reShields("s (\\d+)");
+	std::regex reResources("p (\\d+) (\\d+) (\\d+) (\\d+) (\\d+)");
+	std::regex reScience("science ([\\d\\s]*)");
+	std::regex reProgressTokens("progress ([01\\s]+)");
+	std::regex reWonders("wonder ([\\d\\s]*)");
+
+	std::smatch match;
+
+	// ---------------------------------------------------------
+	// Load Common Game State
+	// ---------------------------------------------------------
+	if (std::regex_search(content, match, reAge)) {
+		this->m_currentAge = static_cast<Building::Age>(std::stoi(match[1]));
+	}
+
+	if (std::regex_search(content, match, rePeon)) {
+		this->m_board.setPos(std::stoi(match[1]));
+	}
+
+	if (std::regex_search(content, match, reZTriggers)) {
+		std::vector<int> triggers = parseList(match[1]);
+		std::vector<bool> boolTriggers;
+		for (int t : triggers) boolTriggers.push_back(t != 0);
+		this->m_board.setZoneTriggers(boolTriggers);
+	}
+
+	if (std::regex_search(content, match, reProgressBoard)) {
+		std::vector<int> tokens = parseList(match[1]);
+
+		std::unordered_map<int, std::function<Player::ProgressToken()>> tokenFactory = {
+			{1, []() { return Player::ProgressToken::agricultureToken; }},
+			{2, []() { return Player::ProgressToken::lawToken; }},
+			{3, []() { return Player::ProgressToken::philosphyToken; }},
+			{4, []() { return Player::ProgressToken::mathematicsToken; }},
+			{5, []() { return Player::ProgressToken::economyToken; }},
+			{6, []() { return Player::ProgressToken::masonryToken; }},
+			{7, []() { return Player::ProgressToken::strategyToken; }},
+			{8, []() { return Player::ProgressToken::theologyToken; }},
+			{9, []() { return Player::ProgressToken::urbanismToken; }},
+			{10, []() { return Player::ProgressToken::architectureToken; }}
+		};
+
+		for (int id : tokens) {
+			if (tokenFactory.find(id) != tokenFactory.end()) {
+				this->m_progressTokensDeck.push_back(
+					std::make_unique<Player::ProgressToken>(tokenFactory[id]())
+				);
+			}
+		}
+	}
+
+	if (std::regex_search(content, match, reDiscard)) {
+		std::vector<int> cards = parseList(match[1]);
+		for (int id : cards) {
+			std::shared_ptr<Building> b = getBuildingById(id);
+			if (b) this->m_discardedCards->push_back(b);
+		}
+	}
+
+	if (std::regex_search(content, match, reGui)) {
+		std::string guiBlock = match[1];
+		std::stringstream ss(guiBlock);
+		std::string line;
+
+		while (std::getline(ss, line)) {
+			if (line.empty()) continue;
+			std::vector<std::optional<displayCard>> row;
+			std::stringstream lineStream(line);
+			std::string item;
+
+			while (lineStream >> item) {
+				if (item == "missing") {
+					row.push_back(std::nullopt);
+				}
+				else {
+					int id = std::stoi(item);
+					displayCard dc;
+					std::shared_ptr<Building> building = getBuildingById(id);
+					if (building) {
+						dc.setBuilding(building);
+						dc.setFaceUp(true);
+						row.push_back(std::make_optional(dc));
+					}
+				}
+			}
+			if (!row.empty()) {
+				m_cardDisplay.push_back(row);
+			}
+		}
+	}
+
+	// ---------------------------------------------------------
+	// Load Player Data
+	// ---------------------------------------------------------
+	size_t posCurrent = content.find("playerCURRENT");
+	size_t posOther = content.find("playerOTHER");
+
+	if (posCurrent == std::string::npos || posOther == std::string::npos) {
+		std::cerr << "Error: Could not find player sections in save file" << std::endl;
+		return;
+	}
+
+	std::string strCurrent = content.substr(posCurrent, posOther - posCurrent);
+	std::string strOther = content.substr(posOther);
+
+	auto loadPlayer = [&](std::shared_ptr<Player> p, const std::string& data) {
+		std::smatch m;
+
+		// Buildings
+		if (std::regex_search(data, m, reBuildings)) {
+			std::vector<int> ids = parseList(m[1]);
+			for (int id : ids) {
+				std::shared_ptr<Building> b = getBuildingById(id);
+				if (b) p->addBuildingDirectly(*b);
+			}
+		}
+
+		// Coins (start is 7, adjust to target)
+		if (std::regex_search(data, m, reCoins)) {
+			int target = std::stoi(m[1]);
+				p->addCoin(target);
+			
+		}
+
+		// Victory Points (start is 0)
+		if (std::regex_search(data, m, reVP)) {
+			p->addVictoryPoints(std::stoi(m[1]));
+		}
+
+		// Shields (start is 0)
+		if (std::regex_search(data, m, reShields)) {
+			p->addShields(std::stoi(m[1]));
+		}
+
+		// Resources
+		if (std::regex_search(data, m, reResources)) {
+			std::vector<ResourceType> toAdd;
+			int wood = std::stoi(m[1]);
+			int stone = std::stoi(m[2]);
+			int clay = std::stoi(m[3]);
+			int glass = std::stoi(m[4]);
+			int papyrus = std::stoi(m[5]);
+
+			for (int i = 0; i < wood; ++i) toAdd.push_back(ResourceType::WOOD);
+			for (int i = 0; i < stone; ++i) toAdd.push_back(ResourceType::STONE);
+			for (int i = 0; i < clay; ++i) toAdd.push_back(ResourceType::CLAY);
+			for (int i = 0; i < glass; ++i) toAdd.push_back(ResourceType::GLASS);
+			for (int i = 0; i < papyrus; ++i) toAdd.push_back(ResourceType::PAPYRUS);
+
+			p->addResources(toAdd);
+		}
+
+		// Science
+		if (std::regex_search(data, m, reScience)) {
+			std::vector<int> sci = parseList(m[1]);
+			for (size_t i = 0; i < sci.size() && i < 7; ++i) {
+				for (int count = 0; count < sci[i]; ++count) {
+					p->addScientificPoint(static_cast<Building::ScientificSymbol>(i));
+				}
+			}
+		}
+
+		// Progress Tokens
+		if (std::regex_search(data, m, reProgressTokens)) {
+			std::vector<int> prog = parseList(m[1]);
+			if (prog.size() >= 10) {
+				p->setAgricultureProgressToken(prog[0] != 0);
+				p->setArchitectureProgressToken(prog[1] != 0);
+				p->setEconomyProgressToken(prog[2] != 0);
+				p->setLawProgressToken(prog[3] != 0);
+				p->setMasonryProgressToken(prog[4] != 0);
+				p->setMathematicsProgressToken(prog[5] != 0);
+				p->setPhilosophyProgressToken(prog[6] != 0);
+				p->setStrategyProgressToken(prog[7] != 0);
+				p->setTheologyProgressToken(prog[8] != 0);
+				p->setUrbanismProgressToken(prog[9] != 0);
+			}
+		}
+
+		// Wonders (ID Age pairs)
+		if (std::regex_search(data, m, reWonders)) {
+			std::vector<int> wonderData = parseList(m[1]);
+
+			for (size_t i = 0; i < wonderData.size(); i += 2) {
+				if (i + 1 >= wonderData.size()) break;
+
+				int wId = wonderData[i];
+				int wAgeVal = wonderData[i + 1];
+
+				std::shared_ptr<Card> wonderCard = getWonderById(wId);
+				if (wonderCard) {
+					p->addWonder(wonderCard);
+					// TODO: Mark wonder as built if wAgeVal != 0
+				}
+			}
+		}
+		};
+
+	loadPlayer(this->m_currentPlayer, strCurrent);
+	loadPlayer(this->m_otherPlayer, strOther);
+
+	std::cout << "Game loaded successfully." << std::endl;
 }
 void Game::saveGame()
 {
