@@ -21,6 +21,7 @@ private:
 	static bool m_isInPlayerBox;
 	static bool m_isInCardsBox;
 	static bool m_isFirstPlayerBox;
+	static bool m_wasGameLoaded;
 	std::shared_ptr<Player> m_currentPlayer, m_otherPlayer;
 	Board m_board;
 	std::array<bool, 6> m_zoneRewardsGiven = { false, false, false, false, false, false };
@@ -104,7 +105,7 @@ private:
 	void draw3ProgressTokens(sf::RenderWindow& window);
 	bool selectFrom3ProgressTokens(sf::RenderWindow& window, const sf::Vector2i& mousePos);
 	void takeProgressToken(sf::RenderWindow& window);
-
+	void drawPlayerProgressTokens(sf::RenderWindow& window);
 public:
 
 	Game();
