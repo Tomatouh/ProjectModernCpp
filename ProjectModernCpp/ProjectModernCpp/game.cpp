@@ -40,7 +40,7 @@ m_currentAge(Building::Age::AGEI)
 	initProgressTokens();
 	initCardEffects();
 }
-
+// Add this helper function at the top of game.cpp (before loadGame)
 std::vector<int> parseList(const std::string& str) {
 	std::vector<int> result;
 	std::stringstream ss(str);
@@ -54,6 +54,7 @@ std::vector<int> parseList(const std::string& str) {
 	}
 	return result;
 }
+
 void Game::loadGame()
 {
 	std::ifstream f("save.txt");
@@ -85,11 +86,12 @@ void Game::loadGame()
 
 	std::smatch match;
 
-	// ---------------------------------------------------------
 	// Load Common Game State
-	// ---------------------------------------------------------
 	if (std::regex_search(content, match, reAge)) {
-		this->m_currentAge = static_cast<Building::Age>(std::stoi(match[1]));
+		int ageNum = std::stoi(match[1]);
+		if (ageNum == 1) this->m_currentAge = Building::Age::AGEI;
+		else if (ageNum == 2) this->m_currentAge = Building::Age::AGEII;
+		else if (ageNum == 3) this->m_currentAge = Building::Age::AGEIII;
 	}
 
 	if (std::regex_search(content, match, rePeon)) {
@@ -152,13 +154,18 @@ void Game::loadGame()
 					row.push_back(std::nullopt);
 				}
 				else {
-					int id = std::stoi(item);
-					displayCard dc;
-					std::shared_ptr<Building> building = getBuildingById(id);
-					if (building) {
-						dc.setBuilding(building);
-						dc.setFaceUp(true);
-						row.push_back(std::make_optional(dc));
+					try {
+						int id = std::stoi(item);
+						displayCard dc;
+						std::shared_ptr<Building> building = getBuildingById(id);
+						if (building) {
+							dc.setBuilding(building);
+							dc.setFaceUp(true);
+							row.push_back(std::make_optional(dc));
+						}
+					}
+					catch (...) {
+						row.push_back(std::nullopt);
 					}
 				}
 			}
@@ -168,9 +175,7 @@ void Game::loadGame()
 		}
 	}
 
-	// ---------------------------------------------------------
 	// Load Player Data
-	// ---------------------------------------------------------
 	size_t posCurrent = content.find("playerCURRENT");
 	size_t posOther = content.find("playerOTHER");
 
@@ -194,19 +199,24 @@ void Game::loadGame()
 			}
 		}
 
-		// Coins (start is 7, adjust to target)
+		// Coins - need to set to exact amount, not add
 		if (std::regex_search(data, m, reCoins)) {
-			int target = std::stoi(m[1]);
-				p->addCoin(target);
-			
+			int targetCoins = std::stoi(m[1]);
+			int currentCoins = p->getCoins();
+			if (targetCoins > currentCoins) {
+				p->addCoin(targetCoins - currentCoins);
+			}
+			else if (targetCoins < currentCoins) {
+				p->payCoin(currentCoins - targetCoins);
+			}
 		}
 
-		// Victory Points (start is 0)
+		// Victory Points
 		if (std::regex_search(data, m, reVP)) {
 			p->addVictoryPoints(std::stoi(m[1]));
 		}
 
-		// Shields (start is 0)
+		// Shields
 		if (std::regex_search(data, m, reShields)) {
 			p->addShields(std::stoi(m[1]));
 		}
@@ -259,6 +269,7 @@ void Game::loadGame()
 		// Wonders (ID Age pairs)
 		if (std::regex_search(data, m, reWonders)) {
 			std::vector<int> wonderData = parseList(m[1]);
+			std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> wondersToLoad;
 
 			for (size_t i = 0; i < wonderData.size(); i += 2) {
 				if (i + 1 >= wonderData.size()) break;
@@ -268,10 +279,30 @@ void Game::loadGame()
 
 				std::shared_ptr<Card> wonderCard = getWonderById(wId);
 				if (wonderCard) {
-					p->addWonder(wonderCard);
-					// TODO: Mark wonder as built if wAgeVal != 0
+					std::optional<std::shared_ptr<Building>> builtCard = std::nullopt;
+
+					// If wonder was built (wAgeVal != 0), create the placeholder
+					if (wAgeVal != 0) {
+						Building::Age wonderAge = Building::Age::AGEI;
+						if (wAgeVal == 2) wonderAge = Building::Age::AGEII;
+						else if (wAgeVal == 3) wonderAge = Building::Age::AGEIII;
+
+						// Create a placeholder building representing the age card that was used
+						builtCard = std::make_shared<Building>(
+							wonderAge,
+							Building::Color::BROWN,
+							std::vector<ResourceType>{},
+							std::nullopt,
+							* wonderCard
+						);
+					}
+
+					wondersToLoad.push_back({ wonderCard, builtCard });
 				}
 			}
+
+			// Set all wonders at once
+			p->setWonders(wondersToLoad);
 		}
 		};
 
@@ -280,168 +311,131 @@ void Game::loadGame()
 
 	std::cout << "Game loaded successfully." << std::endl;
 }
+
 void Game::saveGame()
 {
 	std::ofstream f("save.txt", std::ios::out);
-	std::vector<Building> playerBuildings;
+	if (!f.is_open()) {
+		std::cerr << "Error: Could not open save.txt for writing" << std::endl;
+		return;
+	}
 
 	f << "common ";
-	f << "age " << static_cast<int>(this->m_currentAge) << "\n";
+	f << "age ";
+	if (this->m_currentAge == Building::Age::AGEI)
+		f << "1\n";
+	else if (this->m_currentAge == Building::Age::AGEII)
+		f << "2\n";
+	else if (this->m_currentAge == Building::Age::AGEIII)
+		f << "3\n";
+	else
+		f << "0\n";
 
 	f << "peon " << this->m_board.getPos() << "\n";
-	std::vector<bool>ZT = this->m_board.getZoneTriggers();
+
+	std::vector<bool> ZT = this->m_board.getZoneTriggers();
 	f << "zTriggers ";
-	for (int i = 0; i < ZT.size(); i++)
-	{
-		f << ZT[i] << " ";
+	for (size_t i = 0; i < ZT.size(); i++) {
+		f << (ZT[i] ? 1 : 0) << " ";
 	}
 	f << "\n";
 
 	f << "progressBoard ";
-	//std::vector< std::unique_ptr<Player::ProgressToken>>
-	for (int i = 0; i < this->m_progressTokensDeck.size(); i++)
-	{
-		f << this->m_progressTokensDeck[i].get()->getId() << " ";
+	for (size_t i = 0; i < this->m_progressTokensDeck.size(); i++) {
+		f << this->m_progressTokensDeck[i]->getId() << " ";
 	}
 	f << "\n";
+
 	f << "discard ";
-	for (int i = 0; i < this->m_discardedCards->size(); i++) {
-		auto it = this->m_discardedCards->begin();
-		std::advance(it, i);
-		f << it->get()->getId() << " ";
+	for (const auto& card : *this->m_discardedCards) {
+		f << card->getId() << " ";
 	}
 	f << "\n";
+
 	f << "gui" << "\n";
-	for (auto& row : m_cardDisplay) {
-		for (auto& card : row)
-		{
-			if (card.has_value())
-			{
+	for (const auto& row : m_cardDisplay) {
+		for (const auto& card : row) {
+			if (card.has_value()) {
 				f << card.value().getBuilding()->getId() << " ";
 			}
-			else
-			{
-				f << "missing" << " ";
+			else {
+				f << "missing ";
 			}
 		}
 		f << "\n";
 	}
-	f << "playerCURRENT" << "\n";
 
-	playerBuildings = this->m_currentPlayer->getAllBuildings();
-	f << "b ";
-	for (int i = 0; i < this->m_currentPlayer->getBuildingCount(); i++) {
-		f << playerBuildings[i].getId() << " ";
-	}
-	f << "\n";
-	f << "c " << this->m_currentPlayer->getCoins() << "\n";
-	f << "vp " << this->m_currentPlayer->getVictoryPoints() << "\n";
-	f << "s " << this->m_currentPlayer->getShields() << "\n";
+	// Helper lambda to save player data
+	auto savePlayer = [&](const std::shared_ptr<Player>& player, const std::string& label) {
+		f << label << "\n";
 
-	f << "p " << this->m_currentPlayer->getWood() << " " << this->m_currentPlayer->getStone() << " "
-		<< this->m_currentPlayer->getClay() << " " << this->m_currentPlayer->getGlass() << " "
-		<< this->m_currentPlayer->getPapyrus() << "\n";
-	f << "science ";
-	std::vector<uint16_t> sci_Points = this->m_currentPlayer->getScientificPoints();
-	for (int i = 0; i < sci_Points.size(); i++)
-	{
-		f << sci_Points[i] << " ";
-	}
-	f << "\n";
-	f << "progress ";
-	f << this->m_currentPlayer->hasAgricultureProgressToken() << " "
-		<< this->m_currentPlayer->hasArchitectureProgressToken() << " "
-		<< this->m_currentPlayer->hasEconomyProgressToken() << " "
-		<< this->m_currentPlayer->hasLawProgressToken() << " "
-		<< this->m_currentPlayer->hasMasonryProgressToken() << " "
-		<< this->m_currentPlayer->hasMathematicsProgressToken() << " "
-		<< this->m_currentPlayer->hasPhilosophyProgressToken() << " "
-		<< this->m_currentPlayer->hasStrategyProgressToken() << " "
-		<< this->m_currentPlayer->hasTheologyProgressToken() << " "
-		<< this->m_currentPlayer->hasUrbanismProgressToken() << "\n";
-	f << "\n";
-	f << "wonder ";
-	for (int i = 0; i < this->m_currentPlayer->getWonders().size(); i++)
-	{
-		f << this->m_currentPlayer->getWonders()[i].first->getId() << " ";
-		if (this->m_currentPlayer->getWonders()[i].second.has_value())
-			switch (this->m_currentPlayer->getWonders()[i].second.value()->getAge())
-			{
-			case Building::Age::AGEI:
-				f << "1" << " ";
-				break;
-			case Building::Age::AGEII:
-				f << "2" << " ";
-				break;
-			case Building::Age::AGEIII:
-				f << "3" << " ";
-				break;
+		// Buildings
+		const std::vector<Building>& allBuildings = player->getAllBuildings();
+		f << "b ";
+		for (int i = 0; i < player->getBuildingCount(); i++) {
+			f << allBuildings[i].getId() << " ";
+		}
+		f << "\n";
+
+		f << "c " << player->getCoins() << "\n";
+		f << "vp " << player->getVictoryPoints() << "\n";
+		f << "s " << player->getShields() << "\n";
+
+		f << "p " << player->getWood() << " " << player->getStone() << " "
+			<< player->getClay() << " " << player->getGlass() << " "
+			<< player->getPapyrus() << "\n";
+
+		f << "science ";
+		std::vector<uint16_t> sciPoints = player->getScientificPoints();
+		for (size_t i = 0; i < sciPoints.size(); i++) {
+			f << sciPoints[i] << " ";
+		}
+		f << "\n";
+
+		f << "progress ";
+		f << player->hasAgricultureProgressToken() << " "
+			<< player->hasArchitectureProgressToken() << " "
+			<< player->hasEconomyProgressToken() << " "
+			<< player->hasLawProgressToken() << " "
+			<< player->hasMasonryProgressToken() << " "
+			<< player->hasMathematicsProgressToken() << " "
+			<< player->hasPhilosophyProgressToken() << " "
+			<< player->hasStrategyProgressToken() << " "
+			<< player->hasTheologyProgressToken() << " "
+			<< player->hasUrbanismProgressToken() << "\n";
+
+		f << "wonder ";
+		for (const auto& wonderPair : player->getWonders()) {
+			f << wonderPair.first->getId() << " ";
+			if (wonderPair.second.has_value()) {
+				switch (wonderPair.second.value()->getAge()) {
+				case Building::Age::AGEI:
+					f << "1 ";
+					break;
+				case Building::Age::AGEII:
+					f << "2 ";
+					break;
+				case Building::Age::AGEIII:
+					f << "3 ";
+					break;
+				default:
+					f << "0 ";
+					break;
+				}
 			}
-		else
-			f << "0" << " ";
-	}
-
-	f << "playerOTHER" << "\n";
-	playerBuildings.clear();
-	playerBuildings = this->m_otherPlayer->getAllBuildings();
-	f << "b ";
-	for (int i = 0; i < this->m_otherPlayer->getBuildingCount(); i++) {
-		f << playerBuildings[i].getId() << " ";
-	}
-	f << "\n";
-
-	f << "c " << this->m_otherPlayer->getCoins() << "\n";
-	f << "vp " << this->m_otherPlayer->getVictoryPoints() << "\n";
-	f << "s " << this->m_otherPlayer->getShields() << "\n";
-
-	f << "p " << this->m_otherPlayer->getWood() << " " << this->m_otherPlayer->getStone() << " "
-		<< this->m_otherPlayer->getClay() << " " << this->m_otherPlayer->getGlass() << " "
-		<< this->m_otherPlayer->getPapyrus() << "\n";
-	f << "science ";
-	std::vector<uint16_t> sciPoints = this->m_otherPlayer->getScientificPoints();
-	for (int i = 0; i < sciPoints.size(); i++)
-	{
-		f << sciPoints[i] << " ";
-	}
-	f << "\n";
-	f << "progress ";
-	f << this->m_otherPlayer->hasAgricultureProgressToken() << " "
-		<< this->m_otherPlayer->hasArchitectureProgressToken() << " "
-		<< this->m_otherPlayer->hasEconomyProgressToken() << " "
-		<< this->m_otherPlayer->hasLawProgressToken() << " "
-		<< this->m_otherPlayer->hasMasonryProgressToken() << " "
-		<< this->m_otherPlayer->hasMathematicsProgressToken() << " "
-		<< this->m_otherPlayer->hasPhilosophyProgressToken() << " "
-		<< this->m_otherPlayer->hasStrategyProgressToken() << " "
-		<< this->m_otherPlayer->hasTheologyProgressToken() << " "
-		<< this->m_otherPlayer->hasUrbanismProgressToken() << "\n";
-	f << "\n";
-	f << "wonder ";
-	for (int i = 0; i < this->m_otherPlayer->getWonders().size(); i++)
-	{
-		f << this->m_otherPlayer->getWonders()[i].first->getId() << " ";
-		if (this->m_otherPlayer->getWonders()[i].second.has_value())
-			switch (this->m_otherPlayer->getWonders()[i].second.value()->getAge())
-			{
-			case Building::Age::AGEI:
-				f << "1" << " ";
-				break;
-			case Building::Age::AGEII:
-				f << "2" << " ";
-				break;
-			case Building::Age::AGEIII:
-				f << "3" << " ";
-				break;
+			else {
+				f << "0 ";
 			}
-		else
-			f << "0" << " ";
-	}
-	f << "\n";
+		}
+		f << "\n";
+		};
 
+	savePlayer(this->m_currentPlayer, "playerCURRENT");
+	savePlayer(this->m_otherPlayer, "playerOTHER");
 
-
+	f.close();
+	std::cout << "Game saved successfully." << std::endl;
 }
-
 //void Game::setGamestate(GameState& gamestate)
 //{
 //	this->m_gamestate = gamestate;

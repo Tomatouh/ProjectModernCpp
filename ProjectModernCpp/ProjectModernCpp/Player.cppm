@@ -43,8 +43,7 @@ public:
     const std::vector<Building>& getRedBuildings() const noexcept;
     const std::vector<Building>& getPurpleBuildings() const noexcept;
     const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> getWonders() const noexcept;
-
-
+	const void setWonders(const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>>& wonders) noexcept;
     uint16_t getVictoryPoints() const noexcept;
     void addVictoryPoints(uint16_t points) noexcept;
 

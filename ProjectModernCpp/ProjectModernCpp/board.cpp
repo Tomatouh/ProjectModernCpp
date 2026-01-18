@@ -53,7 +53,7 @@ void Board::movePeon(const  int & steps) noexcept(false)
 	checkZones();
 }
 
-std::vector<bool> Board::setZoneTriggers(std::vector<bool>& other)
+void Board::setZoneTriggers(std::vector<bool>& other)
 {
 	this->zoneTriggers = other;
 }

@@ -246,6 +246,12 @@ const std::vector<Building>& Player::getPurpleBuildings() const noexcept { retur
 
 const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>> Player::getWonders() const noexcept { return m_wonders; }
 
+const void Player::setWonders(const std::vector<std::pair<std::shared_ptr<Card>, std::optional<std::shared_ptr<Building>>>>& wonders) noexcept
+{
+    m_wonders = wonders;
+    return;
+}
+
 
 uint16_t Player::getVictoryPoints() const noexcept { return m_victoryPoints; }
 void Player::addVictoryPoints(uint16_t points) noexcept { m_victoryPoints += points; }

@@ -30,6 +30,6 @@ public:
     void movePeon (const int& steps) noexcept(false);
     int getZone() const noexcept {  return zone; }
 	std::vector<bool> getZoneTriggers() const noexcept { return zoneTriggers; }
-    std::vector<bool> setZoneTriggers(std::vector<bool> & other);
+    void setZoneTriggers(std::vector<bool> & other);
     void setZone(int & newZone) noexcept { zone = newZone; }
 };
