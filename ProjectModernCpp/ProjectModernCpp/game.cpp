@@ -444,10 +444,9 @@ std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 
 	if (m_ageIIIDeck[searchId])
 		return m_ageIIIDeck[searchId];
-}
-std::shared_ptr<Card> Game::getWonderById(std::uint8_t searchId)
+}std::shared_ptr<Card> Game::getWonderById(std::uint8_t searchId)
 {
-	auto it = std::find_if(m_wondersDeck.begin(), m_wondersDeck.end(),
+	auto it = std::ranges::find_if(m_wondersDeck,
 		[searchId](const std::shared_ptr<Card>& card) {
 			return card && card->getId() == searchId;
 		});
