@@ -10,7 +10,7 @@ import <vector>;
 //import <memory>;
 
 /*
-* TODO: Fix board zone triggering in player.cpp
+* TODO: 
 		load function: 
 				-behaviour:if there is a file named "save.txt", begin save load, if not, begin game as normal
 
