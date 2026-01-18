@@ -2029,10 +2029,12 @@ void Game::handleClick(sf::RenderWindow& window, sf::Vector2i&& mousePos)
 
 			if (!alreadyDrawn && m_gamestate == ONGOING) {
 				window.draw(m_backgroundSprite);
+
 				if(m_wasGameLoaded)
 					redrawCurrentAgeCards(window);
 				else
 					drawCurrentAgeCards(window);
+
 				drawPlayerCards(window);
 				drawClickAreaForPlayerDetails(window);
 				alreadyDrawn = true;
@@ -3240,7 +3242,7 @@ void Game::run()
 				}
 			}
 		}
-
+		m_wasGameLoaded = true;
 		// 2. Logic check: Turn cards up if they are no longer covered
 		turnCards();
 
