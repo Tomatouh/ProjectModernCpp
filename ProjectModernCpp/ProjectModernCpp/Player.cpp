@@ -204,36 +204,13 @@ void Player::addBuildingDirectly(const Building& building)
 
 void Player::discardBuilding(Building::Color color, std::uint16_t i)
 {
-    /*Building found;
-    std::vector<Building>::iterator it;
-    switch (color)
-    {
-    case Building::Color::GREY:
-        it = std::find_if(m_greyBuildings.begin(), m_greyBuildings.end(), [id](const Building& b) { return b.getId() == id; });
-        if (it == m_greyBuildings.end()) {
-            std::cout << "building not found\n";
-            return;
-        }
-        found = std::move(*it);
-        m_greyBuildings.erase(it);
-        m_discardPile->emplace_back(std::make_shared<Building>(found));
-        break;
-    case Building::Color::BROWN:
-        it = std::find_if(m_brownBuildings.begin(), m_brownBuildings.end(), [id](const Building& b) { return b.getId() == id; });
-        if (it == m_brownBuildings.end()) {
-            std::cout << "building not found\n";
-            return;
-        }
-        found = std::move(*it);
-        m_brownBuildings.erase(it);
-        m_discardPile->emplace_back(std::make_shared<Building>(found));
-        break;
-    }*/
+   
     if(color == Building::Color::BROWN && i < m_brownBuildings.size())
     {
         m_discardPile->emplace_back(std::make_shared<Building>(m_brownBuildings[i]));
 		removeResources(m_brownBuildings[i].getResources());
         m_brownBuildings.erase(m_brownBuildings.begin() + i);
+		//std::ranges::destroy_at(m_brownBuildings.begin() + i);
 	}
     else if (color == Building::Color::GREY && i < m_greyBuildings.size()) {
         m_discardPile->emplace_back(std::make_shared<Building>(m_greyBuildings[i]));
@@ -366,20 +343,6 @@ uint16_t Player::getClay() const noexcept { return m_clay; }
 uint16_t Player::getGlass() const noexcept { return m_glass; }
 uint16_t Player::getPapyrus() const noexcept { return m_papyrus; }
 
-//void Player::showStatus(std::ostream& os) const {
-//    os << "Player " << m_name << " | coins=" << getCoins() << "\n";
-//}
-//
-//void Player::showCards(std::ostream& os) const {
-//    os << m_name << " owns buildings:\n";
-//    os << " - Brown: " << m_brownBuildings.size() << "\n";
-//    os << " - Grey: " << m_greyBuildings.size() << "\n";
-//    os << " - Blue: " << m_blueBuildings.size() << "\n";
-//    os << " - Green: " << m_greenBuildings.size() << "\n";
-//    os << " - Yellow: " << m_yellowBuildings.size() << "\n";
-//    os << " - Red: " << m_redBuildings.size() << "\n";
-//    os << " - Purple: " << m_purpleBuildings.size() << "\n";
-//}
 
 void Player::addScientificPoint(Building::ScientificSymbol point) noexcept
 {
@@ -478,24 +441,6 @@ Player::ProgressToken::ProgressToken(std::function<void(std::shared_ptr<Player> 
 
 bool Player::hasDiscountFor(ResourceType type) const
 {
-    /*std::uint8_t requiredId = 0;
-
-    switch (type)
-    {
-    case ResourceType::WOOD: requiredId = 42; break;
-    case ResourceType::CLAY: requiredId = 41; break;
-    case ResourceType::STONE: requiredId = 40; break;
-    case ResourceType::GLASS: requiredId = 43; break
-    case ResourceType::PAPYRUS: requiredId = 43; break;
-    }
-
-    for (const auto& building : m_yellowBuildings)
-    {
-        if (building.getId() == requiredId)
-        {
-            return true;
-        }
-    }*/
     return m_tradeDiscounts.at(type);
 }
 
@@ -550,10 +495,6 @@ void Player::setDiscardPile(const std::shared_ptr<std::vector<std::shared_ptr<Bu
     m_discardPile = discardPile;
 }
 
-//void Player::removeCardFromDiscardPile(uint16_t cardId)
-//{
-//    m_discardPile->erase(cardId);
-//}
 
 std::unordered_map<ResourceType, bool> Player::getTradeDiscounts() const noexcept
 {

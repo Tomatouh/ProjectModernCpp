@@ -329,7 +329,7 @@ void Game::initCardEffects()
 		{Card::Effect::addRawResourceProduction, [](Game& game) {game.m_currentPlayer->addProduction(game.m_selectedBuilding->getResources()); } },
 		{Card::Effect::constructCard, [](Game& game) {game.m_waitingForDiscardedChoice = true; }},
 		{Card::Effect::discardBrown, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
-		{Card::Effect::discardGrey, [](Game& game) { game.m_waitingToDiscardBrown = true; }},
+		{Card::Effect::discardGrey, [](Game& game) { game.m_waitingToDiscardGrey = true; }},
 		{Card::Effect::drawProgress, [](Game& game) { game.m_waitingForTokenSelection = true; }},
 		{Card::Effect::loseThreeCoins, [](Game& game) {game.m_otherPlayer->addCoin(-3); }},
 		{Card::Effect::magistratesGuild, [](Game& game) {
@@ -444,10 +444,9 @@ std::shared_ptr<Building> Game::getBuildingById(std::uint8_t searchId)
 
 	if (m_ageIIIDeck[searchId])
 		return m_ageIIIDeck[searchId];
-}
-std::shared_ptr<Card> Game::getWonderById(std::uint8_t searchId)
+}std::shared_ptr<Card> Game::getWonderById(std::uint8_t searchId)
 {
-	auto it = std::find_if(m_wondersDeck.begin(), m_wondersDeck.end(),
+	auto it = std::ranges::find_if(m_wondersDeck,
 		[searchId](const std::shared_ptr<Card>& card) {
 			return card && card->getId() == searchId;
 		});
