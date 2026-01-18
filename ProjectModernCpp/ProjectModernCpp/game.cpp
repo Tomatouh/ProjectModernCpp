@@ -55,12 +55,12 @@ std::vector<int> parseList(const std::string& str) {
 	return result;
 }
 
-void Game::loadGame()
+bool Game::loadGame()
 {
 	std::ifstream f("save.txt");
 	if (!f.is_open()) {
-		std::cerr << "Error: Could not open save.txt" << std::endl;
-		return;
+		std::cout << "Could not open save.txt" << std::endl;
+		return false;
 	}
 
 	std::stringstream buffer;
@@ -181,7 +181,7 @@ void Game::loadGame()
 
 	if (posCurrent == std::string::npos || posOther == std::string::npos) {
 		std::cerr << "Error: Could not find player sections in save file" << std::endl;
-		return;
+		return false;
 	}
 
 	std::string strCurrent = content.substr(posCurrent, posOther - posCurrent);
@@ -310,8 +310,8 @@ void Game::loadGame()
 	loadPlayer(this->m_otherPlayer, strOther);
 
 	std::cout << "Game loaded successfully." << std::endl;
+	return true;
 }
-
 void Game::saveGame()
 {
 	std::ofstream f("save.txt", std::ios::out);
@@ -3139,32 +3139,69 @@ void Game::drawScientificVictoryScreen(sf::RenderWindow& window)
 
 void Game::run()
 {
-	//loadGame();
-	m_gamestate = GAMESTART;
-	bool player1Turn = true;
-	initAgeIBoard();
-	m_currentAge = Building::Age::AGEI;
-	std::uint8_t move;
-	std::vector<std::optional<std::shared_ptr<Card>>> wonders;
-	m_selectedBuilding = nullptr;
-
+	// Create window first so it is available for both new and loaded games
 	sf::RenderWindow window(sf::VideoMode({ 1500, 900 }), "7Wonders", sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(60);
-	int step = 1;
 
+	if (!loadGame())
+	{
+		// --- New Game Setup ---
+		m_gamestate = GAMESTART;
+		m_currentAge = Building::Age::AGEI;
+		initAgeIBoard();
+		m_selectedBuilding = nullptr;
+	}
+	else
+	{
+		// --- Loaded Game Setup ---
+		// The game is already in progress
+		m_gamestate = ONGOING;
+		m_selectedBuilding = nullptr;
+
+		// We need to initialize the graphical representations (sprites) 
+		// based on the logical grid loaded into m_cardDisplay.
+		// drawCurrentAgeCards iterates the grid and populates m_guiCardDisplay.
+		// We call it once here to set up the visual state.
+		drawCurrentAgeCards(window);
+	}
+
+	// Main Game Loop
 	while (window.isOpen())
 	{
+		// Clear the previous frame (good practice, even if background covers it)
+		window.clear();
 
+		// Always draw the background
 		window.draw(m_backgroundSprite);
-		if (m_gamestate == GAMESTART) {
+
+		// Handle State-Specific Drawing
+		if (m_gamestate == GAMESTART)
+		{
 			drawWondersSelection(window);
 		}
+		else if (m_gamestate == ONGOING)
+		{
+			// For the ongoing game, we need to draw the board components every frame.
+			// redrawCurrentAgeCards uses existing positions from m_guiCardDisplay.
+			redrawCurrentAgeCards(window);
+
+			drawPlayerCards(window);
+			drawMilitaryBoard(window);
+			drawPlayerTurn(window);
+			drawClickAreaForPlayerDetails(window);
+
+			// Draw selection preview if a card is selected
+			drawSelectedCard(window);
+		}
+
+		// Display the frame
 		window.display();
 
+		// Handle Input
+		// Note: Your PollEvents uses waitEvent(), so this loop blocks here until input occurs.
 		PollEvents(window);
 	}
 }
-
 std::uint8_t Game::m_constructedWonders = 0;
 
 sf::Texture Game::m_background = []() {
