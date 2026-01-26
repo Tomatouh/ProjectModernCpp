@@ -18,5 +18,82 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="buildingResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="card.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="buildingResource.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resource.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="effects.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="effects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cardsLoader.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="displayCard.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="displayCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="guiCard.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="guiCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawableGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawableGroup.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="choiceBox.cppm">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="choiceBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
